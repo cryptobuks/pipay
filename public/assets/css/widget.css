@@ -1,0 +1,127 @@
+.pi_widget_wrap {
+    z-index: 20;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(2,117,189,0.5);
+}
+.pi_widget {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -250px;
+    width: 500px;
+    min-height: 200px;
+    padding: 16px;
+    background-color: #fff;
+    border: 1px solid #0171b7;
+    box-sizing: border-box;
+    border-radius: 10px;
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7);
+    -ms-transform: scale(0.7);
+    transform: scale(0.7);
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+.pi_widget_effect {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+}
+.pi_widget_top {
+    position: relative;
+    border-bottom: 1px solid #9EADB7;
+}
+    .pi_widget_top > h1 {
+        font-size: 16px;
+        margin: 0;
+        padding: 8px;
+        color: #0171b7;
+    }
+.pi_widget_top_close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    border: 1px solid #0171b7;
+    color: #0171b7;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+    .pi_widget_top_close:hover {
+        background-color: #0171b7;
+        color: #fff;
+    }
+.pi_widget_content {
+    color: #4e5656;
+}
+    .pi_widget_content > p {
+        margin: 0;
+        padding: 8px;
+        min-height: 96px;
+        color: #0171b7;
+    }
+.pi_widget_bottom {
+    text-align: right;
+}
+    .pi_widget_bottom > button {
+        display: inline-block;
+        border: 1px solid #0171b7;
+        background-color: #fff;
+        color: #0171b7;
+        border-radius: 5px;
+        text-align: center;
+        padding: 8px 16px;
+        margin-left: 8px;
+        cursor: pointer;
+    }
+        .pi_widget_bottom > button:hover {
+            background-color: #0171b7;
+            color: #fff;
+        }
+
+.pi_widget_button_cancel {
+    color: #D10000 !important;
+    border-color: #D10000 !important;
+}
+    .pi_widget_button_cancel:hover {
+        color: #fff !important;
+        background-color: #D10000 !important;
+    }
+
+
+/* Responsive */
+@media screen and (min-width:0px) and (max-width:569px) {
+    .pi_widget {
+        width: 280px;
+        margin-left: -140px;
+        min-height: 150px;
+    }
+    .pi_widget_content > p {
+        min-height: 64px;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 768px) and (max-width:991px) {
+}
+
+/* Normal LCD */
+@media screen and (min-width: 992px) and (max-width:1199px) {
+}
+
+/* Widescreen */
+@media screen and (min-width: 1200px) {
+
+}
