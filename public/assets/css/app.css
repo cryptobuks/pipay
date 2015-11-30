@@ -1,2 +1,38 @@
+* {
+  font-family: 'Nanum';
+  font-size: 14px;
+  font-weight: normal;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+}
 
-/*# sourceMappingURL=app.css.map */
+*:focus {
+  outline: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+img {
+  border: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: 'Nanum';
+  src: url("../font/NanumGothic.eot");
+}
+
+@font-face {
+  font-family: 'Nanum';
+  src: url("../font/NanumGothic.woff");
+}
