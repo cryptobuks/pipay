@@ -1,8 +1,9 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 //Variable
+$architekt-theme-confirm: #63a9ee;
 
-//Mixins
 
 @import "init.scss";
 @import "font.scss";
 @import "utility.scss";
+@import "component.scss";

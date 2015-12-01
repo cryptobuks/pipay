@@ -21,11 +21,13 @@ elixir(function(mix) {
 
     //Minifying and merge scripts
     mix.scripts([
+        'jquery-1.11.3.min.js',
         'json2.min.js',
         'mobile-detect.min.js',
         'architekt.js',
         //modules here
-        'reserved/test.js',
+        'reserved/locale.js',
+        'reserved/widget.js',
         //Application source
         'app.js',
     ], 

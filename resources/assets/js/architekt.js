@@ -15,25 +15,29 @@ if (typeof String.prototype.utf8Decode == 'undefined') {
 
 //Crossbrowsing event handler
 var events = {
-	on: function(type, func) {
+	on: function(target, type, func) {
 		if(window.addEventListener) {
-			window.addEventListener(type, func);
+			target.addEventListener(type, func);
 		}
 		else {
 			type = type.toLowerCase();
 			if(type.substr(0,2) !== 'on') type = 'on' + type;
-			window.attachEvent(type, func);
+			target.attachEvent(type, func);
 		}
+
+        return this;
 	},
-	off: function(type) {
+	off: function(target, type) {
 		if(window.removeEventHandler) {
-			window.removeEventHandler(type);
+			target.removeEventHandler(type);
 		}
 		else {
 			type = type.toLowerCase();
 			if(type.substr(0,2) !== 'on') type = 'on' + type;
-			window.detachEvent(type);
+			target.detachEvent(type);
 		}
+
+        return this;
 	}
 };
 
@@ -56,6 +60,10 @@ window.Architekt = new function ArchitektConstructor() {
         extend: function (source) {
             var obj = Object.create(source);
             return obj;
+        },
+        link: function(baseObject, derivedObject, paramsObject) {
+            baseObject.call(derivedObject, paramsObject);
+            return this;
         },
     };
     //Array object: helpers for array
@@ -256,14 +264,14 @@ window.Architekt = new function ArchitektConstructor() {
 
 	//Architekt.init(): Init Architekt
 	this.init = function() {
-		console.log('Architekt.js: Ready to go.');
-		console.log(JSON.stringify(this.info));
-
 		//Load reservated modules
 		setTimeout(function() {
 			for(var moduleName in reserved) {
 				Architekt.module.mount(moduleName, reserved[moduleName]);
 			}
+
+            console.log('Architekt.js: Ready to go.');
+            console.log(JSON.stringify(this.info));
 
 			Architekt.event.fire('onready');
 		}, 0);
@@ -274,6 +282,16 @@ window.Architekt = new function ArchitektConstructor() {
 };
 
 //Make Architekt load when window loaded
-events.on('load', function() {
+events.on(window, 'load', function() {
+    Architekt.device.width = window.innerWidth;
+    Architekt.device.height = window.innerHeight;
+
 	Architekt.init();
+}).on(window, 'resize', function(e) {
+    Architekt.device.width = window.innerWidth;
+    Architekt.device.height = window.innerHeight;
+
+    Architekt.event.fire('resize', e);
+}).on(window, 'scroll', function() {
+    Architekt.event.fire('scroll', e);
 });
