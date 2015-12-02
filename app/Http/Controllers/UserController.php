@@ -12,7 +12,15 @@ use Cartalyst\Sentinel\Laravel\Facades\Reminder;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Exception;
-use Redirect;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 
 class UserController extends Controller
 {
@@ -60,17 +68,19 @@ class UserController extends Controller
                 'password' => $input['password'],
             ];
 
-            Sentinel::authenticate($credentials , $request->has('remember') );
+            if( $auth = Sentinel::authenticate($credentials , $request->has('remember') ) )
+            {
+                $user = Sentinel::check();
 
-            $user = Sentinel::check();
-
-            if( $user ) {
-                $result['success'] = true;
-                $result['message'] = trans('users.loggedIn') ;  //'You are now logged in ';         
-            } else {
-                $result['success'] = false;
-                $result['message'] = trans('users.invalid') ;    
+                if( $user ) {
+                    $result['success'] = true;
+                    $result['message'] = trans('users.loggedIn') ;  //'You are now logged in ';         
+                } else {
+                    $result['success'] = false;
+                    $result['message'] = trans('users.invalid') ;    
+                }
             }
+
 
         }
         catch (NotActivatedException $e)
@@ -127,7 +137,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\View
      */
     public function getRegister()
     {
@@ -154,6 +164,8 @@ class UserController extends Controller
         ]);
 
         $result['success'] = false;
+
+        DB::beginTransaction();
 
         try
         {
@@ -189,7 +201,10 @@ class UserController extends Controller
                 ];
 
                 Event::fire('user.signup', $mail  );
+
+                DB::commit();                
             } else {
+                DB::rollback();                
                 throw new Exception( 'users.exception' );
             }
                 
@@ -207,6 +222,73 @@ class UserController extends Controller
         } else {
             return Redirect::to('/');
         }
+    }
+
+    /**
+     * Show the form for update resource.
+     * 
+     * @return \Illuminate\Http\View
+     */
+    public function getProfile()
+    {
+
+        $user = Sentinel::getUser();
+        if( !$user ) {
+            flash()->overlay( trans('users.notfound') , 'Message' );
+            return redirect($this->redirectPath());
+        }
+
+        return view( 'users.profile' , compact('user') );
+    }
+
+    /**
+     * Update user data!
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postProfile( Request $request ) 
+    {
+        $input = $request->all();
+
+        $this->validate( $request , [
+            'old_password' => 'required|min:6',
+            'new_password' => 'required|min:6|confirmed',
+            'new_password_confirmation' => 'required' ,
+            'category' => 'required' ,
+            'shop_type' => 'required' ,                       
+            'company' => 'required' ,                                   
+            'website' => 'required' , 
+            'phone' => 'required' ,             
+        ]);
+
+        try{
+            
+            $user = Sentinel::getUser();
+
+            $data = [
+                'password' => $input['new_password'],
+                'category' => $input['category'],
+                'shop_type' => $input['shop_type'],
+                'company' => $input['company'] ,                            
+                'website' => $input['website'] ,
+                'phone' => $input['phone'] ,
+            ];
+
+            Sentinel::update( $user , $data );
+
+            $result['success'] = true;
+            $result['message'] =  trans('users.update_profile');             
+
+        } catch( Exception $e) {
+            $result['success'] = false;
+            $result['message'] = trans('users.notfound');             
+        }
+
+
+        flash()->overlay( $result['message']  , 'Message' );                
+        return Redirect::action('UserController@getProfile');
+
     }
 
      /**

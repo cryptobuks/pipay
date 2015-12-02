@@ -22,7 +22,7 @@ class TransactionMailer extends Mailer {
 	 */
 	public function withdraw_activation($email, $userId, $name , $withdraw , $activationCode )
 	{
-		$subject = '[파이페이] 승인 필요:파이 출금 요청';
+		$subject = '[파이페이먼트] 승인 필요:파이 출금 요청';
 		$view = 'emails.withdraw_activation';
 		$data['userId'] = $userId;
 		$data['email'] = $email;

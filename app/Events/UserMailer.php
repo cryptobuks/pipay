@@ -27,7 +27,7 @@ class UserMailer extends Mailer {
 
 	public function welcome($email, $url, $link)
 	{
-		$subject = '[파이페이] 회원 가입을 환영합니다.';
+		$subject = '[파이페이먼트] 회원 가입을 환영합니다.';
 		$view = 'emails.welcome';
 		$data['url'] = $url;
 		$data['link'] = $link;
@@ -45,7 +45,7 @@ class UserMailer extends Mailer {
 	 */
 	public function forgotPassword($email, $userId, $resetCode)
 	{
-		$subject = '[파이페이] 패스워드 재설정 승인요청';
+		$subject = '[파이페이먼트] 패스워드 재설정 승인요청';
 		$view = 'emails.reset';
 		$data['userId'] = $userId;
 		$data['resetCode'] = $resetCode;
@@ -63,7 +63,7 @@ class UserMailer extends Mailer {
 	 */
 	public function newPassword($email, $newPassword)
 	{
-		$subject = '[파이페이] 새 패스워드 정보';
+		$subject = '[파이페이먼트] 새 패스워드 정보';
 		$view = 'emails.newpassword';
 		$data['newPassword'] = $newPassword;
 		$data['email'] = $email;

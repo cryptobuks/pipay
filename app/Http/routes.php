@@ -21,6 +21,10 @@ $router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@ge
 $router->get('user/register', ['as' => 'user.register', 'uses' => 'UserController@getRegister']);
 $router->post('user/register', ['as' => 'user.register.post', 'uses' => 'UserController@postRegister']);
 
+$router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);
+$router->post('user/profile', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);
+
+
 // activation routes
 $router->get('user/activate/{id}/{code}', ['as' => 'user.activate', 'uses' => 'UserController@getActivate'])->where('id', '\d+');
 $router->get('user/resend', ['as' => 'user.resend', 'uses' => 'UserController@getResend']);
@@ -47,4 +51,21 @@ Event::listen('users.logout', function()
 {
     Session::flush();
 });
+
+// Subscribe to User Mailer events
+Event::subscribe('App\Events\UserMailer');
+Event::subscribe('App\Events\TransactionMailer');
+
+Route::get('locale', [
+    'as' => 'global.locale',
+    function () {
+        $cookie = cookie()->forever('l5locale', Request::input('l5locale'));
+
+        Cookie::queue($cookie);
+
+        return ($return = Request::input('return'))
+            ? redirect(urldecode($return))->withCookie($cookie)
+            : redirect()->route('home.index')->withCookie($cookie);
+    } 
+]);
 

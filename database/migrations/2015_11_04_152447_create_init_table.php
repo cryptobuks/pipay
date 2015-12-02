@@ -137,7 +137,7 @@ class CreateInitTable extends Migration
             $table->index('user_id');                        
         });
 
-        // 파이 환불 
+        // 파이 수수료 
         Schema::create('fees', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
