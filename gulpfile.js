@@ -12,19 +12,25 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass( [
-        'app.scss' ,
-    ] , 
-    'public/assets/css'
+    //Sass
+    mix.sass([
+        'app.scss',
+    ], 
+        'public/assets/css'
     );
 
-    mix.scripts( [
-        'common.js',
-        'widget.js',
-        'locale.js',        
-        'util.js',  
-        'bootstrap-switch.min.js',    
-        'mobile-detect.min.js' ,
-     ] 
+    //Minifying and merge scripts
+    mix.scripts([
+        'jquery-1.11.3.min.js',
+        'json2.min.js',
+        'mobile-detect.min.js',
+        'architekt.js',
+        //modules here
+        'reserved/locale.js',
+        'reserved/widget.js',
+        //Application source
+        'app.js',
+    ], 
+        'public/assets/js/all.js'
     );
 });

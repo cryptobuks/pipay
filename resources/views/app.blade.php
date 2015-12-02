@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Pi Payment</title>
+<head>
+<title>Pi Payment</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>{{ Lang::get('pages.title1') }}</title>
-    <meta property="og:url" content="https://www.pi-pay.net/" />
-    <meta property="og:title" content="{{ Lang::get('pages.title1') }}" />
-    <meta property="og:image" content="https://www.pi-pay.net/images/logo1.png" />
-    <meta property="og:description" content="{{ Lang::get('pages.sub1') }}" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>{{ Lang::get('pages.title1') }}</title>
+<meta property="og:url" content="https://www.pi-pay.net/" />
+<meta property="og:title" content="{{ Lang::get('pages.title1') }}" />
+<meta property="og:image" content="https://www.pi-pay.net/images/logo1.png" />
+<meta property="og:description" content="{{ Lang::get('pages.sub1') }}" />
 
-    <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" type="image/x-icon" />
-    <link href="{{ asset('assets/css/app.css') }}?noCache={{ date('Y-m-d_h:i:s') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/widget.css') }}" rel="stylesheet">    
-    <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'><!-- Fonts -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" type="image/x-icon" />
+<link href="{{ asset('assets/css/app.css') }}?noCache={{ date('Y-m-d_h:i:s') }}" rel="stylesheet">
+<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'><!-- Fonts -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">    -->
 
-    </head>
-    <body>
+
+</head>
+<body>
 @if (Session::has('flash_message'))
     <script>
         window.addEventListener('load', function(){
@@ -90,10 +87,13 @@
             @yield('content')
         </div>
 
-    <script src="{{ asset('js/all.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+    <script src="{{ asset('assets/js/all.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
     <script> 
-    window.Locale.setLocale('<?= App::getLocale() ?>'); 
+        /* window.Locale.setLocale('<?= App::getLocale() ?>'); */
     </script>
 
-    </body>
+</body>
 </html>            

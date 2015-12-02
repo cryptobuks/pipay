@@ -5,6 +5,5 @@ $(document).ready(function () {
 
         //Toggle
         $('input[type=checkbox]').bootstrapSwitch();
-
     };
 });
