@@ -1,11 +1,11 @@
 Architekt.module.reserv('Locale', function(options) {
 	var namespace = this;
-	var currentLocale = 'ko_kr';
+	var currentLocale = 'ko';
 	var localeStrings = {
-		"ko_kr": {
+		"ko": {
 
 		},
-		"us_en": {
+		"en": {
 
 		},
 	};
@@ -13,7 +13,14 @@ Architekt.module.reserv('Locale', function(options) {
 	return {
 		//Architekt.module.Locale.setLocale(string newLocale): Set new locale
 		setLocale: function(newLocale) {
-			currentLocale = newLocale;
+			//If new locale is not supported, use english instead.
+			if(typeof localeStrings[newLocale] === 'undefined') {
+				currentLocale = 'en';
+				console.warn('Architekt.module.Locale: [WARN] Unsupported locale ' + newLocale);
+			}
+			else
+				currentLocale = newLocale;
+			
 			return this;
 		},
 		//Architekt.module.Locale.getCurrentLocale(void): Get current locale

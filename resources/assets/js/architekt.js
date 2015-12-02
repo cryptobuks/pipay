@@ -271,7 +271,7 @@ window.Architekt = new function ArchitektConstructor() {
 			}
 
             console.log('Architekt.js: Ready to go.');
-            console.log(JSON.stringify(this.info));
+            console.log(JSON.stringify(self.info));
 
 			Architekt.event.fire('onready');
 		}, 0);

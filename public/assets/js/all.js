@@ -25,26 +25,26 @@ if (typeof String.prototype.utf8Decode == 'undefined') {
 
 //Crossbrowsing event handler
 var events = {
-	on: function(type, func) {
+	on: function(target, type, func) {
 		if(window.addEventListener) {
-			window.addEventListener(type, func);
+			target.addEventListener(type, func);
 		}
 		else {
 			type = type.toLowerCase();
 			if(type.substr(0,2) !== 'on') type = 'on' + type;
-			window.attachEvent(type, func);
+			target.attachEvent(type, func);
 		}
 
         return this;
 	},
-	off: function(type) {
+	off: function(target, type) {
 		if(window.removeEventHandler) {
-			window.removeEventHandler(type);
+			target.removeEventHandler(type);
 		}
 		else {
 			type = type.toLowerCase();
 			if(type.substr(0,2) !== 'on') type = 'on' + type;
-			window.detachEvent(type);
+			target.detachEvent(type);
 		}
 
         return this;
@@ -274,14 +274,14 @@ window.Architekt = new function ArchitektConstructor() {
 
 	//Architekt.init(): Init Architekt
 	this.init = function() {
-		console.log('Architekt.js: Ready to go.');
-		console.log(JSON.stringify(this.info));
-
 		//Load reservated modules
 		setTimeout(function() {
 			for(var moduleName in reserved) {
 				Architekt.module.mount(moduleName, reserved[moduleName]);
 			}
+
+            console.log('Architekt.js: Ready to go.');
+            console.log(JSON.stringify(self.info));
 
 			Architekt.event.fire('onready');
 		}, 0);
@@ -292,27 +292,158 @@ window.Architekt = new function ArchitektConstructor() {
 };
 
 //Make Architekt load when window loaded
-events.on('load', function() {
+events.on(window, 'load', function() {
     Architekt.device.width = window.innerWidth;
     Architekt.device.height = window.innerHeight;
 
 	Architekt.init();
-}).on('resize', function(e) {
+}).on(window, 'resize', function(e) {
     Architekt.device.width = window.innerWidth;
     Architekt.device.height = window.innerHeight;
-    
+
     Architekt.event.fire('resize', e);
-}).on('scroll', function() {
+}).on(window, 'scroll', function() {
     Architekt.event.fire('scroll', e);
+});
+/****************************************************************************************************
+ *
+ *      Architekt.module.Printer: Debugging helper for Architekt
+ *      Logging levels:
+ *      - 0: Log everything
+ *      - 1: Do not show Error
+ *      - 2: Do not show Error and Warning
+ *      - 3: No log
+ *
+ ****************************************************************************************************/
+
+Architekt.module.reserv('Printer', function(options) {
+	var logLevel = 0;	//Default lvl is 0
+	var printDate = false;
+
+	function getDate(dateObj) {
+		return (dateObj.getFullYear() + "-" + ("0" + (dateObj.getMonth() + 1)).substr(0,2) + "-" + ("0" + dateObj.getDate()).substr(0,2));
+	}
+	function getTime(dateObj) {
+		return (("0" + dateObj.getHours()).substr(0,2) + ":" + ("0" + dateObj.getMinutes()).substr(0,2) + ":" + ("0" + dateObj.getSeconds()).substr(0,2));
+	}
+	function getFormatedDate() {
+		var date = new Date();
+		var printStr = (printDate ? getDate(date) + " " : "") + getTime(date);
+
+		return printStr;
+	}
+	function getDebugText(type, text) {
+		return "[" + getFormatedDate() + " " + type + "] " + text;
+	}
+
+	return {
+		setLevel: function(newLevel) {
+			newLevel = +newLevel;
+
+			if(isNaN(newLevel)) {
+				console.log('Architekt.module.Printer: Unknown level ' + newLevel);
+				newLevel = 0;
+			}
+
+			switch(newLevel) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+					newLevel = newLevel;
+					break;
+				default: 
+					console.log('Architekt.module.Printer: Unknown level ' + newLevel);
+					break;
+			}
+
+			logLevel = newLevel;
+			console.log('Architekt.module.Printer: Log level set to ' + newLevel);
+			return this;
+		},
+		getLevel: function() {
+			return logLevel;
+		},
+		setPrintDate: function(print) {
+			printDate = !!print;
+			return this;
+		},
+		getPrintDate: function() {
+			return printDate;
+		},
+		//Architekt.module.Printer.log(string text): Log the text
+		log: function(text) {
+			if(logLevel >= 3) return;
+			console.log(getDebugText('LOG', text));
+		},
+		//Architekt.module.Printer.warn(string text): Log the text with warning
+		warn: function(text) {
+			if(logLevel >= 2) return;
+			console.warn(getDebugText('WARN', text));
+		},
+		//Architekt.module.Printer.error(string text): Log the text with error
+		error: function(text) {
+			if(logLevel >= 1) return;
+			console.error(getDebugText('ERR', text));
+		},
+		//Architekt.module.Printer.inspect(object obj): Inspect object properties
+		inspect: function(obj) {
+			if(logLevel >= 3) return;
+
+			if(typeof obj !== 'object') {
+				console.log(getDebugText('INSPECT', 'Parameter obj is not a object.'));
+			}
+			else {
+				console.log(getDebugText('INSPECT', obj.constructor.name));
+
+				var spaceBetween = 4;
+				var treeDepth = 0;
+
+				//function for get between space of the depth
+				function _getSpaceBetween(depth) {
+					var spaceStr = '';
+					//Depth * 4 blank spaces
+					for(var i = 0; i < ((depth + 1) * spaceBetween); i++) spaceStr += ' ';
+
+					return spaceStr;
+				}
+
+				//function for actual inspect object. it is recursive until property exists.
+				function _inspectObject(targetObj, depth) {
+					//Make spaces by depth of the object tree
+					var bracketSpace = _getSpaceBetween(depth - 1);
+					var propertySpace = _getSpaceBetween(depth);
+
+					console.log(bracketSpace + "{");
+
+					for(var key in targetObj) {
+						//Make sure that property is not linked in Prototype
+						if(targetObj.hasOwnProperty(key)) {
+							console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
+
+							//If the property is typeof of object, increase depth and search
+							if(typeof targetObj[key] === 'object') {
+								_inspectObject(targetObj[key], (depth+1));	//Recursive with inside of the object
+							}
+						}
+					}
+
+					console.log(bracketSpace + "}");
+				}
+
+				_inspectObject(obj, 0);
+			}
+		}
+	}
 });
 Architekt.module.reserv('Locale', function(options) {
 	var namespace = this;
-	var currentLocale = 'ko_kr';
+	var currentLocale = 'ko';
 	var localeStrings = {
-		"ko_kr": {
+		"ko": {
 
 		},
-		"us_en": {
+		"en": {
 
 		},
 	};
@@ -320,7 +451,14 @@ Architekt.module.reserv('Locale', function(options) {
 	return {
 		//Architekt.module.Locale.setLocale(string newLocale): Set new locale
 		setLocale: function(newLocale) {
-			currentLocale = newLocale;
+			//If new locale is not supported, use english instead.
+			if(typeof localeStrings[newLocale] === 'undefined') {
+				currentLocale = 'en';
+				console.warn('Architekt.module.Locale: [WARN] Unsupported locale ' + newLocale);
+			}
+			else
+				currentLocale = newLocale;
+			
 			return this;
 		},
 		//Architekt.module.Locale.getCurrentLocale(void): Get current locale
@@ -353,12 +491,10 @@ Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');
 
 	var defaultText = {
-		text: {
-			ok: 'Ok',
-			confirm: 'Confirm',
-			close: 'Close',
-			cancel: 'Cancel',
-		},
+		ok: 'Ok',
+		confirm: 'Confirm',
+		close: 'Close',
+		cancel: 'Cancel',
 	};
 
 	//widgetBase constructor
@@ -368,10 +504,10 @@ Architekt.module.reserv('Widget', function(options) {
 		this.controlObject = null;
 		this.callback = typeof options.callback === 'function' ? options.callback : function() {};
 		this.noCallback = typeof options.noCallback === 'function' ? options.noCallback : function() {};
-		this.okText = typeof options.okText !== 'undefined' ? options.okText : defaultText.text.ok;
-		this.confirmText = typeof options.confirmText !== 'undefined' ? options.confirmText : defaultText.text.confirm;
-		this.closeText = typeof options.closeText !== 'undefined' ? options.closeText : defaultText.text.close;
-		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.text.cancel;
+		this.okText = typeof options.okText !== 'undefined' ? options.okText : defaultText.ok;
+		this.confirmText = typeof options.confirmText !== 'undefined' ? options.confirmText : defaultText.confirm;
+		this.closeText = typeof options.closeText !== 'undefined' ? options.closeText : defaultText.close;
+		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.cancel;
 	}
 	widgetBase.prototype.destruct = function() {
 		this.controlObject.remove();
@@ -444,22 +580,31 @@ Architekt.module.reserv('Widget', function(options) {
 		Notice: Notice,
 		Confirm: Confirm,
 		setDefaultText: function(newTexts) {
-			if(typeof newTexts.ok !== 'undefined') defaultText.text.ok = newTexts.ok;
-			if(typeof newTexts.confirm !== 'undefined') defaultText.text.confirm = newTexts.confirm;
-			if(typeof newTexts.close !== 'undefined') defaultText.text.close = newTexts.close;
-			if(typeof newTexts.cancel !== 'undefined') defaultText.text.cancel = newTexts.cancel;
+			if(typeof newTexts.ok !== 'undefined') defaultText.ok = newTexts.ok;
+			if(typeof newTexts.confirm !== 'undefined') defaultText.confirm = newTexts.confirm;
+			if(typeof newTexts.close !== 'undefined') defaultText.close = newTexts.close;
+			if(typeof newTexts.cancel !== 'undefined') defaultText.cancel = newTexts.cancel;
 		}
 	};
 });
 Architekt.event.on('ready', function() {
-	new Architekt.module.Widget.Confirm({
-		text: 'Press OK to see Notice widget.',
-		confirmText: 'OK',
-		callback: function() {
-			new Architekt.module.Widget.Notice({
-				text: 'I am Notice widget!',
-			});
-		}
+	Architekt.module.Printer.setLevel(0);
+	Architekt.module.Printer.log('Helloworld!');
+	Architekt.module.Printer.warn('You have warning!');
+	Architekt.module.Printer.error('You have error');
+	Architekt.module.Printer.inspect({
+		lorem: 'ipsum',
+		dolor: 'sit amet',
+		another: {
+			lorem: 'ipsum',
+			dolor: 'sit',
+			andAnother : {
+				lorem: 'ipsum',
+			},
+		},
+		method: function() {
+			return true;
+		},
 	});
 });
 //# sourceMappingURL=all.js.map

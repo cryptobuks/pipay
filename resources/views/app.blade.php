@@ -40,7 +40,7 @@
     }
 ?>
 
-        <div class="container">
+    <div class="container">
         <nav class="navbar xnavbar-fixed-top navbar-inverse" role="navigation">
 
             <div class="navbar-header">
@@ -54,7 +54,6 @@
             </div>
 
             <div class="collapse navbar-collapse navbar-ex1-collapse">
-
                 <ul class="nav navbar-nav">
                     <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">Home</a></li>
                     @if ( ! Sentinel::check())
@@ -67,33 +66,27 @@
                     <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">Leagder</a></li>                                                                           
                     @endif
                 </ul>
-          <ul class="nav navbar-nav pull-right">
-                @if ($user = Sentinel::check())
-                    <li{{ Request::is('account') ? ' class="active"' : null }}><a href="{{ URL::to('account') }}">Account
-                    @if ( ! Activation::completed($user))
-                    <span class="label label-danger">Inactive</span>
+                <ul class="nav navbar-nav pull-right">
+                    @if ($user = Sentinel::check())
+                    <li{{ Request::is('account') ? ' class="active"' : null }}>
+                        <a href="{{ URL::to('account') }}">Account
+                        @if ( ! Activation::completed($user))
+                            <span class="label label-danger">Inactive</span>
+                        @endif
+                        </a>
+                    </li>
+                    <li><a href="{{ URL::to('logout') }}">Logout</a></li>
                     @endif
-                </a></li>
-                <li><a href="{{ URL::to('logout') }}">Logout</a></li>
-                @endif
-          </ul>
+                </ul>
+            </div>
+        </nav>
 
-        </div>
-    </nav>
+        @include('errors.message')
+        @yield('content')
+    </div>
 
-
-
-            @include('errors.message')
-            @yield('content')
-        </div>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
     <script src="{{ asset('assets/js/all.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
-    <script> 
-        /* window.Locale.setLocale('<?= App::getLocale() ?>'); */
-    </script>
-
+    @include('synchronizer/sync_locale')
 </body>
 </html>            

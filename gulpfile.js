@@ -26,6 +26,7 @@ elixir(function(mix) {
         'mobile-detect.min.js',
         'architekt.js',
         //modules here
+        'reserved/printer.js',
         'reserved/locale.js',
         'reserved/widget.js',
         //Application source

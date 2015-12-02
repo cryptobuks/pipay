@@ -3,12 +3,10 @@ Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');
 
 	var defaultText = {
-		text: {
-			ok: 'Ok',
-			confirm: 'Confirm',
-			close: 'Close',
-			cancel: 'Cancel',
-		},
+		ok: 'Ok',
+		confirm: 'Confirm',
+		close: 'Close',
+		cancel: 'Cancel',
 	};
 
 	//widgetBase constructor
@@ -18,10 +16,10 @@ Architekt.module.reserv('Widget', function(options) {
 		this.controlObject = null;
 		this.callback = typeof options.callback === 'function' ? options.callback : function() {};
 		this.noCallback = typeof options.noCallback === 'function' ? options.noCallback : function() {};
-		this.okText = typeof options.okText !== 'undefined' ? options.okText : defaultText.text.ok;
-		this.confirmText = typeof options.confirmText !== 'undefined' ? options.confirmText : defaultText.text.confirm;
-		this.closeText = typeof options.closeText !== 'undefined' ? options.closeText : defaultText.text.close;
-		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.text.cancel;
+		this.okText = typeof options.okText !== 'undefined' ? options.okText : defaultText.ok;
+		this.confirmText = typeof options.confirmText !== 'undefined' ? options.confirmText : defaultText.confirm;
+		this.closeText = typeof options.closeText !== 'undefined' ? options.closeText : defaultText.close;
+		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.cancel;
 	}
 	widgetBase.prototype.destruct = function() {
 		this.controlObject.remove();
@@ -94,10 +92,10 @@ Architekt.module.reserv('Widget', function(options) {
 		Notice: Notice,
 		Confirm: Confirm,
 		setDefaultText: function(newTexts) {
-			if(typeof newTexts.ok !== 'undefined') defaultText.text.ok = newTexts.ok;
-			if(typeof newTexts.confirm !== 'undefined') defaultText.text.confirm = newTexts.confirm;
-			if(typeof newTexts.close !== 'undefined') defaultText.text.close = newTexts.close;
-			if(typeof newTexts.cancel !== 'undefined') defaultText.text.cancel = newTexts.cancel;
+			if(typeof newTexts.ok !== 'undefined') defaultText.ok = newTexts.ok;
+			if(typeof newTexts.confirm !== 'undefined') defaultText.confirm = newTexts.confirm;
+			if(typeof newTexts.close !== 'undefined') defaultText.close = newTexts.close;
+			if(typeof newTexts.cancel !== 'undefined') defaultText.cancel = newTexts.cancel;
 		}
 	};
 });
