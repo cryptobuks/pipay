@@ -24,11 +24,14 @@ elixir(function(mix) {
         'jquery-1.11.3.min.js',
         'json2.min.js',
         'mobile-detect.min.js',
+        'socket.io-1.3.5.js',
+        //Architekt:
         'architekt.js',
         //modules here
         'reserved/printer.js',
         'reserved/locale.js',
         'reserved/widget.js',
+        'reserved/comparator.js',
         //Application source
         'app.js',
     ], 

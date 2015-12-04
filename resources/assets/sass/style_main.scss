@@ -1,0 +1,147 @@
+#pi_main_top {
+	position: relative;
+	background-image: url('../../image/background.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 100%;
+	height: 800px;
+
+	> .pi-container {
+		height: 100%;
+		text-align: center;
+		overflow: hidden;
+
+		> #pi_main_top_text {
+			padding-top: 200px;
+
+			> * {
+				margin: 8px;
+			}
+			> .pi-button {
+				padding: 16px 48px;
+				font-size: 24px;
+			}
+			> h1 {
+				color: #fff;
+				font-size: 32px;
+				line-height: 48px;
+			}
+			> p {
+				color: #3b4551;
+				font-size: 16px;
+				cursor: pointer;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}	
+		}	
+	}
+
+	> #pi_main_top_yummy {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		width: 800px;
+		margin-left: -400px;
+	}
+}
+
+#pi_main_feature_overview {
+	background-color: #fff;
+
+	> .pi-container {
+		padding: 64px 0;
+		overflow: hidden;
+		text-align: center;
+
+		.pi_main_feature_item {
+			float: left;
+			width: 25%;
+			font-size: 0;
+
+			> img {
+				display: block;
+				margin: 0 auto;
+				padding-bottom: 16px;
+			}
+			> p {
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+.pi_main_feature {
+	position: relative;
+	background-color: #63a9ee;
+	padding: 48px 0;
+
+	> .pi-container {
+		overflow: hidden;
+
+		.pi_feature_texts {
+			margin-top: 18px;
+			float: left;
+			text-align: left;
+
+			> h1 {
+				color: #fff;
+				font-size: 32px;
+				font-weight: bold;
+				padding-bottom: 36px;
+			}
+			> p {
+				color: #fff;
+				font-size: 18px;
+			}	
+		}
+		
+		> img {
+			float: right;
+			height: 180px;
+		}
+	}
+	
+	&.alt {
+		background-color: #fff;
+
+		> .pi-container {
+			> .pi_feature_texts {
+				float: right;
+				text-align: right;
+
+				> h1 {
+					color: #63a9ee;
+				}
+				> p {
+					color: #4a5056;
+				}
+			}
+
+			> img {
+				float: left;
+			}	
+			
+		}
+		
+		
+	}
+}
+
+#pi_main_bottom {
+	clear: both;
+	background-color: #e2effb;
+	padding: 80px 0;
+
+	> .pi-container {
+		text-align: center;
+
+		> a.pi-button {
+			display: inline-block;
+			margin: 0 auto;
+			padding: 16px 48px;
+			font-size: 24px;
+		}	
+	}
+}

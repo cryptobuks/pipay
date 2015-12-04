@@ -1,0 +1,1 @@
+<script src="{{ asset('assets/js/all.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>

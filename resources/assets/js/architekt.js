@@ -292,6 +292,6 @@ events.on(window, 'load', function() {
     Architekt.device.height = window.innerHeight;
 
     Architekt.event.fire('resize', e);
-}).on(window, 'scroll', function() {
+}).on(window, 'scroll', function(e) {
     Architekt.event.fire('scroll', e);
 });

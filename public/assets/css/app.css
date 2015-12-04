@@ -29,6 +29,10 @@ a {
   text-decoration: none;
 }
 
+li {
+  list-style: none;
+}
+
 @font-face {
   font-family: 'Nanum';
   src: url("../../font/NanumGothic.eot");
@@ -40,6 +44,60 @@ a {
 }
 
 /* Component style definitions */
+
+.pi-container {
+  position: relative;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.pi-button {
+  display: inline-block;
+  background-color: #d9d9d9;
+  text-align: center;
+  color: #000;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+}
+
+.pi-button:hover {
+  background-color: #b3b3b3;
+}
+
+.pi-button:active {
+  background-color: #8c8c8c;
+}
+
+.pi-button.pi-theme-point {
+  background-color: #e2b57a;
+  color: #fff;
+}
+
+.pi-button.pi-theme-point:hover {
+  background-color: #d4923b;
+}
+
+.pi-button.pi-theme-point:active {
+  background-color: #a06a23;
+}
+
+.pi-button.pi-theme-proceed {
+  background-color: #606986;
+  color: #fff;
+}
+
+.pi-button.pi-theme-proceed:hover {
+  background-color: #404659;
+}
+
+.pi-button.pi-theme-proceed:active {
+  background-color: #20232d;
+}
 
 /* Widget definitions */
 
@@ -137,4 +195,272 @@ a {
 
 .architekt-widget-button.architekt-theme-confirm:active {
   background: #bfdcf8;
+}
+
+#pi_gnb {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: unset;
+  left: 0;
+  height: 80px;
+  z-index: 200;
+  border-bottom: 1px solid #b5b5b5;
+}
+
+#pi_gnb > .pi-container {
+  height: 100%;
+}
+
+#pi_gnb > .pi-container > a {
+  position: absolute;
+  top: 50%;
+  right: unset;
+  bottom: unset;
+  left: 8px;
+  height: 50px;
+  margin-top: -25px;
+}
+
+#pi_gnb > .pi-container > a > img {
+  height: 100%;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list {
+  position: absolute;
+  top: unset;
+  right: 0;
+  bottom: 0;
+  left: unset;
+  overflow: hidden;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list > li {
+  float: left;
+  font-size: 0;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list > li > a {
+  display: block;
+  min-width: 96px;
+  color: #4b5457;
+  text-align: center;
+  font-size: 16px;
+  padding: 16px;
+  border-bottom: 10px solid transparent;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list > li > a.on {
+  border-bottom-color: #99ccff;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list > li > a:hover {
+  border-bottom-color: #1a8cff;
+}
+
+#pi_footer {
+  background-color: #383d4f;
+  width: 100%;
+  padding: 24px 0;
+}
+
+#pi_footer > .pi-container {
+  overflow: hidden;
+}
+
+#pi_footer > .pi-container > #pi_footer_left {
+  width: 50%;
+  float: left;
+}
+
+#pi_footer > .pi-container > #pi_footer_left > img {
+  display: block;
+  height: 46px;
+  margin-bottom: 8px;
+}
+
+#pi_footer > .pi-container > #pi_footer_left > ul {
+  overflow: hidden;
+}
+
+#pi_footer > .pi-container > #pi_footer_left > ul > li {
+  float: left;
+}
+
+#pi_footer > .pi-container > #pi_footer_left > ul > li > a {
+  display: block;
+  color: #fff;
+  padding: 8px;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+#pi_footer > .pi-container > #pi_footer_left > ul > li > a:hover {
+  text-decoration: underline;
+}
+
+#pi_footer > .pi-container > #pi_footer_right {
+  width: 50%;
+  float: right;
+}
+
+#pi_footer > .pi-container > #pi_footer_right > p {
+  color: #cccccc;
+  font-size: 10px;
+  margin-bottom: 8px;
+}
+
+#pi_footer > .pi-container > #pi_footer_right > p > a {
+  font-size: 10px;
+  color: #ccc;
+  text-decoration: underline;
+}
+
+#pi_main_top {
+  position: relative;
+  background-image: url("../../image/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 800px;
+}
+
+#pi_main_top > .pi-container {
+  height: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text {
+  padding-top: 200px;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text > * {
+  margin: 8px;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text > .pi-button {
+  padding: 16px 48px;
+  font-size: 24px;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text > h1 {
+  color: #fff;
+  font-size: 32px;
+  line-height: 48px;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text > p {
+  color: #3b4551;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#pi_main_top > .pi-container > #pi_main_top_text > p:hover {
+  text-decoration: underline;
+}
+
+#pi_main_top > #pi_main_top_yummy {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 800px;
+  margin-left: -400px;
+}
+
+#pi_main_feature_overview {
+  background-color: #fff;
+}
+
+#pi_main_feature_overview > .pi-container {
+  padding: 64px 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+#pi_main_feature_overview > .pi-container .pi_main_feature_item {
+  float: left;
+  width: 25%;
+  font-size: 0;
+}
+
+#pi_main_feature_overview > .pi-container .pi_main_feature_item > img {
+  display: block;
+  margin: 0 auto;
+  padding-bottom: 16px;
+}
+
+#pi_main_feature_overview > .pi-container .pi_main_feature_item > p {
+  font-size: 16px;
+}
+
+.pi_main_feature {
+  position: relative;
+  background-color: #63a9ee;
+  padding: 48px 0;
+}
+
+.pi_main_feature > .pi-container {
+  overflow: hidden;
+}
+
+.pi_main_feature > .pi-container .pi_feature_texts {
+  margin-top: 18px;
+  float: left;
+  text-align: left;
+}
+
+.pi_main_feature > .pi-container .pi_feature_texts > h1 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  padding-bottom: 36px;
+}
+
+.pi_main_feature > .pi-container .pi_feature_texts > p {
+  color: #fff;
+  font-size: 18px;
+}
+
+.pi_main_feature > .pi-container > img {
+  float: right;
+  height: 180px;
+}
+
+.pi_main_feature.alt {
+  background-color: #fff;
+}
+
+.pi_main_feature.alt > .pi-container > .pi_feature_texts {
+  float: right;
+  text-align: right;
+}
+
+.pi_main_feature.alt > .pi-container > .pi_feature_texts > h1 {
+  color: #63a9ee;
+}
+
+.pi_main_feature.alt > .pi-container > .pi_feature_texts > p {
+  color: #4a5056;
+}
+
+.pi_main_feature.alt > .pi-container > img {
+  float: left;
+}
+
+#pi_main_bottom {
+  clear: both;
+  background-color: #e2effb;
+  padding: 80px 0;
+}
+
+#pi_main_bottom > .pi-container {
+  text-align: center;
+}
+
+#pi_main_bottom > .pi-container > a.pi-button {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 16px 48px;
+  font-size: 24px;
 }

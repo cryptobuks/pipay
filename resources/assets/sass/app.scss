@@ -2,8 +2,11 @@
 //Variable
 $architekt-theme-confirm: #63a9ee;
 
-
 @import "init.scss";
 @import "font.scss";
 @import "utility.scss";
 @import "component.scss";
+
+//Main
+@import "style_common.scss";
+@import "style_main.scss";

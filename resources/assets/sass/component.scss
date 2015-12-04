@@ -1,4 +1,58 @@
 /* Component style definitions */
+.pi-container {
+	position: relative;
+	width: 1100px;
+	margin: 0 auto;
+}
+
+$component-basic: darken(#fff, 15%);
+$pi-theme-success: #fff;
+$pi-theme-confirm: #fff;
+$pi-theme-warning: #fff;
+$pi-theme-danger: #fff;
+$pi-theme-point: #e2b57a;
+$pi-theme-proceed: #606986;
+
+.pi-button {
+	display: inline-block;
+	background-color: $component-basic;
+	text-align: center;
+	color: #000;
+	padding: 8px 16px;
+	cursor: pointer;
+	@include createBorderRadius(5px);
+
+	&:hover {
+		background-color: darken($component-basic, 15%);
+	}
+	&:active {
+		background-color: darken($component-basic, 30%);
+	}
+
+	&.pi-theme-point {
+		background-color: $pi-theme-point;
+		color: #fff;
+
+		&:hover {
+			background-color: darken($pi-theme-point, 15%);
+		}
+		&:active {
+			background-color: darken($pi-theme-point, 30%);
+		}
+	}
+
+	&.pi-theme-proceed {
+		background-color: $pi-theme-proceed;
+		color: #fff;
+
+		&:hover {
+			background-color: darken($pi-theme-proceed, 15%);
+		}
+		&:active {
+			background-color: darken($pi-theme-proceed, 30%);
+		}
+	}
+}
 
 /* Widget definitions */
 

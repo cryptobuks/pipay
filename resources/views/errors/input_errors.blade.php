@@ -8,10 +8,9 @@
 	<script>
 		var errorString = '<?= $errorString ?>';
 
-		window.addEventListener('load', function(){
-			new Widget.Notice({
+		Architekt.event.on('ready', function() {
+			new Architekt.module.Widget.Notice({
 				text: errorString,
-				headText: 'Pi-Payment'
 			});
 		});
 	</script>

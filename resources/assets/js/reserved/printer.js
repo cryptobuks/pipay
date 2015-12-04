@@ -13,18 +13,22 @@ Architekt.module.reserv('Printer', function(options) {
 	var logLevel = 0;	//Default lvl is 0
 	var printDate = false;
 
+	//getDate(): Return date part string
 	function getDate(dateObj) {
 		return (dateObj.getFullYear() + "-" + ("0" + (dateObj.getMonth() + 1)).substr(0,2) + "-" + ("0" + dateObj.getDate()).substr(0,2));
 	}
+	//getTime(): Return time part string
 	function getTime(dateObj) {
 		return (("0" + dateObj.getHours()).substr(0,2) + ":" + ("0" + dateObj.getMinutes()).substr(0,2) + ":" + ("0" + dateObj.getSeconds()).substr(0,2));
 	}
+	//getFormattedDate(): Return actual formated date string
 	function getFormatedDate() {
 		var date = new Date();
 		var printStr = (printDate ? getDate(date) + " " : "") + getTime(date);
 
 		return printStr;
 	}
+	//getDebugText(string type, string text): Return printing format [Date Type] Text -> [10:32:20 LOG] Helloworld
 	function getDebugText(type, text) {
 		return "[" + getFormatedDate() + " " + type + "] " + text;
 	}
@@ -79,8 +83,11 @@ Architekt.module.reserv('Printer', function(options) {
 			if(logLevel >= 1) return;
 			console.error(getDebugText('ERR', text));
 		},
-		//Architekt.module.Printer.inspect(object obj): Inspect object properties
-		inspect: function(obj) {
+		//Architekt.module.Printer.inspect(object obj, options): Inspect object properties
+		//options:
+		//int depth: Max tree level for search
+		//array ignoreRegex: Array of the strings that ignore searching it.
+		inspect: function(obj, options) {
 			if(logLevel >= 3) return;
 
 			if(typeof obj !== 'object') {
@@ -89,8 +96,17 @@ Architekt.module.reserv('Printer', function(options) {
 			else {
 				console.log(getDebugText('INSPECT', obj.constructor.name));
 
+				options = typeof options === 'object' ? options : {};
+
+				var maxDepth = typeof options.maxDepth !== 'undefined' ? +options.maxDepth : false;
+				var ignoreRegex = typeof options.ignoreRegex !== 'undefined' ? options.ignoreRegex : false;
+				var displayFunctionCode = typeof options.displayFunctionCode !== 'undefined' ? !!options.displayFunctionCode : false;
 				var spaceBetween = 4;
 				var treeDepth = 0;
+
+				//To increase perfomance, make regexp array in here
+				var ignoreList = [];
+				for(var i = 0, len = ignoreRegex.length; i < len; i++) ignoreList.push(new RegExp(ignoreRegex[i]));
 
 				//function for get between space of the depth
 				function _getSpaceBetween(depth) {
@@ -101,9 +117,17 @@ Architekt.module.reserv('Printer', function(options) {
 					return spaceStr;
 				}
 
+				//function that check the key is in the ignore list
+				function _checkInIgnoreList(text) {
+					for(var i = 0, len = ignoreList.length; i < len; i++)
+						if(ignoreList[i].test(text)) return true;
+
+					return false;
+				}
+
 				//function for actual inspect object. it is recursive until property exists.
 				function _inspectObject(targetObj, depth) {
-					//Make spaces by depth of the object tree
+					//Make space by depth of the object tree (space = depth * 4)
 					var bracketSpace = _getSpaceBetween(depth - 1);
 					var propertySpace = _getSpaceBetween(depth);
 
@@ -111,13 +135,22 @@ Architekt.module.reserv('Printer', function(options) {
 
 					for(var key in targetObj) {
 						//Make sure that property is not linked in Prototype
-						if(targetObj.hasOwnProperty(key)) {
-							console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
-
+						if(targetObj.hasOwnProperty(key) && !_checkInIgnoreList(key)) {
 							//If the property is typeof of object, increase depth and search
 							if(typeof targetObj[key] === 'object') {
-								_inspectObject(targetObj[key], (depth+1));	//Recursive with inside of the object
+								console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
+
+								if(maxDepth === false || (maxDepth && depth < maxDepth))
+									_inspectObject(targetObj[key], (depth+1));	//Recursive with inside of the object
 							}
+							else {
+								if(typeof targetObj[key] === 'function' && !displayFunctionCode) {
+									console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
+								}
+								else
+									console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key + ": " + targetObj[key]);
+							}
+
 						}
 					}
 

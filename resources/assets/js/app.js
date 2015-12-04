@@ -1,20 +1,17 @@
 Architekt.event.on('ready', function() {
 	Architekt.module.Printer.setLevel(0);
-	Architekt.module.Printer.log('Helloworld!');
-	Architekt.module.Printer.warn('You have warning!');
-	Architekt.module.Printer.error('You have error');
-	Architekt.module.Printer.inspect({
-		lorem: 'ipsum',
-		dolor: 'sit amet',
-		another: {
-			lorem: 'ipsum',
-			dolor: 'sit',
-			andAnother : {
-				lorem: 'ipsum',
-			},
-		},
-		method: function() {
-			return true;
-		},
-	});
+
+	Architekt.module.Comparator.start();
+	setTimeout(function() {
+		Architekt.module.Comparator.check();
+
+		setTimeout(function() {
+			Architekt.module.Comparator.check('Custom check string');
+
+			setTimeout(function() {
+				var result = Architekt.module.Comparator.stop();
+				Architekt.module.Printer.inspect(result);
+			}, 750);
+		}, 500);
+	}, 750);
 });
