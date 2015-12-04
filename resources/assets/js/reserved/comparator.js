@@ -17,7 +17,7 @@ Architekt.module.reserv('Comparator', function(options) {
 
 			return this;
 		},
-		//Architekt.module.Comparator.start(): Begins measuring
+		//Architekt.module.Comparator.stop(): Stops measuring
 		stop: function() {
 			endTime = new Date();
 
@@ -27,6 +27,7 @@ Architekt.module.reserv('Comparator', function(options) {
 
 			return this.result();
 		},
+		//Architekt.module.Comparator.check(): Add checkpoint
 		check: function(text) {
 			var currentTime = new Date();
 
@@ -38,6 +39,7 @@ Architekt.module.reserv('Comparator', function(options) {
 
 			return this;
 		},
+		//Architekt.module.Comparator.result(): Get result
 		result: function() {
 			var resultObject = [];
 			for(var i = 0, len = results.length; i < len; i++)

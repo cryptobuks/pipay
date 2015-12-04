@@ -2,7 +2,8 @@
 	@include createPosition(fixed, 0, 0, unset, 0);
 	height: 80px;
 	z-index: 200;
-	border-bottom: 1px solid #b5b5b5;
+	background-color: #fff;
+	//border-bottom: 1px solid #b5b5b5;
 
 	> .pi-container {
 		height: 100%;
