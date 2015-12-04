@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     
-    <meta property="og:url" content="https://www.pi-pay.net/" />
+    <meta property="og:url" content="{{ url('/') }}" />
     <meta property="og:title" content="{{ Lang::get('pages.title1') }}" />
-    <meta property="og:image" content="https://www.pi-pay.net/images/logo1.png" />
+    <meta property="og:image" content="{{ url('/images/logo.png') }}" />
     <meta property="og:description" content="{{ Lang::get('pages.sub1') }}" />
 
     <title>{{ Lang::get('pages.title1') }}</title>
@@ -15,7 +15,6 @@
     <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" type="image/x-icon" />
     <link href="{{ asset('assets/css/app.css') }}?noCache={{ date('Y-m-d_h:i:s') }}" rel="stylesheet">
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'><!-- Fonts -->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">    -->
 </head>
 <body>
 @if (Session::has('flash_message') || Session::has('flash_notification.message'))
@@ -58,8 +57,8 @@
             <ul id="pi_gnb_list">
                 <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인으로</a></li>
         @if ( ! Sentinel::check())
-                <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">Login</a></li>
-                <li{{ Request::is('register') ? ' class="active"' : null }}><a href="{{ URL::to('user/register') }}">Register</a></li>
+                <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
+                <li{{ Request::is('register') ? ' class="active"' : null }}><a href="{{ URL::to('user/register') }}">회원가입</a></li>
         @else
                 <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">Dashboard</a></li>                    
                 <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">Product</a></li>                                   
