@@ -33,3 +33,17 @@
 	bottom: $bottom;
 	left: $left;
 }
+@mixin createPlaceholder($color: #9da6aa) {
+	&::-webkit-input-placeholder {
+		color: $color;
+	}
+	&:-moz-placeholder {
+		color: $color;
+	}
+	&::-moz-placeholder {
+		color: $color;
+	}
+	&::-ms-input-placeholder {
+		color: $color;
+	}
+}

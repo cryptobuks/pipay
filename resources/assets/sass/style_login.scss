@@ -1,0 +1,38 @@
+#pi_auth {
+	background-color: #f4f5f5;
+	width: 100%;
+	padding-top: 80px;
+
+	> .pi-container {
+		> .pi-form {
+			@include createPosition(absolute, 50%, unset, unset, 50%);
+			width: 400px;
+    		height: 220px;
+    		margin-top: -110px;
+    		margin-left: -200px;
+
+			> h1 {
+				text-align: center;
+				font-size: 28px;
+				color: #525a5d;
+				margin-bottom: 16px;
+			}
+
+			> h2 {
+				text-align: center;
+				font-size: 18px;
+				color: #636c70;
+				margin-bottom: 16px;
+			}
+
+			> .pi-input {
+				display: block;
+				width: 100%;
+				margin-bottom: 16px;
+			}
+			> .pi-error {
+
+			}
+		}
+	}
+}

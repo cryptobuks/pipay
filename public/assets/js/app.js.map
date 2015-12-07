@@ -1,0 +1,1 @@
+{"version":3,"sources":["app.js"],"names":[],"mappings":"AAAA;AACA;AACA","file":"app.js","sourcesContent":["Architekt.event.on('ready', function() {\n\tArchitekt.module.Printer.setLevel(0);\n});"],"sourceRoot":"/source/"}

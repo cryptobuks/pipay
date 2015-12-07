@@ -22,7 +22,7 @@ Architekt.module.reserv('Comparator', function(options) {
 			endTime = new Date();
 
 			results.push(endTime.getTime() - startTime.getTime());
-			texts.push('Begins');
+			texts.push('Ends');
 			console.log('Architekt.module.Comparator: Stop perfomance measuring at ' + startTime.toGMTString());
 
 			return this.result();

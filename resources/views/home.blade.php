@@ -104,24 +104,4 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <div id="pi_footer">
-        <div class="pi-container">
-            <div id="pi_footer_left">
-                <img src="image/footer_logo.png" />
-                <ul id="pi_footer_nav">
-                    <li><a href="#">파이페이</a></li>
-                    <li><a href="#">이용약관</a></li>
-                    <li><a href="#">자주묻는 질문</a></li>
-                </ul>
-            </div>
-            <div id="pi_footer_right">
-                <p>문의: 070-4849-6024 (평일 오전 10시 ~ 오후 6시)</p>
-                <p><a href="mailto:works4pi@gmail.com">works4pi@gmail.com</a> | 부산시 부산진구 범일동 306</p>
-                <p>진흥마제스타워 102-2433 | (주)파이웍스 대표 박제규</p>
-                <p>통신판매업 신고 제 2015-부산동구-00154호</p>
-                <p>사업자번호: 816-86-00146</p>
-            </div>            
-        </div>
-    </div>
 @endsection

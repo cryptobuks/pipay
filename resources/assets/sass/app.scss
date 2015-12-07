@@ -1,5 +1,6 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 //Variable
+$pi-control-focus: #63a9ee;
 $architekt-theme-confirm: #63a9ee;
 
 @import "init.scss";
@@ -10,3 +11,4 @@ $architekt-theme-confirm: #63a9ee;
 //Main
 @import "style_common.scss";
 @import "style_main.scss";
+@import "style_login.scss";

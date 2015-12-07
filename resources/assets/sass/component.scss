@@ -5,9 +5,26 @@
 	margin: 0 auto;
 }
 
+.pi-button-container {
+	clear: both;
+	text-align: right;
+
+	> .pi-button {
+		margin-left: 8px;
+	}
+
+	&.pi-button-centralize {
+		text-align: center;
+
+		> .pi-button {
+			margin: 0 4px;
+		}
+	}
+}
+
 $component-basic: darken(#fff, 15%);
 $pi-theme-success: #fff;
-$pi-theme-confirm: #fff;
+$pi-theme-confirm: #63a9ee;
 $pi-theme-warning: #fff;
 $pi-theme-danger: #fff;
 $pi-theme-point: #e2b57a;
@@ -16,6 +33,7 @@ $pi-theme-proceed: #606986;
 .pi-button {
 	display: inline-block;
 	background-color: $component-basic;
+	border: none;
 	text-align: center;
 	color: #000;
 	padding: 8px 16px;
@@ -52,7 +70,36 @@ $pi-theme-proceed: #606986;
 			background-color: darken($pi-theme-proceed, 30%);
 		}
 	}
+
+	&.pi-theme-confirm {
+		background-color: $pi-theme-confirm;
+		color: #fff;
+
+		&:hover {
+			background-color: darken($pi-theme-confirm, 15%);
+		}
+		&:active {
+			background-color: darken($pi-theme-confirm, 30%);
+		}
+	}	
 }
+
+.pi-input {
+	display: inline-block;
+	background-color: #fff;
+	color: #000;
+	border: 1px solid #d2d2d2;
+	padding: 8px;
+	@include createBorderRadius(5px);
+	@include createPlaceholder();
+
+	&:focus {
+		border-color: $pi-control-focus;
+	}
+}
+
+
+
 
 /* Widget definitions */
 
