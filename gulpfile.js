@@ -23,7 +23,6 @@ elixir(function(mix) {
     mix.scripts([
         'jquery-1.11.3.min.js',
         'json2.min.js',
-        'mobile-detect.min.js',
         'socket.io-1.3.5.js',
         //Architekt:
         'architekt.js',
