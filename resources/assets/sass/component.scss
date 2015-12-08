@@ -1,3 +1,7 @@
+.pi-modal {
+	overflow: hidden;
+}
+
 /* Component style definitions */
 .pi-container {
 	position: relative;
@@ -115,6 +119,7 @@ $widget-control-fontColor: #5f6268;
 	left: 0;
 	right: 0;
 	background-color: rgba(56, 61, 79, 0.6);
+	z-index: 210;
 
 	> .architekt-widget-container {
 		position: absolute;

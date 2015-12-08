@@ -46,6 +46,42 @@
     }
 ?>
 
+    <script>
+        Architekt.event.on('ready', function() {
+            function _register() {
+                new Architekt.module.Widget.Confirm({
+                    text: '파이 페이먼트를 이용하시려면 먼저 파이 거래소에 가입하셔야 합니다. 파이 거래소 페이지로 이동하시겠습니까?',
+                    closeText: '취소',
+                    confirmText: '파이 거래소 회원가입',
+                    callback: function() {
+                        window.open('https://www.pi-pay.net/user/register', '_blank');
+                    }
+                });
+            }
+
+            //Register - redirect to pipay site
+            $('#nav_register').click(function() {
+                _register();
+                return false;   
+            });
+            $('#loginRegister').click(function() {
+                $('#nav_register').trigger('click');
+                return false;
+            });
+
+
+            //Gnb
+            var profile = $('#pi_gnb_profile_menu');
+            $('#gnb_profile').click(function() {
+                profile.fadeIn(200);
+                return false;   //prevent default
+            });
+            $('#profile_close > p').click(function() {
+                profile.fadeOut(200);
+            });
+        })
+    </script>
+
     <!-- GNB -->
     <div id="pi_gnb">
         <div class="pi-container">
@@ -54,20 +90,35 @@
             </a>
 
             <ul id="pi_gnb_list">
-                <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
         @if ( ! Sentinel::check())
+            <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
-                <li{{ Request::is('register') ? ' class="active"' : null }}><a href="{{ URL::to('user/register') }}">회원가입</a></li>
+                <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
         @else
-                <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">대시보드</a></li>                    
-                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">제품</a></li>                                   
-                <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">결제</a></li>                                  
-                <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">Leagder</a></li>                                                                           
+                <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
+                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">제품</a></li>
+                <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">결제</a></li>
+                <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">정산내역</a></li>
+                <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">고객센터</a></li>
+                <li{{ Request::is('login') ? ' class="active"' : null }}><a id="gnb_profile" href="{{ URL::to('user/profile') }}"><img src="{{ asset('image/profile_pic.png') }}" /></a></li>
         @endif
             </ul>
+
+        @if (Sentinel::check())
+            <!-- GNB Profile menu -->
+            <div id="pi_gnb_profile_menu">
+                <div id="profile_close">
+                    <p>×</p>
+                </div>
+                <p><strong>최민규</strong> 님으로 로그인하셨습니다.</p>
+                <a href="{{ URL::to('user/profile') }}">정보수정</a>
+                <a href="{{ URL::to('user/logout') }}">로그아웃</a>
+            </div>
+        @endif
+        
         </div>
     </div>
-
+    
     @yield('content')
 
     <!-- Footer -->

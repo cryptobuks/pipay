@@ -1,23 +1,49 @@
 @extends('app')
 
 @section('content')
+	@include('users.setFormHeight')
 
 @if (count($errors) > 0)
 	@include('users.error')
 @else
 	<script>
 		Architekt.event.on('ready', function() {
-			//Get height
-			var h = Architekt.device.height;
-			h -= 80;	//gnb height
-			h -= 143;	//footer height
-			console.log(h);
-			$('#pi_auth > .pi-container').css('height', h + 'px');
-
 			$('#email').focus();
 		});
 	</script>
 @endif
+
+	<script>
+		Architekt.event.on('ready', function() {
+			function _error(text, focus, reset) {
+				new Architekt.module.Widget.Notice({
+					text: text,
+					callback: function() {
+						if(focus) focus.focus();
+						if(reset) reset.val('');
+					}
+				});
+			}
+
+			//validation
+			$('#frmLogin').submit(function() {
+				var email = $('#email');
+				var password = $('#password');
+
+				if(!email.val()) {
+					_error('이메일을 입력해주세요.', email);
+					return false;
+				}
+				else if(!password.val()) {
+					_error('비밀번호를 입력해주세요.', password);
+					return false;
+				}
+
+				return true;
+			});
+		});
+	</script>
+
 	<div id="pi_auth">
 		<div class="pi-container">
 			<form action="{{ url('/user/login') }}" method="post" class="pi-form" id="frmLogin">
@@ -31,7 +57,7 @@
 				
 				<div class="pi-button-container pi-button-centralize">
 					<input class="pi-button pi-theme-confirm" type="submit" value="{{ Lang::get('users.login') }}" />
-					<input class="pi-button" type="button" value="{{ Lang::get('users.register') }}" />
+					<a id="loginRegister" href="/user/register" class="pi-button">{{ Lang::get('users.register') }}</a>
 				</div>
 				
 			</form>

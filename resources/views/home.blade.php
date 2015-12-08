@@ -1,16 +1,38 @@
 @extends('app')
 @section('content')
+    <script>
+        Architekt.event.on('ready', function() {
+            var body = $('body');
+            var howThisWorkLayer = $('#howThisWorkLayer');
+
+            $('#howThisWork').click(function() {
+                body.addClass('pi-modal');          //hide scrollbar
+                $('#howThisWorkLayer').fadeIn();
+            });
+
+            $('#howThisWorkLayer').click(function() {
+                body.removeClass('pi-modal');
+                $('#howThisWorkLayer').fadeOut();
+            });
+        });
+    </script>
+
 	<!-- Main top -->
     <div id="pi_main_top">
         <div class="pi-container">
             <div id="pi_main_top_text">
                 <h1>파이 결제를 시작하고<br />쇼핑몰 매출이 증가하였습니다.</h1>
-                <a href="#" class="pi-button pi-theme-point">파이 결제 받기</a>
-                <p>파이 페이먼트는 어떻게 동작하나요?</p>
+                <a href="{{ URL::to('user/login') }}" class="pi-button pi-theme-point">파이 결제 받기</a>
+                <p id="howThisWork">파이 페이먼트는 어떻게 동작하나요?</p>
             </div>
         </div>
 
         <img id="pi_main_top_yummy" src="image/yummy.png" />
+    </div>
+
+    <!-- How this work -->
+    <div id="howThisWorkLayer" class="architekt-widget-background">
+        <img src="{{ asset('image/howThisWork.png') }}" />
     </div>
 
     <!-- Feature overview -->
@@ -100,7 +122,7 @@
     <!-- Bottom -->
     <div id="pi_main_bottom">
         <div class="pi-container">
-            <a href="#" class="pi-button pi-theme-proceed">파이 결제받기</a>
+            <a href="{{ URL::to('user/login') }}" class="pi-button pi-theme-proceed">파이 결제받기</a>
         </div>
     </div>
 

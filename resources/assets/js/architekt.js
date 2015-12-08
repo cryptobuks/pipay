@@ -278,7 +278,7 @@ window.Architekt = new function ArchitektConstructor() {
 	};
 
 	//Event definitions
-    this.event = new this.EventEmitter([ 'onready', 'onresize', 'onscroll', 'onmodulesloaded' ]);
+    this.event = new this.EventEmitter([ 'onready', 'onresize', 'onscroll', 'onmodulesloaded', 'onpreparing' ]);
 };
 
 //Make Architekt load when window loaded
@@ -286,6 +286,7 @@ events.on(window, 'load', function() {
     Architekt.device.width = window.innerWidth;
     Architekt.device.height = window.innerHeight;
 
+    Architekt.event.fire('onpreparing');
 	Architekt.init();
 }).on(window, 'resize', function(e) {
     Architekt.device.width = window.innerWidth;

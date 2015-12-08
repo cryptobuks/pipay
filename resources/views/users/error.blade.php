@@ -5,16 +5,14 @@
 		$errorString .= $error;
 ?>
 	<script>
-		var errorString = '<?= $errorString ?>';
+		Architekt.event.on('ready', function() {
+			var errorString = '<?= $errorString ?>';
 
-		window.addEventListener('load', function(){
-			new Widget.Notice({
+			new Architekt.module.Widget.Notice({
 				text: errorString,
-				headText: 'Pi-Pay',
-				callback: function(){
+				callback: function() {
 					$('#email').focus();
-				},
-				error: true
+				}
 			});
 		});
 	</script>

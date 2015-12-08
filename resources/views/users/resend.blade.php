@@ -1,50 +1,62 @@
 @extends('app')
 
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Resend E-mail</div>
-				<div class="panel-body">
-					@if (session('status'))
-						<div class="alert alert-success">
-							{{ session('status') }}
-						</div>
-					@endif
+	@include('users.setFormHeight')
 
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
+@if (count($errors) > 0)
+	@include('users.error')
+@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/user/resend') }}">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+@if (session('status'))
+	<script>
+		Architekt.event.on('ready', function() {
+			new Architekt.module.Widget.Notice({
+				text: '{{ session('status') }}'
+			});
+		});
+	</script>
+@endif
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control pi_text" name="email" value="{{ old('email') }}">
-							</div>
-						</div>
+	<script>
+		Architekt.event.on('ready', function() {
+			function _error(text, focus, reset) {
+				new Architekt.module.Widget.Notice({
+					text: text,
+					callback: function() {
+						if(focus) focus.focus();
+						if(reset) reset.val('');
+					}
+				});
+			}
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									ReSend Email
-								</button>
-							</div>
-						</div>
-					</form>
+			$('#frmResend').submit(function() {
+				var email = $('#email');
+
+				if(!email.val()) {
+					_error('이메일을 입력해주세요.', email);
+					return false;
+				}
+
+				return true;
+			});
+		});
+	</script>
+
+	<div id="pi_auth">
+		<div class="pi-container">
+			<form action="{{ url('/user/resend') }}" method="post" class="pi-form" id="frmResend">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+				<h1>Resend Email</h1>
+
+				<input id="email" type="email" class="pi-input" name="email" value="{{ old('email') }}">
+				
+				<div class="pi-button-container pi-button-centralize">
+					<input class="pi-button pi-theme-confirm" type="submit" value="Resend" />
 				</div>
-			</div>
+				
+			</form>
 		</div>
 	</div>
-</div>
+
 @endsection

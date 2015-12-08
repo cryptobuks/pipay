@@ -43,6 +43,10 @@ li {
   src: url("../../font/NanumGothic.woff");
 }
 
+.pi-modal {
+  overflow: hidden;
+}
+
 /* Component style definitions */
 
 .pi-container {
@@ -172,6 +176,7 @@ li {
   left: 0;
   right: 0;
   background-color: rgba(56, 61, 79, 0.6);
+  z-index: 210;
 }
 
 .architekt-widget-background > .architekt-widget-container {
@@ -322,6 +327,101 @@ li {
   border-bottom-color: #1a8cff;
 }
 
+#pi_gnb > .pi-container > #pi_gnb_list > li > a#gnb_profile > img {
+  display: block;
+  height: 16px;
+  margin: 0 auto;
+}
+
+#pi_gnb > .pi-container > #pi_gnb_list > li > a#gnb_profile.on,
+#pi_gnb > .pi-container > #pi_gnb_list > li > a#gnb_profile:hover {
+  border-bottom: none;
+  background-color: #e6e6e6;
+}
+
+#pi_gnb_profile_menu {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 4px;
+  bottom: unset;
+  left: unset;
+  z-index: 201;
+  background-color: #fff;
+  padding: 8px;
+  cursor: default;
+  border: 1px solid #959595;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -o-border-radius: 10px;
+  -ms-border-radius: 10px;
+}
+
+#pi_gnb_profile_menu > * {
+  display: block;
+}
+
+#pi_gnb_profile_menu > #profile_close {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  bottom: unset;
+  left: unset;
+}
+
+#pi_gnb_profile_menu > #profile_close > p {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  padding: 3px;
+  color: #000;
+  font-size: 10px;
+  line-height: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+}
+
+#pi_gnb_profile_menu > #profile_close > p:hover {
+  background-color: #e6e6e6;
+}
+
+#pi_gnb_profile_menu > p {
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+#pi_gnb_profile_menu > p > strong {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#pi_gnb_profile_menu > p > strong:hover {
+  text-decoration: underline;
+}
+
+#pi_gnb_profile_menu > a {
+  width: 80%;
+  margin: 0 auto;
+  padding: 4px;
+  color: #000;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+#pi_gnb_profile_menu > a:hover {
+  color: #4D92D8;
+  border-bottom: 1px solid #acd5fe;
+}
+
 #pi_footer {
   background-color: #383d4f;
   width: 100%;
@@ -384,6 +484,7 @@ li {
   position: relative;
   background-image: url("../../image/background.png");
   background-repeat: no-repeat;
+  background-attachment: fixed;
   background-size: cover;
   width: 100%;
   height: 800px;
@@ -529,10 +630,31 @@ li {
   font-size: 24px;
 }
 
+#howThisWorkLayer {
+  display: none;
+  cursor: pointer;
+}
+
+#howThisWorkLayer > img {
+  position: absolute;
+  top: 50%;
+  right: unset;
+  bottom: unset;
+  left: 50%;
+  height: 500px;
+  width: 700px;
+  margin-top: -250px;
+  margin-left: -350px;
+}
+
 #pi_auth {
   background-color: #f4f5f5;
   width: 100%;
   padding-top: 80px;
+}
+
+#pi_auth > .pi-container {
+  height: 300px;
 }
 
 #pi_auth > .pi-container > .pi-form {

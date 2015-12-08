@@ -42,10 +42,87 @@
 						border-bottom-color: darken(#99ccff, 25%);
 					}
 				}
+				> a#gnb_profile {
+					> img {
+						display: block;
+						height: 16px;
+						margin: 0 auto;
+					}
+
+					&.on, &:hover {
+						border-bottom: none;
+						background-color: darken(#fff, 10%);
+					}
+				}
 			}
 		}
 	}
 }
+
+#pi_gnb_profile_menu {
+	display: none;
+	@include createPosition(absolute, 20px, 4px, unset, unset);
+	z-index: 201;
+	background-color: #fff;
+	padding: 8px;
+	cursor: default;
+	border: 1px solid #959595;
+	@include createBorderRadius(10px);
+
+	> * {
+		display: block;
+	}
+	> #profile_close {
+		@include createPosition(absolute, -20px, 0, unset, unset);
+
+		> p {
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			padding: 3px;
+			color: #000;
+			font-size: 10px;
+			line-height: 10px;
+			text-align: center;
+			cursor: pointer;
+			border: 1px solid #000;
+			@include createBorderRadius(3px);
+
+			&:hover {
+				background-color: darken(#fff, 10%);
+			}
+		}
+	}
+	> p {
+		font-size: 12px;
+		margin-bottom: 8px;
+		text-align: center;
+
+		> strong {
+			font-size: 12px;
+			font-weight: bold;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	> a {
+		width: 80%;
+		margin: 0 auto;
+		padding: 4px;
+		color: #000;
+		text-align: center;
+		cursor: pointer;
+		border-bottom: 1px solid darken(#fff, 10%);
+
+		&:hover {
+			color: #4D92D8;
+			border-bottom: 1px solid #acd5fe;
+		}
+	}
+}
+
 
 #pi_footer {
 	background-color: #383d4f;
