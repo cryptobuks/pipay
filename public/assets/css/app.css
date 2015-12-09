@@ -342,84 +342,50 @@ li {
 #pi_gnb_profile_menu {
   display: none;
   position: absolute;
-  top: 20px;
+  top: 80px;
   right: 4px;
   bottom: unset;
   left: unset;
   z-index: 201;
-  background-color: #fff;
-  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
   cursor: default;
   border: 1px solid #959595;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -o-border-radius: 10px;
-  -ms-border-radius: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
 }
 
 #pi_gnb_profile_menu > * {
   display: block;
 }
 
-#pi_gnb_profile_menu > #profile_close {
-  position: absolute;
-  top: -20px;
-  right: 0;
-  bottom: unset;
-  left: unset;
+#pi_gnb_profile_menu > div {
+  padding: 16px;
+  background-color: rgba(204, 204, 204, 0.8);
 }
 
-#pi_gnb_profile_menu > #profile_close > p {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  padding: 3px;
-  color: #000;
+#pi_gnb_profile_menu > div > h1 {
+  font-size: 14px;
+  color: #333333;
+}
+
+#pi_gnb_profile_menu > div > p {
   font-size: 10px;
-  line-height: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid #000;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  -ms-border-radius: 3px;
-}
-
-#pi_gnb_profile_menu > #profile_close > p:hover {
-  background-color: #e6e6e6;
-}
-
-#pi_gnb_profile_menu > p {
-  font-size: 12px;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-#pi_gnb_profile_menu > p > strong {
-  font-size: 12px;
-  font-weight: bold;
-}
-
-#pi_gnb_profile_menu > p > strong:hover {
-  text-decoration: underline;
+  color: #333333;
 }
 
 #pi_gnb_profile_menu > a {
-  width: 80%;
-  margin: 0 auto;
-  padding: 4px;
-  color: #000;
-  text-align: center;
+  padding: 16px;
+  color: #4D92D8;
   cursor: pointer;
-  border-bottom: 1px solid #e6e6e6;
 }
 
 #pi_gnb_profile_menu > a:hover {
-  color: #4D92D8;
-  border-bottom: 1px solid #acd5fe;
+  color: #2b78c7;
+  background-color: rgba(170, 195, 225, 0.8);
 }
 
 #pi_footer {

@@ -22,7 +22,7 @@
     <?php
 
         if(Session::has('flash_message')) $text = Session::get('flash_message');
-        else if(Session::has('flash_notification')) $text = Session::get('flash_notification.message');
+        else if(Session::has('flash_notification.message')) $text = Session::get('flash_notification.message');
 
     ?>
 
@@ -71,11 +71,8 @@
             //Gnb
             var profile = $('#pi_gnb_profile_menu');
             $('#gnb_profile').click(function() {
-                profile.fadeIn(200);
+                profile.stop(true, true).fadeToggle(200);
                 return false;   //prevent default
-            });
-            $('#profile_close > p').click(function() {
-                profile.fadeOut(200);
             });
         })
     </script>
@@ -105,10 +102,11 @@
         @if (Sentinel::check())
             <!-- GNB Profile menu -->
             <div id="pi_gnb_profile_menu">
-                <div id="profile_close">
-                    <p>×</p>
+                <div>
+                    <h1>최민규</h1>
+                    <p>rico345100@gmail.com</p>
                 </div>
-                <p><strong>최민규</strong> 님으로 로그인하셨습니다.</p>
+
                 <a href="{{ URL::to('user/profile') }}">정보수정</a>
                 <a href="{{ URL::to('user/logout') }}">로그아웃</a>
             </div>

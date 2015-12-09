@@ -60,65 +60,41 @@
 }
 
 #pi_gnb_profile_menu {
+	$opac: 0.8;
+
 	display: none;
-	@include createPosition(absolute, 20px, 4px, unset, unset);
+	@include createPosition(absolute, 80px, 4px, unset, unset);
 	z-index: 201;
-	background-color: #fff;
-	padding: 8px;
+	background-color: rgba(255, 255, 255, $opac);
 	cursor: default;
 	border: 1px solid #959595;
-	@include createBorderRadius(10px);
+	margin-bottom: 8px;
+	@include createBorderRadius(5px);
 
 	> * {
 		display: block;
 	}
-	> #profile_close {
-		@include createPosition(absolute, -20px, 0, unset, unset);
+	> div {
+		padding: 16px;
+		background-color: rgba(204, 204, 204, $opac);
 
-		> p {
-			display: inline-block;
-			width: 16px;
-			height: 16px;
-			padding: 3px;
-			color: #000;
-			font-size: 10px;
-			line-height: 10px;
-			text-align: center;
-			cursor: pointer;
-			border: 1px solid #000;
-			@include createBorderRadius(3px);
-
-			&:hover {
-				background-color: darken(#fff, 10%);
-			}
+		> h1 {
+			font-size: 14px;
+			color: lighten(#000, 20%);
 		}
-	}
-	> p {
-		font-size: 12px;
-		margin-bottom: 8px;
-		text-align: center;
-
-		> strong {
-			font-size: 12px;
-			font-weight: bold;
-
-			&:hover {
-				text-decoration: underline;
-			}
+		> p {
+			font-size: 10px;
+			color: lighten(#000, 20%);
 		}
 	}
 	> a {
-		width: 80%;
-		margin: 0 auto;
-		padding: 4px;
-		color: #000;
-		text-align: center;
+		padding: 16px;
+		color: #4D92D8;
 		cursor: pointer;
-		border-bottom: 1px solid darken(#fff, 10%);
 
 		&:hover {
-			color: #4D92D8;
-			border-bottom: 1px solid #acd5fe;
+			color: darken(#4D92D8, 10%);
+			background-color: rgba(170, 195, 225, $opac);
 		}
 	}
 }
