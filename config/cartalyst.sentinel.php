@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'session' => 'cartalyst_sentinel',
+    'session' => 'payall_pi_awesome',
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     |
     */
 
-    'cookie' => 'cartalyst_sentinel',
+    'cookie' => 'payall_pi_awesome',
 
     /*
     |--------------------------------------------------------------------------
