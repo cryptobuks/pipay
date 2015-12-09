@@ -90,7 +90,7 @@
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
         @else
-                <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
+                <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">홈</a></li>
                 <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">제품</a></li>
                 <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">결제</a></li>
                 <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">정산내역</a></li>

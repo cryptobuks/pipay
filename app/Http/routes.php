@@ -12,6 +12,7 @@
 */
 
 Route::get('/', ['as' => 'home.index', 'uses' => 'HomeController@index'] );
+Route::get('dashboard', ['as' => 'home.dashboard', 'uses' => 'HomeController@dashboard'] );
 
 // login routes
 $router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getLogin']);
