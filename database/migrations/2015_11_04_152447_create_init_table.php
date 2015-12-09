@@ -205,7 +205,7 @@ class CreateInitTable extends Migration
         });
 
         // 파이 결제 계정  장부 
-        Schema::create('legders', function (Blueprint $table) {
+        Schema::create('ledgers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();            
             $table->integer('account_id')->unsigned();                        
