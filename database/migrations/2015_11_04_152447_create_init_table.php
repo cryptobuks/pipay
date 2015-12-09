@@ -243,7 +243,6 @@ class CreateInitTable extends Migration
         Schema::create('users_profile', function (Blueprint $table) {
             $table->integer('user_id')->unsigned()->primary();            
             $table->string('email');
-            $table->timestamp('last_login')->nullable();
             $table->string('username')->nullable();
             $table->string('cellphone' , 32 )->nullable();            
             $table->smallInteger('level' )->nullable();
