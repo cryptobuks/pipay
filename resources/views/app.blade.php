@@ -86,15 +86,15 @@
 
             <ul id="pi_gnb_list">
         @if ( ! Sentry::check())
-            <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
+                <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
         @else
                 <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
-                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">제품</a></li>
-                <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">결제</a></li>
-                <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">정산내역</a></li>
-                <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">고객센터</a></li>
+                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/product') }}">제품</a></li>
+                <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/payment') }}">결제</a></li>
+                <li{{ Request::is('ledger') ? ' class="active"' : null }}><a href="{{ URL::to('/ledger') }}">정산내역</a></li>
+                <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/support') }}">고객센터</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a id="gnb_profile" href="{{ URL::to('user/profile') }}"><img src="{{ asset('image/profile_pic.png') }}" /></a></li>
         @endif
             </ul>
@@ -103,8 +103,8 @@
             <!-- GNB Profile menu -->
             <div id="pi_gnb_profile_menu">
                 <div>
-                    <h1>최민규</h1>
-                    <p>rico345100@gmail.com</p>
+                    <h1>{{ $user->username }}</h1>
+                    <p>{{ $user->email }}</p>
                 </div>
 
                 <a href="{{ URL::to('user/profile') }}">정보수정</a>
@@ -114,7 +114,7 @@
         
         </div>
     </div>
-    
+
     @yield('content')
 
     <!-- Footer -->
@@ -123,9 +123,9 @@
             <div id="pi_footer_left">
                 <img src="{{ asset('image/footer_logo.png') }}" />
                 <ul id="pi_footer_nav">
-                    <li><a href="#">파이페이</a></li>
-                    <li><a href="#">이용약관</a></li>
-                    <li><a href="#">자주묻는 질문</a></li>
+                    <li><a href="https://www.pi-pay.net/" target="_blank">파이페이</a></li>
+                    <li><a href="/agreement">이용약관</a></li>
+                    <li><a href="/faq">자주묻는 질문</a></li>
                 </ul>
             </div>
             <div id="pi_footer_right">
