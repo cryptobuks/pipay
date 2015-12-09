@@ -125,7 +125,7 @@ class UserController extends Controller
                         ));
 
             //flash()->overlay( $result['message']  , 'Message');
-            return redirect('dashboard');
+            return redirect('/');
         } else {
             return redirect($this->loginPath())
                 ->withInput($request->only('email', 'remember'))
