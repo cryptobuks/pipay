@@ -240,6 +240,25 @@ class CreateInitTable extends Migration
 
         });
 
+        Schema::create('users_profile', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->primary();            
+            $table->string('email');
+            $table->timestamp('last_login')->nullable();
+            $table->string('username')->nullable();
+            $table->string('cellphone' , 32 )->nullable();            
+            $table->smallInteger('level' )->nullable();
+            $table->integer('category' )->nullable();            
+            $table->tinyInteger('shop_type' )->nullable(); 
+            $table->string('company' )->nullable();   
+            $table->string('website' )->nullable();             
+            $table->string('phone' )->nullable();     
+            $table->string('logo' )->nullable();                 
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->unique('email');
+        });
+
 
         Schema::create('two_factors', function($table)
         {
@@ -278,6 +297,7 @@ class CreateInitTable extends Migration
         Schema::drop('accounts');         
         Schema::drop('ledgers'); 
         Schema::drop('users_key');
+        Schema::drop('users_profile');        
         Schema::drop('two_factors');        
 
     }

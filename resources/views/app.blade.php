@@ -36,10 +36,10 @@
 @endif
 
 <?php
-    $loggedIn = Sentinel::check();
+    $loggedIn = Sentry::check();
     
     if($loggedIn){
-        $user = Sentinel::getUser();
+        $user = Sentry::getUser();
         $username = $user->username ? $user->username : $user->email;
     }
 ?>
@@ -88,7 +88,7 @@
             </a>
 
             <ul id="pi_gnb_list">
-        @if ( ! Sentinel::check())
+        @if ( ! Sentry::check())
             <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
@@ -102,7 +102,7 @@
         @endif
             </ul>
 
-        @if (Sentinel::check())
+        @if (Sentry::check())
             <!-- GNB Profile menu -->
             <div id="pi_gnb_profile_menu">
                 <div id="profile_close">

@@ -1,12 +1,17 @@
-<?php
-
-namespace App\Http\Middleware;
+<?php namespace App\Http\Middleware;
 
 use Closure;
-use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Cartalyst\Sentry\Sentry;
+use Illuminate\Http\RedirectResponse;
 
-class RedirectIfAuthenticated
-{
+class RedirectIfAuthenticated {
+
+    /**
+     * The Guard implementation.
+     *
+     * @var Guard
+     */
+    protected $sentry;
 
     /**
      * Create a new filter instance.
@@ -14,9 +19,9 @@ class RedirectIfAuthenticated
      * @param  Guard  $auth
      * @return void
      */
-    public function __construct()
+    public function __construct(Sentry $sentry)
     {
-
+        $this->sentry = $sentry;
     }
 
     /**
@@ -28,10 +33,14 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next)
     {
-        if( $user = Sentinel::check() ) {        
-            return redirect('/');
+        /*
+        if (!$this->sentry->check())
+        {
+            return new RedirectResponse(url('/'));
         }
+        */
 
         return $next($request);
     }
+
 }

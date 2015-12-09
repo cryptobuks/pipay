@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
-use Cartalyst\Sentinel\Laravel\Facades\Activation;
-use Cartalyst\Sentinel\Laravel\Facades\Reminder;
-use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
-use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
+use Cartalyst\Sentry\Sentry;
+use Cartalyst\Sentry\Users\UserExistsException;
+use Cartalyst\Sentry\Users\LoginRequiredException;
+use Cartalyst\Sentry\Users\PasswordRequiredException;
+use Cartalyst\Sentry\Users\UserNotFoundException;
 use Exception;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Session;
@@ -21,18 +21,32 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
+
+    protected $sentry;
+    protected $throttleProvider;    
 
     /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct( Sentry $sentry )
     {
-        $this->middleware( 'auth' , ['only' => 'create' ] );
+
+        $this->sentry = $sentry;
+
+        // Get the Throttle Provider
+        $this->throttleProvider = $this->sentry->getThrottleProvider();
+
+        // Enable the Throttling Feature
+        $this->throttleProvider->enable();
+
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' ] );
     }
 
     /**
@@ -42,11 +56,14 @@ class UserController extends Controller
      */
     public function getLogin()
     {
-        if( $user = Sentinel::check() ) {
-            return new RedirectResponse( url('/') );
-        } else {
-            return view('users.login');
+
+        if ($this->sentry->check())
+        {
+            return new RedirectResponse(url('/'));
         }
+
+        return view('users.login');
+
     }
 
     public function postLogin(Request $request )
@@ -61,55 +78,53 @@ class UserController extends Controller
         $result['success'] = false;
         $result['message'] = '';
 
-        try 
+        try
         {
-            $credentials = [
-                'email'    => $input['email'],
-                'password' => $input['password'],
-            ];
+            $credentials = $request->only('email','password');
 
-            if( $auth = Sentinel::authenticate($credentials , $request->has('remember') ) )
-            {
-                $user = Sentinel::check();
+            //Check for suspension or banned status
+            $user = $this->sentry->getUserProvider()->findByLogin( $credentials['email'] );
+            $throttle = $this->throttleProvider->findByUserId($user->id);
+            $throttle->check();
 
-                if( $user ) {
-                    $result['success'] = true;
-                    $result['message'] = trans('users.loggedIn') ;  //'You are now logged in ';         
-                } else {
-                    $result['success'] = false;
-                    $result['message'] = trans('users.invalid') ;    
-                }
-            }
-
+            // Try to authenticate the user
+            $user = $this->sentry->authenticate($credentials , $request->has('remember') );
+            $result['success'] = true;
+            $result['message'] = trans('users.loggedIn') ;  //'You are now logged in ';         
 
         }
-        catch (NotActivatedException $e)
+        catch(\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
-            $errors = 'Account is not activated!';
-            return Redirect::to('/user/resend')->with('user', $e->getUser());
+            $result['success'] = false;         
+            $result['message'] =  trans('users.invalid');  
         }
-        catch (ThrottlingException $e)
+        catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
         {
-            $delay = $e->getDelay();
-            $result['success'] = false;            
-            $result['message'] = "Your account is blocked for {$delay} second(s).";
-        }        
-        catch( Exception $e)
-        {
-            $result['success'] = false;
-            $result['message'] = trans('users.invalid') ;  
+            $result['success'] = false;     
+            $url = route('user.resend');
+            $result['message'] = trans('users.notactive' , ['url' => $url] );   
         }
 
-        //dd( $result );
+        // The following is only required if throttle is enabled
+        catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e)
+        {
+            $result['success'] = false;         
+            $result['message'] = trans('users.suspended'); 
+        }
+        catch (\Cartalyst\Sentry\Throttling\UserBannedException $e)
+        {
+            $result['success'] = false;         
+            $result['message'] = trans('users.banned');             
+        }
 
         if ( $result['success']  ) 
         {
+                    Event::fire('user.login', array(
+                            'userId' => $user->getId(),
+                            'email' => $user->email
+                        ));
 
-            Event::fire('users.login', array(
-                    'userId' => $user->id,
-                    'email' => $user->email
-             ));
-
+            //flash()->overlay( $result['message']  , 'Message');
             return redirect('/');
         } else {
             return redirect($this->loginPath())
@@ -129,10 +144,35 @@ class UserController extends Controller
 
      public function getLogout()
      {
-        Sentinel::logout();
+        $this->sentry->logout();
         Event::fire('users.logout');        
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');      
      }
+
+     /**
+     * Delete a user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+     public function postDelete(Request $request , $id )
+     {
+        try
+        {
+            $user = $this->sentry->findUserById($id);
+            $user->delete();
+
+        } catch(UserNotFoundException $e)
+        {
+            flash()->overlay( trans('users.unableDelete')  , 'Message');
+            return redirect($this->redirectPath());
+        }
+
+        flash()->overlay( trans('users.deletedUser')  , 'Message');
+        return redirect($this->redirectPath());
+
+     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -141,8 +181,9 @@ class UserController extends Controller
      */
     public function getRegister()
     {
-        if( $user = Sentinel::check() ) {
-            return new RedirectResponse( url('/') );
+        if ($this->sentry->check())
+        {
+            return new RedirectResponse(url('/'));
         }
         
         return view( 'users.register' );
@@ -173,27 +214,28 @@ class UserController extends Controller
 
             // User created.
             $input['activated'] = false;
+            $user = $this->sentry->register( $input );
 
-            $credentials = [
-                'email'    => $input['email'] ,
-                'password' => $input['password'] ,
-            ];
-
-            if( $user = Sentinel::register($credentials) ) 
+            // Update group memberships
+            $allGroups = $this->sentry->getGroupProvider()->findAll();
+            foreach ($allGroups as $group)
             {
-                $activation = Activation::create($user);
-                $code =  $activation->code;
+                if ( $group->id == 1 ) 
+                {
+                    $user->addGroup($group);
+                }
+            }
 
-                $user->permissions = [
-                    'user.create' => true,
-                    'user.delete' => false,
-                ];
+            // Account created to each currency.
+            $currencies = Currency::all();
+            foreach( $currencies as $currency )  Account::create( [ 'user_id' => $user->id , 'currency_id' => $currency->id , 'balance' => 0 , 'locked' => 0  ] );
 
-                // success!
-                // You get activation code and email send to you before you click activation link.
-                $result['success'] = true;
-                $result['message'] = trans('users.created'); 
-            
+            // success!
+            // You get activation code and email send to you before you click activation link.
+            $result['success'] = true;
+            $result['message'] = trans('users.created'); 
+            $code = $user->GetActivationCode(); 
+                
                 $mail = [
                     'email' => $user->email ,               
                     'url' => URL::to(Config::get('app.url','/')),
@@ -201,27 +243,25 @@ class UserController extends Controller
                 ];
 
                 Event::fire('user.signup', $mail  );
-
                 DB::commit();                
-            } else {
-                DB::rollback();                
-                throw new Exception( 'users.exception' );
-            }
-                
-        } catch( Exception $e ) {
-            $result['success'] = false;  
-            $result['message'] = trans('users.notactivated');
+        }         
+        catch (LoginRequiredException $e)
+        {
+            DB::rollback();                            
+            $result['success'] = false;
+            $result['message'] = trans('users.loginreq');   
+        }       
+        catch (UserExistsException $e)
+        {
+            DB::rollback();                                        
+            $result['success'] = false;
+            $result['message'] = trans('users.exists');  
         }
 
         flash()->overlay( $result['message']  , 'Message');
 
-        if( $result['success'] == false ) {
-            return Redirect::to('/user/register')
-            ->withInput()
-            ->withErrors('Failed to register.');
-        } else {
-            return Redirect::to('/');
-        }
+        return redirect($this->redirectPath());
+
     }
 
     /**
@@ -232,10 +272,18 @@ class UserController extends Controller
     public function getProfile()
     {
 
-        $user = Sentinel::getUser();
-        if( !$user ) {
+      try{
+            $user = $this->sentry->getUser();
+            if(!$user)
+            {
+                flash()->overlay( trans('users.notfound') , 'Message' );
+                return redirect($this->redirectPath());
+            }
+        }
+        catch (UserNotFoundException $e)
+        {
             flash()->overlay( trans('users.notfound') , 'Message' );
-            return redirect($this->redirectPath());
+            return redirect($this->redirectPath());         
         }
 
         return view( 'users.profile' , compact('user') );
@@ -252,9 +300,6 @@ class UserController extends Controller
         $input = $request->all();
 
         $this->validate( $request , [
-            'old_password' => 'required|min:6',
-            'new_password' => 'required|min:6|confirmed',
-            'new_password_confirmation' => 'required' ,
             'category' => 'required' ,
             'shop_type' => 'required' ,                       
             'company' => 'required' ,                                   
@@ -264,27 +309,38 @@ class UserController extends Controller
 
         try{
             
-            $user = Sentinel::getUser();
+            $user = $this->sentry->getUserProvider()->findById( $id );
+        
+            $user->category = e( $input['category'] );
+            $user->shop_type = e( $input['shop_type'] );
+            $user->company = e( $input['company'] );
+            $user->website = e( $input['website'] );
+            $user->phone = e( $input['phone'] );                                    
 
-            $data = [
-                'password' => $input['new_password'],
-                'category' => $input['category'],
-                'shop_type' => $input['shop_type'],
-                'company' => $input['company'] ,                            
-                'website' => $input['website'] ,
-                'phone' => $input['phone'] ,
-            ];
+            if ($user->save())
+            {
+                // User saved
+                $result['success'] = true;
+                $result['message'] =  trans('users.update_profile'); 
+            }
+            else
+            {
+                // User not saved
+                $result['success'] = false;                 
+                $result['message'] = trans('users.failed_profile'); 
+            }
 
-            Sentinel::update( $user , $data );
-
-            $result['success'] = true;
-            $result['message'] =  trans('users.update_profile');             
-
-        } catch( Exception $e) {
-            $result['success'] = false;
-            $result['message'] = trans('users.notfound');             
         }
-
+        catch (UserExistsException $e)
+        {
+            $result['success'] = false;
+            $result['message'] = trans('users.loginExists'); 
+        }
+        catch (UserNotFoundException $e)
+        {
+            $result['success'] = false;         
+            $result['message'] = trans('users.notfound'); 
+        }       
 
         flash()->overlay( $result['message']  , 'Message' );                
         return Redirect::action('UserController@getProfile');
@@ -309,24 +365,39 @@ class UserController extends Controller
         $result = array();
 
         try{
+            $user = $this->sentry->findUserById($id);
+            //print_r($user);
+                
+            if($user->attemptActivation($code))
+            {
+                $result['success'] = true;  
+                $url = URL::route('user.login');            
+                $result['message'] =  trans('users.activated', array('url' => $url));
+            } 
+            else 
+            {
+                $result['success'] = false;                             
+                $result['message']  =trans('users.notactivated');
+            }
 
-                $user = Sentinel::findById($id);
-                if ( ! Activation::complete($user, $code))
-                {
-                    $result['success'] = false;                             
-                    $result['message']  = trans('users.notactivated');
-                } else {
-                    $result['success'] = true;  
-                    $url = URL::route('user.login');            
-                    $result['message'] =  trans('users.activated', array('url' => $url));
-                }
-
-        } catch( Exception $e ) {
-               $result['success'] = false;  
-               $result['message'] = trans('users.notactivated');
+        }
+        catch(\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+        {
+            $result['success'] = false;                             
+            $result['message']  = trans('users.alreadyactive');
+        }
+        catch(\Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
+            $result['success'] = false;                             
+            $result['message']  = trans('users.exists');
+        }
+        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
+        {
+            $result['success'] = false;
+                $result['message'] =  trans('users.notfound');
         }
         
-        if( $result['success'] == true ) 
+        if( $result['success'] ) 
         {
             flash()->overlay( $result['message']  , 'Success');
         }
@@ -361,7 +432,6 @@ class UserController extends Controller
         $input = $request->all();
         $result = array();
 
-
         if ( ! $user = Sentinel::check())
         {
             return Redirect::to('/user/login');
@@ -387,6 +457,7 @@ class UserController extends Controller
         flash()->overlay( $result['message'] , 'Message');
 
         return redirect($this->redirectPath());
+
      }   
 
      /**
@@ -409,7 +480,7 @@ class UserController extends Controller
      public function postReset(Request $request)
      {
         $input = $request->all();
-        $reslt = array();
+        $result = array();
 
         try
         {
@@ -464,34 +535,26 @@ class UserController extends Controller
         ]);
 
         $result = array();
+
         try
         {
+            $user = $this->sentry->getUserProvider()->findByLogin(e($input['email']));
 
-                $user = Sentinel::findByCredentials(compact('email'));
-
-                if ( ! $user)
-                {
-                    throw new Exception( 'users.notfound' );
-                }
-
-               $reminder = Reminder::exists($user) ?: Reminder::create($user);
-               $code = $reminder->code;
-
-               $result['success'] = true;
-               $result['message'] = trans('users.emailinfo');
-               $mail = [
+            $result['success'] = true;
+                $result['message'] = trans('users.emailinfo');
+                $mail = [
                     'email' => e($input['email'])  , 
-                    'userId' => $user->id ,
+                    'userId' => $user->getId() ,
                     'resetCode' => $user->getResetPasswordCode() 
-               ] ;
+                 ] ;
 
-               Event::fire('user.forgot', $mail );
+                    Event::fire('user.forgot', $mail );
 
-         }
-         catch (Exception $e)
+            }
+                catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
-                $result['success'] = false;
-                $result['message'] = trans( $e->getMessage() );
+            $result['success'] = false;
+                $result['message'] = trans('users.notfound');
         }
 
         if($result['success'])
@@ -504,6 +567,7 @@ class UserController extends Controller
                     'email' => $result['message'] ,
             ]);
         }
+
 
      }
 
