@@ -125,7 +125,7 @@ class UserController extends Controller
                         ));
 
             //flash()->overlay( $result['message']  , 'Message');
-            return redirect('/');
+            return redirect('dashboard');
         } else {
             return redirect($this->loginPath())
                 ->withInput($request->only('email', 'remember'))
@@ -286,7 +286,9 @@ class UserController extends Controller
             return redirect($this->redirectPath());         
         }
 
-        return view( 'users.profile' , compact('user') );
+        $user_categories = Config::get('common.user_categories');
+
+        return view( 'users.profile' , compact('user' , 'user_categories' ) );
     }
 
     /**

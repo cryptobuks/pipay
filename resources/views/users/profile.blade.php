@@ -50,31 +50,6 @@
 				<div class="col-md-2 hidden-xs"></div>
 			</div>
 
-
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.oldpw') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="password" id="password" class="pi_text{{ !empty($errors->get('old_password')) ? ' pi_error' : '' }}" name="old_password">
-				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
-
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('user.npw') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="password" id="new_password" class="pi_text{{ !empty($errors->get('new_password')) ? ' pi_error' : '' }}" name="new_password">
-				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
-
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('user.npwc') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="password" id="new_password_confirmation" class="pi_text{{ !empty($errors->get('new_password_confirmation')) ? ' pi_error' : '' }}" name="new_password_confirmation">
-				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
-
 			<div class="form-group">
 				<div class="col-md-2"></div>
 				<div class="col-md-8 col-xs-12">

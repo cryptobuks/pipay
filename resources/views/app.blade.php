@@ -90,11 +90,19 @@
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
         @else
+<<<<<<< HEAD
                 <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/product') }}">제품</a></li>
                 <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/payment') }}">결제</a></li>
                 <li{{ Request::is('ledger') ? ' class="active"' : null }}><a href="{{ URL::to('/ledger') }}">정산내역</a></li>
                 <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/support') }}">고객센터</a></li>
+=======
+                <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">홈</a></li>
+                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">제품</a></li>
+                <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">결제</a></li>
+                <li{{ Request::is('leagder') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">정산내역</a></li>
+                <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">고객센터</a></li>
+>>>>>>> f2963c5278d4a258b8b533f02e1f008f03631e6c
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a id="gnb_profile" href="{{ URL::to('user/profile') }}"><img src="{{ asset('image/profile_pic.png') }}" /></a></li>
         @endif
             </ul>
