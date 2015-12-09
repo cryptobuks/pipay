@@ -21,10 +21,8 @@
 @if (Session::has('flash_message') || Session::has('flash_notification.message'))
     <?php
 
-        $text = '';
-
         if(Session::has('flash_message')) $text = Session::get('flash_message');
-        else if(Session::has('flash_notification')) $text = Session::get('flash_notification');
+        else if(Session::has('flash_notification')) $text = Session::get('flash_notification.message');
 
     ?>
 
