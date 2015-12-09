@@ -1,10 +1,8 @@
 <?php namespace App;
 
-use Cartalyst\Sentry\Groups\GroupInterface;
-use Cartalyst\Sentry\Users\Eloquent\User as SentryUser;
-use McCool\LaravelAutoPresenter\HasPresenter;
+use Cartalyst\Sentry\Groups\Eloquent\Group as SentryGroup;
 
-class User extends SentryUser  {
+class Group extends SentryGroup  {
 
 
 	/**
@@ -19,14 +17,14 @@ class User extends SentryUser  {
 	 *
 	 * @var string
 	 */
-	protected $table = 'users';
+	protected $table = 'groups';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['username', 'email', 'password'];
+	protected $fillable = ['name', 'permissions'];
 
 
 	/**
@@ -34,7 +32,7 @@ class User extends SentryUser  {
 	 *
 	 * @var array
 	 */
-	public static $index = ['id', 'email', 'username'];
+	public static $index = [ 'id' , 'name' ];
 	/**
 	 * The max users per page when displaying a paginated index.
 	 *
@@ -60,12 +58,8 @@ class User extends SentryUser  {
 	 * @var array
 	 */
 	public static $rules = [
-	    'username'            => 'required|min:2|max:128',
-	    'email'                 => 'required|min:4|max:128|email',
-	    'password'              => 'required|min:6|confirmed',
-	    'password_confirmation' => 'required',
-	    'activated'             => 'required',
-	    'activated_at'          => 'required',
+	    'name'            => 'required|min:2|max:128',
+	    'permissions'                 => 'required',
 	];
 
 	/**

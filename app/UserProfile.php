@@ -4,14 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserKey extends Model
+class UserProfile extends Model
 {
+
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'users_key';
+	protected $table = 'users_profile';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -19,7 +20,8 @@ class UserKey extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'user_id', 'live_api_key', 'test_api_key' ,
+		'user_id' , 'email', 'category', 'shop_type', 'company', 'website' , 'phone' , 'logo' ,
 	];
-    
+
+
 }

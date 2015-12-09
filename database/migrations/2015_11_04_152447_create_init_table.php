@@ -205,7 +205,7 @@ class CreateInitTable extends Migration
         });
 
         // 파이 결제 계정  장부 
-        Schema::create('legders', function (Blueprint $table) {
+        Schema::create('ledgers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();            
             $table->integer('account_id')->unsigned();                        
@@ -238,6 +238,24 @@ class CreateInitTable extends Migration
             $table->unique( 'live_api_key' );
             $table->unique( 'test_api_key' );            
 
+        });
+
+        Schema::create('users_profile', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->primary();            
+            $table->string('email');
+            $table->string('username')->nullable();
+            $table->string('cellphone' , 32 )->nullable();            
+            $table->smallInteger('level' )->nullable();
+            $table->integer('category' )->nullable();            
+            $table->tinyInteger('shop_type' )->nullable(); 
+            $table->string('company' )->nullable();   
+            $table->string('website' )->nullable();             
+            $table->string('phone' )->nullable();     
+            $table->string('logo' )->nullable();                 
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->unique('email');
         });
 
 
@@ -278,6 +296,7 @@ class CreateInitTable extends Migration
         Schema::drop('accounts');         
         Schema::drop('ledgers'); 
         Schema::drop('users_key');
+        Schema::drop('users_profile');        
         Schema::drop('two_factors');        
 
     }

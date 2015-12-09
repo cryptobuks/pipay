@@ -151,8 +151,8 @@ return [
         LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
         Propaganistas\LaravelPhone\LaravelPhoneServiceProvider::class,
-        Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class ,
         Vinkla\Hashids\HashidsServiceProvider::class , 
+        Cartalyst\Sentry\SentryServiceProvider::class,        
     ],
 
     /*
@@ -209,10 +209,8 @@ return [
         'Form'      => Illuminate\Html\FormFacade::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
-        'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class ,
-        'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class ,
-        'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class ,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class , 
+        'Sentry' => Cartalyst\Sentry\Facades\Laravel\Sentry::class,        
     ],
 
 ];

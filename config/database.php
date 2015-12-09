@@ -86,6 +86,24 @@ return [
             'strict'    => false,
         ],
 
+        'pi' => [
+            'driver'    => 'mysql',
+            'read' => [
+                'host' => env('DB_HOST', '127.0.0.1'),
+            ],
+            'write' => [
+                'host' => env('DB_HOST', '127.0.0.1'),
+            ],
+            'database'  => env('DB_PI', 'pi' ),
+            'username'  => env('DB_USERNAME', 'web_user' ),
+            'password'  => env('DB_PASSWORD', 'sktjzm!@7' ),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
+
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),
