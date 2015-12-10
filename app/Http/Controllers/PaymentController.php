@@ -7,22 +7,24 @@ use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class HomeController extends Controller
+class PaymentController extends Controller
 {
 
     protected $sentry;
     
     /**
-     * Create a new home controller instance.
+     * Create a new payment controller instance.
      *
      * @return void
      */
     public function __construct( Sentry $sentry)
     {
         $this->sentry = $sentry;
-        $this->middleware( 'auth' , [ 'only' => [ 'dashboard'  ] ] );   
 
-    }    
+        $this->middleware( 'auth'  );
+
+    }
+
     /**
      * Display a index of the resource.
      *
@@ -30,18 +32,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('payments.index');
     }
 
     /**
-     * Display a dashboard of the resource.
+     * Display a show of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function dashboard()
+    public function show( $id )
     {
-        return view('dashboard');
+        return view('payments.show');
     }
 
+    /**
+     * Display a receipt of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function receipt( $id )
+    {
+        return view('payments.receipt');
+    }
     
 }

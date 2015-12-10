@@ -19,12 +19,8 @@ $router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getL
 $router->post('user/login', ['as' => 'user.login.post', 'uses' => 'UserController@postLogin']);
 $router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@getLogout']);
 
-$router->get('user/register', ['as' => 'user.register', 'uses' => 'UserController@getRegister']);
-$router->post('user/register', ['as' => 'user.register.post', 'uses' => 'UserController@postRegister']);
-
 $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);
 $router->post('user/profile', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);
-
 
 // activation routes
 $router->get('user/activate/{id}/{code}', ['as' => 'user.activate', 'uses' => 'UserController@getActivate'])->where('id', '\d+');
@@ -36,9 +32,28 @@ $router->get('user/forgot', ['as' => 'user.forgot', 'uses' => 'UserController@ge
 $router->post('user/forgot', ['as' => 'user.forgot.post', 'uses' => 'UserController@postForgot']);
 $router->get('user/password/{id}/{code}', ['as' => 'user.password', 'uses' => 'UserController@getPassword']);
 
-// reset routes
-$router->get('user/reset', ['as' => 'user.reset', 'uses' => 'UserController@getReset']);
-$router->post('user/reset', ['as' => 'user.reset.post', 'uses' => 'UserController@postReset']);
+// product routes
+$router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);
+$router->get('product/{id}', ['as' => 'product.show', 'uses' => 'ProductController@show']);
+$router->get('product/create', ['as' => 'product.create', 'uses' => 'ProductController@create']);
+$router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@store']);
+$router->get('product/{id}/edit', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);
+$router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);
+
+// payment routes
+$router->get('payment', ['as' => 'payment.index', 'uses' => 'PaymentController@index']);
+$router->get('payment/{id}', ['as' => 'payment.show', 'uses' => 'PaymentController@show']);
+$router->get('refund/{id}', ['as' => 'refund.index', 'uses' => 'RefundController@index']);
+$router->post('refund', ['as' => 'refund.store', 'uses' => 'RefundController@store']);
+
+
+// ledger routes
+$router->get('ledger', ['as' => 'ledger.index', 'uses' => 'LedgerController@index']);
+
+
+// checkout routes
+$router->get('checkout', ['as' => 'checkout.index', 'uses' => 'CheckoutController@index']);
+
 
 // User login event
 Event::listen('users.login', function($userId, $email)
