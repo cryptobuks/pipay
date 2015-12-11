@@ -27,7 +27,7 @@
 }
 
 $component-basic: darken(#fff, 15%);
-$pi-theme-success: #fff;
+$pi-theme-success: #82befa;
 $pi-theme-confirm: #63a9ee;
 $pi-theme-warning: #fff;
 $pi-theme-danger: #fff;
@@ -60,6 +60,18 @@ $pi-theme-proceed: #606986;
 		}
 		&:active {
 			background-color: darken($pi-theme-point, 30%);
+		}
+	}
+
+	&.pi-theme-success {
+		background-color: $pi-theme-success;
+		color: #fff;
+
+		&:hover {
+			background-color: darken($pi-theme-success, 15%);
+		}
+		&:active {
+			background-color: darken($pi-theme-success, 30%);
 		}
 	}
 
@@ -99,6 +111,52 @@ $pi-theme-proceed: #606986;
 
 	&:focus {
 		border-color: $pi-control-focus;
+	}
+}
+
+table.pi-table {
+	width: 100%;
+    border-collapse: collapse;
+    cursor: default;
+
+	> thead {
+		> tr {
+			background-color: #e3e3e3;
+
+			> th, td {
+				padding: 12px;
+				text-align: center;
+				vertical-align: middle;
+				border-right: 1px solid #acafb8;
+				color: #4c5356;
+			}
+			> th:last-child, td:last-child {
+				border-right: none;
+			}
+		}
+	}
+	> tbody {
+		> tr {
+			background-color: #ffffff;
+
+			&:hover {
+				background-color: darken(#e3e3e3, 10%) !important;	
+			}
+
+			> td {
+				padding: 12px;
+				text-align: center;
+				vertical-align: middle;
+				border-right: 1px solid #acafb8;
+				color: #6d7477;
+			}
+			> td:last-child {
+				border-right: none;
+			}
+		}
+		> tr:nth-child(2n) {
+			background-color: #f6f6f6;
+		}
 	}
 }
 

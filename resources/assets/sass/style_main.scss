@@ -52,7 +52,7 @@
 	background-color: #fff;
 
 	> .pi-container {
-		padding: 64px 0;
+		padding: 40px 0;
 		overflow: hidden;
 		text-align: center;
 
@@ -63,6 +63,7 @@
 
 			> img {
 				display: block;
+				width: 96px;
 				margin: 0 auto;
 				padding-bottom: 16px;
 			}
@@ -76,7 +77,7 @@
 .pi_main_feature {
 	position: relative;
 	background-color: #63a9ee;
-	padding: 48px 0;
+	padding: 72px 0;
 
 	> .pi-container {
 		overflow: hidden;

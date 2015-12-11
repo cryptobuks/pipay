@@ -3,7 +3,7 @@
 	height: 80px;
 	z-index: 200;
 	background-color: #fff;
-	//border-bottom: 1px solid #b5b5b5;
+	border-bottom: 1px solid #dcdee0;
 
 	> .pi-container {
 		height: 100%;
@@ -60,10 +60,10 @@
 }
 
 #pi_gnb_profile_menu {
-	$opac: 0.8;
+	$opac: 0.9;
 
 	display: none;
-	@include createPosition(absolute, 80px, 4px, unset, unset);
+	@include createPosition(absolute, 79px, 4px, unset, unset);
 	z-index: 201;
 	background-color: rgba(255, 255, 255, $opac);
 	cursor: default;

@@ -108,6 +108,19 @@ li {
   background-color: #a06a23;
 }
 
+.pi-button.pi-theme-success {
+  background-color: #82befa;
+  color: #fff;
+}
+
+.pi-button.pi-theme-success:hover {
+  background-color: #3898f7;
+}
+
+.pi-button.pi-theme-success:active {
+  background-color: #0972da;
+}
+
 .pi-button.pi-theme-proceed {
   background-color: #606986;
   color: #fff;
@@ -165,6 +178,54 @@ li {
 
 .pi-input:focus {
   border-color: #63a9ee;
+}
+
+table.pi-table {
+  width: 100%;
+  border-collapse: collapse;
+  cursor: default;
+}
+
+table.pi-table > thead > tr {
+  background-color: #e3e3e3;
+}
+
+table.pi-table > thead > tr > th,
+table.pi-table > thead > tr td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #acafb8;
+  color: #4c5356;
+}
+
+table.pi-table > thead > tr > th:last-child,
+table.pi-table > thead > tr td:last-child {
+  border-right: none;
+}
+
+table.pi-table > tbody > tr {
+  background-color: #ffffff;
+}
+
+table.pi-table > tbody > tr:hover {
+  background-color: #cacaca !important;
+}
+
+table.pi-table > tbody > tr > td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #acafb8;
+  color: #6d7477;
+}
+
+table.pi-table > tbody > tr > td:last-child {
+  border-right: none;
+}
+
+table.pi-table > tbody > tr:nth-child(2n) {
+  background-color: #f6f6f6;
 }
 
 /* Widget definitions */
@@ -275,6 +336,7 @@ li {
   height: 80px;
   z-index: 200;
   background-color: #fff;
+  border-bottom: 1px solid #dcdee0;
 }
 
 #pi_gnb > .pi-container {
@@ -342,12 +404,12 @@ li {
 #pi_gnb_profile_menu {
   display: none;
   position: absolute;
-  top: 80px;
+  top: 79px;
   right: 4px;
   bottom: unset;
   left: unset;
   z-index: 201;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   cursor: default;
   border: 1px solid #959595;
   margin-bottom: 8px;
@@ -364,7 +426,7 @@ li {
 
 #pi_gnb_profile_menu > div {
   padding: 16px;
-  background-color: rgba(204, 204, 204, 0.8);
+  background-color: rgba(204, 204, 204, 0.9);
 }
 
 #pi_gnb_profile_menu > div > h1 {
@@ -385,7 +447,7 @@ li {
 
 #pi_gnb_profile_menu > a:hover {
   color: #2b78c7;
-  background-color: rgba(170, 195, 225, 0.8);
+  background-color: rgba(170, 195, 225, 0.9);
 }
 
 #pi_top_space {
@@ -508,7 +570,7 @@ li {
 }
 
 #pi_main_feature_overview > .pi-container {
-  padding: 64px 0;
+  padding: 40px 0;
   overflow: hidden;
   text-align: center;
 }
@@ -521,6 +583,7 @@ li {
 
 #pi_main_feature_overview > .pi-container .pi_main_feature_item > img {
   display: block;
+  width: 96px;
   margin: 0 auto;
   padding-bottom: 16px;
 }
@@ -532,7 +595,7 @@ li {
 .pi_main_feature {
   position: relative;
   background-color: #63a9ee;
-  padding: 48px 0;
+  padding: 72px 0;
 }
 
 .pi_main_feature > .pi-container {
@@ -657,4 +720,17 @@ li {
   display: block;
   width: 100%;
   margin-bottom: 16px;
+}
+
+#pi_product {
+  padding: 32px 0;
+}
+
+#pi_product > .pi-container > .pi-button-container {
+  margin-bottom: 32px;
+}
+
+#addProduct {
+  font-size: 16px;
+  padding: 16px 48px;
 }
