@@ -75,7 +75,7 @@ li {
 .pi-button {
   display: inline-block;
   background-color: #d9d9d9;
-  border: none;
+  border: 1px solid transparent;
   text-align: center;
   color: #000;
   padding: 8px 16px;
@@ -145,6 +145,31 @@ li {
 
 .pi-button.pi-theme-confirm:active {
   background-color: #125da6;
+}
+
+.pi-button.pi-theme-form {
+  background-color: #fff;
+  color: #50575a;
+  border: 1px solid #50575a;
+}
+
+.pi-button.pi-theme-form:hover {
+  background-color: #f2f2f2;
+}
+
+.pi-button.pi-theme-form:active {
+  background-color: #e6e6e6;
+}
+
+.pi-button > div {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.pi-button > p {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .pi-input {
@@ -226,6 +251,35 @@ table.pi-table > tbody > tr > td:last-child {
 
 table.pi-table > tbody > tr:nth-child(2n) {
   background-color: #f6f6f6;
+}
+
+.pi-theme-complete {
+  color: #0c69b8;
+}
+
+.pi-theme-waiting {
+  color: #de6f6f;
+}
+
+.pi-abstract-nav {
+  clear: both;
+  text-align: center;
+}
+
+.pi-abstract-nav > .pi-abstract-nav-item {
+  margin: 0 24px;
+  display: inline-block;
+  font-size: 24px;
+  color: #899397;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.pi-abstract-nav > .pi-abstract-nav-item.on {
+  color: #0c69b8;
+  border-bottom: 1px solid #0c69b8;
+  font-weight: bold;
+  cursor: default;
 }
 
 /* Widget definitions */
@@ -325,6 +379,33 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 .architekt-widget-button.architekt-theme-confirm:active {
   background: #bfdcf8;
+}
+
+.sprite_basic,
+.sprite-arrow-left,
+.sprite-arrow-right,
+.sprite-refresh,
+.sprite-disk {
+  width: 32px;
+  height: 32px;
+  background-image: url("../../image/sprites_v1.png");
+  background-size: cover;
+}
+
+.sprite-arrow-left {
+  background-position: 0px 0px;
+}
+
+.sprite-arrow-right {
+  background-position: 0px -32px;
+}
+
+.sprite-refresh {
+  background-position: 0px -64px;
+}
+
+.sprite-disk {
+  background-position: 0px -96px;
 }
 
 #pi_gnb {
@@ -727,10 +808,48 @@ table.pi-table > tbody > tr:nth-child(2n) {
 }
 
 #pi_product > .pi-container > .pi-button-container {
+  position: relative;
   margin-bottom: 32px;
 }
 
 #addProduct {
   font-size: 16px;
   padding: 16px 48px;
+}
+
+#refresh {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+#pi_ledger {
+  padding: 32px 0;
+}
+
+#pi_ledger > .pi-container > .pi-button-container {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+#pi_ledger_total {
+  padding: 16px 0;
+  width: 700px;
+  margin: 0 auto;
+}
+
+#pi_ledger_total > h1 {
+  color: #a4a9ac;
+  font-size: 24px;
+}
+
+#pi_ledger_total > h1 > span {
+  font-size: 24px;
+  margin: 0 16px;
+}
+
+#pi_ledger_total > p {
+  color: #a4a9ac;
+  font-size: 12px;
+  margin: 8px 0;
 }

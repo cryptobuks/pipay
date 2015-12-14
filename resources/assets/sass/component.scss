@@ -33,11 +33,14 @@ $pi-theme-warning: #fff;
 $pi-theme-danger: #fff;
 $pi-theme-point: #e2b57a;
 $pi-theme-proceed: #606986;
+$pi-theme-complete: #0c69b8;
+$pi-theme-waiting: #de6f6f;
+$pi-theme-form: #fff;
 
 .pi-button {
 	display: inline-block;
 	background-color: $component-basic;
-	border: none;
+	border: 1px solid transparent;
 	text-align: center;
 	color: #000;
 	padding: 8px 16px;
@@ -97,7 +100,30 @@ $pi-theme-proceed: #606986;
 		&:active {
 			background-color: darken($pi-theme-confirm, 30%);
 		}
-	}	
+	}
+
+	&.pi-theme-form {
+		background-color: $pi-theme-form;
+		color: #50575a;
+		border: 1px solid #50575a;
+
+		&:hover {
+			background-color: darken($pi-theme-form, 5%);
+		}
+		&:active {
+			background-color: darken($pi-theme-form, 10%);
+		}
+	}
+
+	> div {
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: 4px;
+	}
+	> p {
+		display: inline-block;
+		vertical-align: middle;
+	}
 }
 
 .pi-input {
@@ -156,6 +182,39 @@ table.pi-table {
 		}
 		> tr:nth-child(2n) {
 			background-color: #f6f6f6;
+		}
+	}
+}
+
+.pi-text {
+	
+}
+
+.pi-theme-complete {
+	color: $pi-theme-complete;
+}
+.pi-theme-waiting {
+	color: $pi-theme-waiting;
+}
+
+
+.pi-abstract-nav {
+	clear: both;
+	text-align: center;
+
+	> .pi-abstract-nav-item {
+		margin: 0 24px;
+		display: inline-block;
+		font-size: 24px;
+		color: #899397;
+		border-bottom: 1px solid transparent;
+		cursor: pointer;
+
+		&.on {
+			color: #0c69b8;
+			border-bottom: 1px solid #0c69b8;
+			font-weight: bold;
+			cursor: default;
 		}
 	}
 }
