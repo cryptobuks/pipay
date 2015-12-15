@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
     <script>
         Architekt.event.on('ready', function() {
 
@@ -11,7 +12,7 @@
     <div id="pi_product">
         <div class="pi-container">
             <div class="pi-button-container">
-            	<button id="addProduct" class="pi-button pi-theme-success">결제 상품 추가하기</button>
+            	<a href="#" id="addProduct" class="pi-button pi-theme-success">결제 상품 추가하기</a>
             </div>
 
             <table class="pi-table">
@@ -43,7 +44,5 @@
             </table>
         </div>
     </div>
-
-	
 
 @endsection

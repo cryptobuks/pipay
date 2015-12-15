@@ -7,6 +7,7 @@ $architekt-theme-confirm: #63a9ee;
 @import "font.scss";
 @import "utility.scss";
 @import "component.scss";
+@import "sprites.scss";
 
 //Main
 @import "style_common.scss";
@@ -14,3 +15,4 @@ $architekt-theme-confirm: #63a9ee;
 @import "style_login.scss";
 @import "style_dashboard.scss";
 @import "style_product.scss";
+@import "style_ledger.scss";

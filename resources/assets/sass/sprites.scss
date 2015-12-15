@@ -1,0 +1,25 @@
+$sprite-src: url('../../image/sprites_v1.png');
+
+.sprite_basic {
+	width: 32px;
+	height: 32px;
+	background-image: $sprite-src;
+	background-size: cover;
+}
+
+.sprite-arrow-left {
+	@extend .sprite_basic;
+	background-position: 0px 0px;
+}
+.sprite-arrow-right {
+	@extend .sprite_basic;
+	background-position: 0px -32px;
+}
+.sprite-refresh {
+	@extend .sprite_basic;
+	background-position: 0px -64px;
+}
+.sprite-disk {
+	@extend .sprite_basic;
+	background-position: 0px -96px;
+}
