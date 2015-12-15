@@ -22,7 +22,7 @@ class CreateInitTable extends Migration
             $table->decimal( 'amount' , 24 , 8 )->default(0); 
             $table->char( 'currency' , 5 ); 
             $table->smallinteger( 'usage' )->default(1); 
-            $table->integer( 'settlement_currency' );                         
+            $table->char( 'settlement_currency' , 5 );                         
             $table->string('email')->nullable();
             $table->string('redirect')->nullable();
             $table->string('callback')->nullable();
@@ -246,12 +246,13 @@ class CreateInitTable extends Migration
             $table->string('username')->nullable();
             $table->string('cellphone' , 32 )->nullable();            
             $table->smallInteger('level' )->nullable();
-            $table->integer('category' )->nullable();            
+            $table->integer('category' )->nullable();
             $table->tinyInteger('shop_type' )->nullable(); 
             $table->string('company' )->nullable();   
             $table->string('website' )->nullable();             
             $table->string('phone' )->nullable();     
             $table->string('logo' )->nullable();                 
+            $table->boolean('agreement' )->default(0);            
             $table->timestamps();
 
             $table->engine = 'InnoDB';
