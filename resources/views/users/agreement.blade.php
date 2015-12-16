@@ -8,10 +8,9 @@
 
     <div id="pi_top_space"></div>
 
-    <div id="pi_terms">
+    <div id="pi_agreement">
         <div class="pi-container">
-            <h1>Terms</h1>
-
+            <h1>Agreement</h1>
 <div class="inner-col"><br><br><div class="scrollable"><p align="center">
     <strong>파이페이먼트 이용약관</strong>
 </p>
@@ -367,7 +366,16 @@
 <p>
     5. 기타 ‘회사’가 판단할 때 ‘파이페이먼트’ 서비스 목적과 부합하지 않는 것으로 판단한 콘텐츠
 </p></div></div>
-            
+
         </div>
     </div>
+
+    <div class="form-group">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 col-xs-12">
+            <button id="agreementBtnSubmit" type="submit" class="pi_button">&nbsp; &nbsp; &nbsp; 동의 &nbsp; &nbsp; &nbsp; </button>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
 @endsection

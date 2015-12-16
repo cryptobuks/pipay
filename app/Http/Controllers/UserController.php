@@ -50,6 +50,24 @@ class UserController extends Controller
     }
 
     /**
+     * Display a user agreement of the resource.
+     * @return \Illuminate\Http\Response
+     */
+    public function agreement()
+    {
+        return view('users.agreement');
+    }
+
+    /**
+     * Display a user agreement of the resource.
+     * @return \Illuminate\Http\Response
+     */
+    public function postAgreement()
+    {
+        //return view('users.agreement');
+    }
+
+    /**
      * Display a user login of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -125,7 +143,7 @@ class UserController extends Controller
                         ));
 
             //flash()->overlay( $result['message']  , 'Message');
-            return redirect('/');
+            return redirect('dashboard');
         } else {
             return redirect($this->loginPath())
                 ->withInput($request->only('email', 'remember'))

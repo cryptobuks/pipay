@@ -39,13 +39,13 @@ return [
 
         'main' => [
             'salt' => 'This is pi string slt universe step.',
-            'length' => 20 ,
+            'length' => 16 ,
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 
         'alternative' => [
             'salt' => 'The second pi usa like to love it.',
-            'length' => 20 ,
+            'length' => 16 ,
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 

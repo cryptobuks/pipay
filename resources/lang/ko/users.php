@@ -24,7 +24,7 @@ return [
 
     'login' => '로그인',
     'register' => '회원가입',
-    'profile' => '회원정보',        
+    'profile' => '판매자 프로필',        
     'resetPw' => '비밀번호 재설정',
     'name' => '이름',
     'email' => '이메일',
@@ -107,4 +107,9 @@ return [
     'authcode_invalid' => '올바르지 않은 AUTHCODE입니다.' ,  
     'sms_auth' => '[파이페이먼트] 인증번호는 [:authcode] 입니다.' ,
     'already_cellphone' => '이미 다른 사용자가 등록한 휴대폰 번호입니다. 다시 시도해 주세요.' , 
+    'category_title' => '사업 종류' ,
+    'company_title' => '회사명' ,    
+    'website_title' => '웹사이트' ,    
+    'phone_title' => '전화번호' ,         
+    'logo_title'  => '로고 이미지' , 
 ];

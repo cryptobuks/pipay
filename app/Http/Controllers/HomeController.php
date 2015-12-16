@@ -43,5 +43,9 @@ class HomeController extends Controller
         return view('dashboard');
     }
 
+    public function agreement()
+    {
+        return view('agreement');
+    }
     
 }
