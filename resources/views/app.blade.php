@@ -126,7 +126,7 @@
                 <ul id="pi_footer_nav">
                     <li><a href="https://www.pi-pay.net/" target="_blank">파이페이</a></li>
                     <li><a href="/agreement">이용약관</a></li>
-                    <li><a href="/faq">자주묻는 질문</a></li>
+                    <li><a href="#">자주묻는 질문</a></li>
                 </ul>
             </div>
             <div id="pi_footer_right">
