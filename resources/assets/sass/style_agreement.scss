@@ -1,0 +1,30 @@
+#pi_terms {
+	padding: 32px 0;
+
+	> .pi-container {
+		h1 {
+			font-size: 24px;
+			margin: 16px 0;
+		}
+
+		> .pi_agreements_content {
+			border: 1px solid #e6e6e6;
+			padding: 12px;
+			overflow: scroll;
+			min-height: 300px;
+
+			> p {
+				font-size: 14px;
+			}
+		}
+
+		> .pi-button-container {
+			margin: 16px 0;
+		}
+	}
+}
+
+#agreementBtnSubmit {
+	padding: 16px 48px;
+    font-size: 18px;
+}

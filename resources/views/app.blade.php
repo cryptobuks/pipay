@@ -85,11 +85,11 @@
             </a>
 
             <ul id="pi_gnb_list">
-        @if ( ! Sentry::check())
+            @if ( ! Sentry::check())
                 <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
-        @else
+            @else
                 <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/product') }}">제품</a></li>
                 <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/payment') }}">결제</a></li>

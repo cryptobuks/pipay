@@ -803,6 +803,35 @@ table.pi-table > tbody > tr:nth-child(2n) {
   margin-bottom: 16px;
 }
 
+#pi_terms {
+  padding: 32px 0;
+}
+
+#pi_terms > .pi-container h1 {
+  font-size: 24px;
+  margin: 16px 0;
+}
+
+#pi_terms > .pi-container > .pi_agreements_content {
+  border: 1px solid #e6e6e6;
+  padding: 12px;
+  overflow: scroll;
+  min-height: 300px;
+}
+
+#pi_terms > .pi-container > .pi_agreements_content > p {
+  font-size: 14px;
+}
+
+#pi_terms > .pi-container > .pi-button-container {
+  margin: 16px 0;
+}
+
+#agreementBtnSubmit {
+  padding: 16px 48px;
+  font-size: 18px;
+}
+
 #pi_product {
   padding: 32px 0;
 }
