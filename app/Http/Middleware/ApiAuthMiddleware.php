@@ -17,7 +17,7 @@ class ApiAuthMiddleware
     public function handle($request, Closure $next)
     {
 
-        $credentials = $request->only('api_key','test_mode');
+        $credentials = $request->only('api_key','livemode');
 
         if( !$user = UserKey::authenticate( $credentials ) ) {
             $response = Response::json ( [

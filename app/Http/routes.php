@@ -13,11 +13,14 @@
 
 Route::get('/', ['as' => 'home.index', 'uses' => 'HomeController@index'] );
 Route::get('dashboard', ['as' => 'home.dashboard', 'uses' => 'HomeController@dashboard'] );
+Route::get('agreement', ['as' => 'home.agreement', 'uses' => 'HomeController@agreement'] );
 
 // login routes
 $router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getLogin']);
 $router->post('user/login', ['as' => 'user.login.post', 'uses' => 'UserController@postLogin']);
 $router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@getLogout']);
+$router->get('user/agreement', ['as' => 'user.agreement', 'uses' => 'UserController@agreement']);
+
 
 $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);
 $router->post('user/profile', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);

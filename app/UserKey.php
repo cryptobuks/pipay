@@ -48,9 +48,9 @@ class UserKey extends Model
 	 */
 	public static function authenticate( $credentials ) {
 		$api_key = $credentials['api_key'];
-		$test_mode = $credentials['test_mode'];
+		$livemode = $credentials['livemode'];
 
-		if( !$test_mode ) {
+		if( $livemode == '1' ) {
 			$userKey = $this->whereLiveApiKey ( $api_key )->first();
 		} else {
 			$userKey = $this->whereTestApiKey ( $api_key )->first();

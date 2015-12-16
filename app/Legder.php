@@ -6,5 +6,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class Legder extends Model
 {
-    //
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'legders';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [ 
+		'user_id', 'account_id', 'currency_id', 'balance', 'locked', 'fee', 'amount', 'fun', 'reason', 'modifiable_id', 'modifiable_type' 
+	];
+
+	public function account()
+	{
+		return $this->belongsTo('App\Account');
+	}
+
+	public function userProfile()
+	{
+		return $this->belongsTo('App\UserProfile');
+	}
+
+	public function modifiable()
+	{
+		return $this->morphTo();
+	}
+
+
 }
