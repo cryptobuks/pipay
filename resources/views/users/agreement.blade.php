@@ -17,24 +17,11 @@
         <div class="pi-container">
             @include('agreement_content')
 
-            <div class="pi-button-container pi-button-centralize">
-                <button id="agreementBtnSubmit" type="submit" class="pi-button pi-theme-form">동의</button>
-            </div>
-            
+            <form id="agreementFrm" name="agreementFrm" class="pi-button-container pi-button-centralize" method="POST" action="{{ url('/user/agreement' ) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                
+                <button id="agreementBtnSubmit" type="submit" class="pi-button pi-theme-form">&nbsp; &nbsp; &nbsp; 동의 &nbsp; &nbsp; &nbsp; </button>
+            </form>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-<form id="agreementFrm" name="agreementFrm" class="container" method="POST" action="{{ url('/user/agreement' ) }}">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <div class="col-md-2"></div>
-        <div class="col-md-8 col-xs-12">
-            <button id="agreementBtnSubmit" type="submit" class="pi_button">&nbsp; &nbsp; &nbsp; 동의 &nbsp; &nbsp; &nbsp; </button>
-        </div>
-        <div class="col-md-2"></div>
-    </div>
-</form>
-
->>>>>>> 4ed9a2aa023f43b9f1d924949cd78423fcdb7836
 @endsection
