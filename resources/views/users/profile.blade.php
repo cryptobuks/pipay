@@ -18,7 +18,8 @@
 		<h3>{{ Lang::get('users.profile') }}</h3>
 		<form id="profileFrm" name="profileFrm" class="container" method="POST" action="{{ url('/user/profile' , $user->id  ) }}">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
-			<input type="hidden" id="user_id" name="user_id" value="{{ $user->id }}">			
+			<input type="hidden" id="user_id" name="user_id" value="{{ $user->id }}">
+			<input type="hidden" id="shop_type" name="shop_type" value="1">									
 
 			<div id="pi_box">
 				{{ $user->level_name }} |  {{ $user->username }}  {{ $user->email }}
@@ -27,7 +28,7 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.category_title') }}</label>
 				<div class="col-md-8 col-xs-12">
-					{!! Form::select( 'category' , $user_categories , old('category' , $user->category ) , array( 'class' => 'form-control' ) ) !!}
+					{!! Form::select( 'category' , $user_categories , old('category' , $user_profile->category ) , array( 'class' => 'form-control' ) ) !!}
 				</div>
 				<div class="col-md-2 hidden-xs"></div>
 			</div>
@@ -35,7 +36,7 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.company_title') }}</label>
 				<div class="col-md-8 col-xs-12">
-					<input type="text" id="company" class="pi_text{{ !empty($errors->get('company')) ? ' pi_error' : '' }}" name="company">
+					<input type="text" id="company" class="pi_text{{ !empty($errors->get('company')) ? ' pi_error' : '' }}" name="company" value="{{ $user_profile->company }}" >
 				</div>
 				<div class="col-md-2 hidden-xs"></div>
 			</div>
@@ -43,7 +44,7 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.website_title') }}</label>
 				<div class="col-md-8 col-xs-12">
-					<input type="text" id="website" class="pi_text{{ !empty($errors->get('website')) ? ' pi_error' : '' }}" name="website">
+					<input type="text" id="website" class="pi_text{{ !empty($errors->get('website')) ? ' pi_error' : '' }}" name="website" value="{{ $user_profile->website }}" >
 				</div>
 				<div class="col-md-2 hidden-xs"></div>
 			</div>
@@ -51,7 +52,7 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.phone_title') }}</label>
 				<div class="col-md-8 col-xs-12">
-					<input type="text" id="phone" class="pi_text{{ !empty($errors->get('phone')) ? ' pi_error' : '' }}" name="phone">
+					<input type="text" id="phone" class="pi_text{{ !empty($errors->get('phone')) ? ' pi_error' : '' }}" name="phone" value="{{ $user_profile->phone }}" >
 				</div>
 				<div class="col-md-2 hidden-xs"></div>
 			</div>

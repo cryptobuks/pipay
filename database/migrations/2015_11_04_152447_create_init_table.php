@@ -232,7 +232,7 @@ class CreateInitTable extends Migration
 
         // 유저 API key
         Schema::create('users_key', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->primary();            
+            $table->integer('id')->unsigned()->primary();            
             $table->string('live_api_key', 40);
             $table->string('test_api_key', 40);            
             $table->timestamps();
@@ -244,7 +244,7 @@ class CreateInitTable extends Migration
         });
 
         Schema::create('users_profile', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->primary();            
+            $table->integer('id')->unsigned()->primary();            
             $table->string('email');
             $table->string('username')->nullable();
             $table->string('cellphone' , 32 )->nullable();            
