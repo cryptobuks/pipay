@@ -103,6 +103,13 @@ function generateSvcTxSeqno() {
     return $svcTxSeqno;   
 }   
 
+function generateToken( $prefix , $id ) {
+    return $prefix . '_' . Hashids::connection('token')->encode($id) ;
+}
+
+function generateAPIKey( $prefix , $id ) {
+    return $prefix . '_' . Hashids::connection('main')->encode($id) ;    
+}
 
 // API 로그 포맷 
 function api_log_format( $log_param , $request , $response )

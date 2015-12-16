@@ -49,6 +49,13 @@ return [
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 
+        'token' => [
+            'salt' => 'token able love you to move fast company.,',
+            'length' => 28 ,
+            'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+        ],
+
+
     ],
 
 ];
