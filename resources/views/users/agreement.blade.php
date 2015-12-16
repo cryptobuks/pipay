@@ -369,4 +369,13 @@
 
         </div>
     </div>
+
+    <div class="form-group">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 col-xs-12">
+            <button id="agreementBtnSubmit" type="submit" class="pi_button">&nbsp; &nbsp; &nbsp; 동의 &nbsp; &nbsp; &nbsp; </button>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
 @endsection

@@ -59,6 +59,15 @@ class UserController extends Controller
     }
 
     /**
+     * Display a user agreement of the resource.
+     * @return \Illuminate\Http\Response
+     */
+    public function postAgreement()
+    {
+        //return view('users.agreement');
+    }
+
+    /**
      * Display a user login of the resource.
      *
      * @return \Illuminate\Http\Response

@@ -12,50 +12,43 @@
 */
 
 Route::get('/', ['as' => 'home.index', 'uses' => 'HomeController@index'] );
-Route::get('dashboard', ['as' => 'home.dashboard', 'uses' => 'HomeController@dashboard'] );
-Route::get('agreement', ['as' => 'home.agreement', 'uses' => 'HomeController@agreement'] );
+Route::get('dashboard', ['as' => 'home.dashboard', 'uses' => 'HomeController@dashboard'] );   // 대쉬보드 페이지
+Route::get('agreement', ['as' => 'home.agreement', 'uses' => 'HomeController@agreement'] );  // 약관 페이지 
 
 // login routes
-$router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getLogin']);
-$router->post('user/login', ['as' => 'user.login.post', 'uses' => 'UserController@postLogin']);
-$router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@getLogout']);
-$router->get('user/agreement', ['as' => 'user.agreement', 'uses' => 'UserController@agreement']);
+$router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getLogin']);   // 로그인 뷰 
+$router->post('user/login', ['as' => 'user.login.post', 'uses' => 'UserController@postLogin']);  // 로그인 액션
+$router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@getLogout']);   // 로그아웃 
+$router->get('user/agreement', ['as' => 'user.agreement', 'uses' => 'UserController@agreement']);   // 약관 페이지 
+$router->post('user/agreement', ['as' => 'user.agreement.post', 'uses' => 'UserController@postAgreement']);   // 약관 페이지  처리 로직
 
-
-$router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);
-$router->post('user/profile', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);
-
-// activation routes
-$router->get('user/activate/{id}/{code}', ['as' => 'user.activate', 'uses' => 'UserController@getActivate'])->where('id', '\d+');
-$router->get('user/resend', ['as' => 'user.resend', 'uses' => 'UserController@getResend']);
-$router->post('user/resend', ['as' => 'user.resend.post', 'uses' => 'UserController@postResend']);
-
-// forgot routes
-$router->get('user/forgot', ['as' => 'user.forgot', 'uses' => 'UserController@getForgot']);
-$router->post('user/forgot', ['as' => 'user.forgot.post', 'uses' => 'UserController@postForgot']);
-$router->get('user/password/{id}/{code}', ['as' => 'user.password', 'uses' => 'UserController@getPassword']);
+$router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);   // 유저 프로파일
+$router->post('user/profile', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);   // 유저 프로파일 처리
 
 // product routes
-$router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);
-$router->get('product/{id}', ['as' => 'product.show', 'uses' => 'ProductController@show']);
-$router->get('product/create', ['as' => 'product.create', 'uses' => 'ProductController@create']);
-$router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@store']);
-$router->get('product/{id}/edit', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);
-$router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);
+$router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);   // 목록
+$router->get('product/create', ['as' => 'product.create', 'uses' => 'ProductController@create']);  // 추가 
+$router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@store']);  // 추가 저장 
+$router->get('product/{id}', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);  // 수정 
+$router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);  // 수정 저장 
 
 // payment routes
-$router->get('payment', ['as' => 'payment.index', 'uses' => 'PaymentController@index']);
-$router->get('payment/{id}', ['as' => 'payment.show', 'uses' => 'PaymentController@show']);
-$router->get('refund/{id}', ['as' => 'refund.index', 'uses' => 'RefundController@index']);
-$router->post('refund', ['as' => 'refund.store', 'uses' => 'RefundController@store']);
-
+$router->get('payment', ['as' => 'payment.index', 'uses' => 'PaymentController@index']);  // 거래 목록 
+$router->get('payment/{id}', ['as' => 'payment.show', 'uses' => 'PaymentController@show']);  // 거래 보기 
+$router->get('refund/{id}', ['as' => 'refund.index', 'uses' => 'RefundController@index']);  // 환불하기 페이지 
+$router->post('refund', ['as' => 'refund.store', 'uses' => 'RefundController@store']);   // 환불 저장 
 
 // ledger routes
-$router->get('ledger', ['as' => 'ledger.index', 'uses' => 'LedgerController@index']);
+$router->get('ledger', ['as' => 'ledger.index', 'uses' => 'LedgerController@index']);   // 정산 목록 
 
+// 결제 페이지 요청 
+$router->get('checkout/{token}', ['as' => 'checkout.index', 'uses' => 'CheckoutController@index']);
 
-// checkout routes
-$router->get('checkout', ['as' => 'checkout.index', 'uses' => 'CheckoutController@index']);
+// API
+Route::group(array('prefix' => 'api/v1'), function()
+{
+    Route::post('invoice', 'API\V1\InvoiceController@index');  // 결제 요청 
+});
 
 
 // User login event
