@@ -16,10 +16,6 @@
     <div id="pi_terms">
         <div class="pi-container">
             @include('agreement_content')
-
-            <div class="pi-button-container pi-button-centralize">
-                <button id="agreementBtnSubmit" type="submit" class="pi-button pi-theme-form">동의</button>
-            </div>
             
         </div>
     </div>
