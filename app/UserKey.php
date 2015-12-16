@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Vinkla\Hashids\HashidsServiceProvider;
+use Vinkla\Hashids\Facades\Hashids;
 use Response;
 
 class UserKey extends Model
@@ -21,7 +21,7 @@ class UserKey extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'user_id', 'live_api_key', 'test_api_key' ,
+		'id', 'live_api_key', 'test_api_key' ,
 	];
 
 	/**
@@ -32,7 +32,7 @@ class UserKey extends Model
 	public static function keyCreate( $user_id ) {
 
 		$param = [
-			'user_id' => $user_id , 
+			'id' => $user_id , 
 			'live_api_key' => 'sk_live_' . Hashids::connection('main')->encode($user_id) , 
 			'test_api_key' => 'sk_test_' . Hashids::connection('alternative')->encode($user_id) , 
 		];

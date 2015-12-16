@@ -369,7 +369,8 @@
 
         </div>
     </div>
-
+<form id="agreementFrm" name="agreementFrm" class="container" method="POST" action="{{ url('/user/agreement' ) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="form-group">
         <div class="col-md-2"></div>
         <div class="col-md-8 col-xs-12">
@@ -377,5 +378,6 @@
         </div>
         <div class="col-md-2"></div>
     </div>
+</form>
 
 @endsection

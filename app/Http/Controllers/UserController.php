@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\RedirectResponse;
+use App\UserKey;
+use App\UserProfile;
 
 class UserController extends Controller
 {
@@ -46,7 +48,7 @@ class UserController extends Controller
         // Enable the Throttling Feature
         $this->throttleProvider->enable();
 
-        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' ] );
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' , 'agreement' , 'postAgreement' ] );
     }
 
     /**
@@ -64,7 +66,21 @@ class UserController extends Controller
      */
     public function postAgreement()
     {
-        //return view('users.agreement');
+        $user = $this->sentry->getUser();
+
+        $user_key = UserKey::keyCreate( $user->id );
+        $user_profile = UserProfile::create(
+            [  
+                'id' => $user->id , 
+                'email' => $user->email , 
+                'username' => $user->username ,                 
+                'cellphone' => $user->cellphone ,                                 
+                'level' => $user->level ,        
+                'agreement' => 1 ,
+            ]
+        );
+
+        return redirect('dashboard');
     }
 
     /**
@@ -141,6 +157,13 @@ class UserController extends Controller
                             'userId' => $user->getId(),
                             'email' => $user->email
                         ));
+
+            $user_key = UserKey::find( $user->id );
+            $user_profile = UserProfile::find( $user->id );
+
+            if( !$user_key || !$user_profile ) {
+                return redirect('user/agreement');                
+            }
 
             //flash()->overlay( $result['message']  , 'Message');
             return redirect('dashboard');
@@ -297,6 +320,8 @@ class UserController extends Controller
                 flash()->overlay( trans('users.notfound') , 'Message' );
                 return redirect($this->redirectPath());
             }
+            $user_profile = UserProfile::find( $user->id );
+
         }
         catch (UserNotFoundException $e)
         {
@@ -305,8 +330,9 @@ class UserController extends Controller
         }
 
         $user_categories = Config::get('common.user_categories');
+        $user_levels = Config::get('common.user_levels');        
 
-        return view( 'users.profile' , compact('user' , 'user_categories' ) );
+        return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories' , 'user_levels' ) );
     }
 
     /**
@@ -315,7 +341,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function postProfile( Request $request ) 
+    public function postProfile( Request $request , $id ) 
     {
         $input = $request->all();
 
@@ -325,19 +351,20 @@ class UserController extends Controller
             'company' => 'required' ,                                   
             'website' => 'required' , 
             'phone' => 'required' ,             
+            'logo' => '' ,                         
         ]);
 
         try{
             
-            $user = $this->sentry->getUserProvider()->findById( $id );
-        
-            $user->category = e( $input['category'] );
-            $user->shop_type = e( $input['shop_type'] );
-            $user->company = e( $input['company'] );
-            $user->website = e( $input['website'] );
-            $user->phone = e( $input['phone'] );                                    
+            $user_profile = UserProfile::find( $id );
 
-            if ($user->save())
+            $user_profile->category = e( $input['category'] );
+            $user_profile->shop_type = e( $input['shop_type'] );
+            $user_profile->company = e( $input['company'] );
+            $user_profile->website = e( $input['website'] );
+            $user_profile->phone = e( $input['phone'] );  
+
+            if ($user_profile->save())
             {
                 // User saved
                 $result['success'] = true;
@@ -351,13 +378,9 @@ class UserController extends Controller
             }
 
         }
-        catch (UserExistsException $e)
+        catch (Exception $e)
         {
-            $result['success'] = false;
-            $result['message'] = trans('users.loginExists'); 
-        }
-        catch (UserNotFoundException $e)
-        {
+            dd ( $e );
             $result['success'] = false;         
             $result['message'] = trans('users.notfound'); 
         }       
