@@ -19,7 +19,7 @@ class Account extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'user_id', 'currency_id', 'balance', 'locked'
+		'user_id', 'currency', 'balance', 'locked'
 	];
 
 	protected $reason = ACCOUNT_FIX;
@@ -60,7 +60,7 @@ class Account extends Model
 		$account_history = [
 			'user_id' => $this->user_id,
 			'account_id' => $this->id,
-			'currency_id' => $this->currency_id,
+			'currency' => $this->currency ,
 			'fun' => $this->fun,
 			'reason' => $this->reason,
 			'balance' => $balance ,
@@ -148,10 +148,10 @@ class Account extends Model
 		$this->change_balance( $locked - $amount , -$locked  );
 	}
 
-	public function account_sum_per_day( $user_id , $currency_id , $reason ) 
+	public function account_sum_per_day( $user_id , $currency , $reason ) 
 	{
 		$balance = DB::table('account_histories')
-		->whereRaw( "user_id = ? AND currency_id = ? AND reason = ? AND DATE_FORMAT(updated_at, '%Y-%m-%d') = DATE_FORMAT( NOW(), '%Y-%m-%d')" , [ $user_id , $currency_id , $reason ] )
+		->whereRaw( "user_id = ? AND currency = ? AND reason = ? AND DATE_FORMAT(updated_at, '%Y-%m-%d') = DATE_FORMAT( NOW(), '%Y-%m-%d')" , [ $user_id , $currency , $reason ] )
 		->sum('balance');
 
 		return $balance;

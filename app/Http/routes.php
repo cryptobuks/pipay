@@ -24,6 +24,13 @@ $router->post('user/agreement', ['as' => 'user.agreement.post', 'uses' => 'UserC
 
 $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);   // 유저 프로파일
 $router->post('user/profile/{id}', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);   // 유저 프로파일 처리
+$router->post('user/upload/logo' , ['as' => 'user.upload.logo' , 'uses' => 'UserController@postLogo' ]);   // 유저 사진 업로드 
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('user/upload', function () {
+       return view( 'users.upload' );
+    });
+});
 
 // product routes
 $router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);   // 목록

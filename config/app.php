@@ -153,7 +153,8 @@ return [
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
         Propaganistas\LaravelPhone\LaravelPhoneServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class , 
-        Cartalyst\Sentry\SentryServiceProvider::class,      
+        Cartalyst\Sentry\SentryServiceProvider::class,     
+        Intervention\Image\ImageServiceProvider::class ,  
     ],
 
     /*
@@ -211,7 +212,8 @@ return [
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class , 
-        'Sentry' => Cartalyst\Sentry\Facades\Laravel\Sentry::class,        
+        'Sentry' => Cartalyst\Sentry\Facades\Laravel\Sentry::class,      
+        'Image' => Intervention\Image\Facades\Image::class ,   
     ],
 
 ];

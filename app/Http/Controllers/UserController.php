@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\RedirectResponse;
 use App\UserKey;
@@ -48,7 +49,7 @@ class UserController extends Controller
         // Enable the Throttling Feature
         $this->throttleProvider->enable();
 
-        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' , 'agreement' , 'postAgreement' ] );
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' , 'agreement' , 'postAgreement' , 'postLogo' ] );
     }
 
     /**
@@ -68,17 +69,24 @@ class UserController extends Controller
     {
         $user = $this->sentry->getUser();
 
-        $user_key = UserKey::keyCreate( $user->id );
-        $user_profile = UserProfile::create(
-            [  
-                'id' => $user->id , 
-                'email' => $user->email , 
-                'username' => $user->username ,                 
-                'cellphone' => $user->cellphone ,                                 
-                'level' => $user->level ,        
-                'agreement' => 1 ,
-            ]
-        );
+        try {
+            $user_key = UserKey::keyCreate( $user->id );
+            $user_profile = UserProfile::create(
+                [  
+                    'id' => $user->id , 
+                    'email' => $user->email , 
+                    'username' => $user->username ,                 
+                    'cellphone' => $user->cellphone ,                                 
+                    'level' => $user->level ,        
+                    'agreement' => 1 ,
+                ]
+            );
+
+            Account::create( [ 'user_id' => $user->id , 'currency' => 'PI' , 'balance' => 0 , 'locked' => 0  ] );        
+            Account::create( [ 'user_id' => $user->id , 'currency' => 'KRW' , 'balance' => 0 , 'locked' => 0  ] );                
+        } catch ( Exception $e) {
+
+        }
 
         return redirect('dashboard');
     }
@@ -269,7 +277,7 @@ class UserController extends Controller
 
             // Account created to each currency.
             $currencies = Currency::all();
-            foreach( $currencies as $currency )  Account::create( [ 'user_id' => $user->id , 'currency_id' => $currency->id , 'balance' => 0 , 'locked' => 0  ] );
+            foreach( $currencies as $currency )  Account::create( [ 'user_id' => $user->id , 'currency' => $currency->id , 'balance' => 0 , 'locked' => 0  ] );
 
             // success!
             // You get activation code and email send to you before you click activation link.
@@ -303,6 +311,57 @@ class UserController extends Controller
 
         return redirect($this->redirectPath());
 
+    }
+
+    /**
+     * [postLogo upload function ]
+     * @return [json] [logo_url return]
+     */
+    public function postLogo( Request $request ){
+
+
+        $this->validate( $request , [
+            'logo' => 'required|mimes:png,jpg,jpeg',
+        ]);
+
+        //dd( $request->all() );
+
+
+        $user = $this->sentry->getUser();
+
+        $result['status'] = 'success' ; 
+
+        try
+        {
+            $logoName_m = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
+            $logoName_s = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();            
+            $path = public_path() . '/upload/profile/';
+            
+            /*
+            $request->file('logo')->move( public_path() . '/upload/profile/' , $logoName  );
+            */
+
+            Image::make( $request->file('logo')->getRealPath() )->resize(200, 200)->save($path . $logoName);
+
+            $user_profile = UserProfile::find( $user->id );
+            $user_profile->logo = $logoName;
+            $user_profile->save();
+
+            $result['status'] = 'success' ; 
+        } catch ( Exception $e ) {
+            $result['status'] = 'error' ; 
+        }
+
+        if( $result['status'] == 'success') {
+            return Response::json ( [
+                'logo_url' => url('upload/profile/'. $logoName ) ,
+            ]  , 200 ) ;
+        } else {
+            return Response::json ( [
+                'error' => 'upload_failed'  ,
+                ] , 200 ) ;
+        }
+        
     }
 
     /**
@@ -351,7 +410,6 @@ class UserController extends Controller
             'company' => 'required' ,                                   
             'website' => 'required' , 
             'phone' => 'required' ,             
-            'logo' => '' ,                         
         ]);
 
         try{

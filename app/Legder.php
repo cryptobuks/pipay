@@ -19,7 +19,7 @@ class Legder extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'user_id', 'account_id', 'currency_id', 'balance', 'locked', 'fee', 'amount', 'fun', 'reason', 'modifiable_id', 'modifiable_type' 
+		'user_id', 'account_id', 'currency', 'balance', 'locked', 'fee', 'amount', 'fun', 'reason', 'modifiable_id', 'modifiable_type' 
 	];
 
 	public function account()
