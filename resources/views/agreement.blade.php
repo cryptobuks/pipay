@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
     <script>
         Architekt.event.on('ready', function() {
             var h = Architekt.device.height;
@@ -16,10 +17,7 @@
     <div id="pi_terms">
         <div class="pi-container">
             @include('agreement_content')
-<<<<<<< HEAD
-=======
-            
->>>>>>> e8d2f890cdf8fcb3f5a56f75fe5826d707f3e9aa
         </div>
     </div>
+
 @endsection

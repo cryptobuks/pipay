@@ -205,6 +205,12 @@ li {
   border-color: #63a9ee;
 }
 
+select.pi-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 table.pi-table {
   width: 100%;
   border-collapse: collapse;
@@ -234,7 +240,7 @@ table.pi-table > tbody > tr {
 }
 
 table.pi-table > tbody > tr:hover {
-  background-color: #cacaca !important;
+  background-color: #d6d6d6 !important;
 }
 
 table.pi-table > tbody > tr > td {
@@ -259,6 +265,119 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 .pi-theme-waiting {
   color: #de6f6f;
+}
+
+.pi-info {
+  display: block;
+  text-align: center;
+  padding: 24px;
+  background-color: #d9ecff;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+}
+
+.pi-info > h1 {
+  color: #4c5356;
+  font-size: 18px;
+}
+
+.pi-info > p {
+  color: #4c5356;
+  font-size: 12px;
+}
+
+.pi-info.pi-info-inline > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-form {
+  display: block;
+  width: 100%;
+}
+
+.pi-form > h1 {
+  font-size: 24px;
+  color: #4c5356;
+  padding: 8px 0;
+}
+
+.pi-form > p {
+  font-size: 12px;
+  color: #4c5356;
+  padding: 4px 0;
+}
+
+.pi-form > .pi-form-control {
+  margin: 16px 0;
+}
+
+.pi-form-control {
+  display: block;
+}
+
+.pi-form-control > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-form-control > label {
+  width: 20%;
+  color: #4c5356;
+  text-align: right;
+  margin-right: 5%;
+}
+
+.pi-form-control > .pi-input {
+  width: 70%;
+}
+
+.pi-form-control > p {
+  display: block;
+  font-size: 12px;
+  color: #4d4d4d;
+  padding: 8px 0;
+  margin-left: 25%;
+}
+
+.pi-form-control-inline > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-input-required {
+  color: #eb6877;
+  font-size: 24px;
+  margin-left: 8px;
+}
+
+.pi-form-split {
+  display: block;
+  clear: both;
+  height: 1px;
+  background-color: #e6e6e6;
+  margin: 32px 0;
+}
+
+.pi-checkbox,
+.pi-radio {
+  margin-right: 16px;
+}
+
+.pi-checkbox > *,
+.pi-radio > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-checkbox > input[type=checkbox],
+.pi-checkbox > input[type=radio],
+.pi-radio > input[type=checkbox],
+.pi-radio > input[type=radio] {
+  margin-right: 4px;
 }
 
 .pi-abstract-nav {
@@ -830,6 +949,45 @@ table.pi-table > tbody > tr:nth-child(2n) {
 #agreementBtnSubmit {
   padding: 16px 48px;
   font-size: 18px;
+}
+
+#pi_profile {
+  padding: 32px 0;
+}
+
+#pi_profile > .pi-container {
+  overflow: hidden;
+}
+
+#profileFrm {
+  margin: 16px 0;
+  float: left;
+}
+
+#profileFrm > .pi-form-control {
+  width: 70%;
+}
+
+#profileBtnSubmit {
+  font-size: 16px;
+  padding: 16px 48px;
+}
+
+#photoupload {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: auto;
+}
+
+#photoupload > #userPhoto {
+  width: 160px;
+  height: 160px;
+}
+
+#photoupload > p {
+  font-size: 10px;
+  margin: 8px 0;
 }
 
 #pi_product {

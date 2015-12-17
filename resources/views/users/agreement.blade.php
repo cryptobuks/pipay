@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
     <script>
         Architekt.event.on('ready', function() {
             var h = Architekt.device.height;
@@ -12,8 +13,6 @@
     </script>
 
     <div id="pi_top_space"></div>
-<form id="agreementFrm" name="agreementFrm" class="container" method="POST" action="{{ url('/user/agreement' ) }}">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
     <div id="pi_terms">
         <div class="pi-container">
@@ -21,14 +20,9 @@
 
             <form id="agreementFrm" name="agreementFrm" class="pi-button-container pi-button-centralize" method="POST" action="{{ url('/user/agreement' ) }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                
-                <button id="agreementBtnSubmit" type="submit" class="pi-button pi-theme-form">&nbsp; &nbsp; &nbsp; 동의 &nbsp; &nbsp; &nbsp; </button>
+                <input id="agreementBtnSubmit" type="submit" class="pi-button pi-theme-form" value="동의" />
             </form>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-</form>
 
->>>>>>> e8d2f890cdf8fcb3f5a56f75fe5826d707f3e9aa
 @endsection

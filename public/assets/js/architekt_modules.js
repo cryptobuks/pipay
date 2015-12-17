@@ -234,12 +234,13 @@ Architekt.module.reserv('Widget', function(options) {
 		this.confirmText = typeof options.confirmText !== 'undefined' ? options.confirmText : defaultText.confirm;
 		this.closeText = typeof options.closeText !== 'undefined' ? options.closeText : defaultText.close;
 		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.cancel;
+
+		this.destruct = function() {
+			this.controlObject.remove();
+			this.controlObject = null;
+			return this;	
+		};
 	}
-	widgetBase.prototype.destruct = function() {
-		this.controlObject.remove();
-		this.controlObject = null;
-		return this;
-	};
 
 	//Architekt.module.Widget.Notice(): Create a Notice widget
 	function Notice(options) {
@@ -266,8 +267,6 @@ Architekt.module.reserv('Widget', function(options) {
 			container.addClass('on');
 		}, 25);
 	}
-	Notice.prototype = new widgetBase();
-	Notice.prototype.constructor = Notice;
 
 	//Architekt.module.Widget.Confirm(): Create a Confirm widget
 	function Confirm(options) {
@@ -299,8 +298,6 @@ Architekt.module.reserv('Widget', function(options) {
 			container.addClass('on');
 		}, 25);
 	}
-	Confirm.prototype = new widgetBase();
-	Confirm.prototype.constructor = Confirm;
 
 	return {
 		Notice: Notice,

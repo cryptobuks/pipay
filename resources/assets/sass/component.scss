@@ -139,6 +139,11 @@ $pi-theme-form: #fff;
 		border-color: $pi-control-focus;
 	}
 }
+select.pi-input {
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
 
 table.pi-table {
 	width: 100%;
@@ -166,7 +171,7 @@ table.pi-table {
 			background-color: #ffffff;
 
 			&:hover {
-				background-color: darken(#e3e3e3, 10%) !important;	
+				background-color: darken(#e3e3e3, 5%) !important;	
 			}
 
 			> td {
@@ -197,6 +202,111 @@ table.pi-table {
 	color: $pi-theme-waiting;
 }
 
+.pi-info {
+	display: block;
+	text-align: center;
+	padding: 24px;
+	background-color: #d9ecff;
+	@include createBorderRadius(5px);
+
+	> h1 {
+		color: #4c5356;
+		font-size: 18px;
+	}
+	> p {
+		color: #4c5356;
+		font-size: 12px;
+	}
+
+	&.pi-info-inline {
+		> * {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+}
+
+.pi-form {
+	display: block;
+	width: 100%;
+	
+	> h1 {
+		font-size: 24px;
+		color: #4c5356;
+		padding: 8px 0;
+	}
+	> p {
+		font-size: 12px;
+		color: #4c5356;
+		padding: 4px 0;
+	}
+
+	> .pi-form-control {
+		margin: 16px 0;
+	}
+}
+
+.pi-form-control {
+	display: block;
+	
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	> label {
+		width: 20%;
+		color: #4c5356;
+		text-align: right;
+		margin-right: 5%;
+	}
+	> .pi-input {
+		width: 70%;
+	}
+	> p {
+		display: block;
+		font-size: 12px;
+		color: lighten(#000, 30%);
+		padding: 8px 0;
+		margin-left: 25%;
+	}
+}
+.pi-form-control-inline {
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
+
+.pi-input-required {
+	color: #eb6877;
+	font-size: 24px;
+	margin-left: 8px;
+}
+
+.pi-form-split {
+	display: block;
+	clear: both;
+	height: 1px;
+	background-color: #e6e6e6;
+	margin: 32px 0;
+}
+
+.pi-checkbox, .pi-radio {
+	margin-right: 16px;
+
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	> input[type=checkbox], > input[type=radio] {
+		margin-right: 4px;
+	}
+	> label {
+
+	}
+}
 
 .pi-abstract-nav {
 	clear: both;

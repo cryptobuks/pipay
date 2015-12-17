@@ -12,70 +12,86 @@
 		});
 	</script>
 @endif
-	<div id="pi_auth">
+
+	<div id="pi_top_space"></div>
+	
+	<div id="pi_profile">
 		<div class="pi-container">
-
-		<h3>{{ Lang::get('users.profile') }}</h3>
-		<form id="profileFrm" name="profileFrm" class="container" method="POST" action="{{ url('/user/profile' , $user->id  ) }}">
-			<input type="hidden" name="_token" value="{{ csrf_token() }}">
-			<input type="hidden" id="user_id" name="user_id" value="{{ $user->id }}">
-			<input type="hidden" id="shop_type" name="shop_type" value="1">									
-
-			<div id="pi_box">
-				{{ $user->level_name }} |  {{ $user->username }}  {{ $user->email }}
+			<!-- user info -->
+			<div class="pi-info pi-info-inline">
+				<h1>{{ $user->level_name }}</h1>
+				<p>|</p>
+				<h1>{{ $user->username }}  {{ $user->email }}</h1>
 			</div>
 
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.category_title') }}</label>
-				<div class="col-md-8 col-xs-12">
-					{!! Form::select( 'category' , $user_categories , old('category' , $user_profile->category ) , array( 'class' => 'form-control' ) ) !!}
+			<!-- profile form! -->
+			<form id="profileFrm" class="pi-form" method="POST" action="{{ url('/user/profile' , $user->id  ) }}" enctype="multipart/form-data">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}">
+				<input type="hidden" id="user_id" name="user_id" value="{{ $user->id }}">
+				<input type="hidden" id="shop_type" name="shop_type" value="1">	
+				
+				<h1>{{ Lang::get('users.profile') }}</h1>
+				<p>사업의 종류를 선택해주세요.</p>
+
+				<div class="pi-form-control">
+					<label for="category">{{ Lang::get('users.category_title') }}</label>
+					{!! Form::select( 'category' , $user_categories , old('category' , $user_profile->category ) , array( 'class' => 'pi-input' ) ) !!}
+					<div class="pi-input-required">*</div>
 				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
 
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.company_title') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="text" id="company" class="pi_text{{ !empty($errors->get('company')) ? ' pi_error' : '' }}" name="company" value="{{ $user_profile->company }}" >
+				<div class="pi-form-control">
+					<label for="shop_type"></label>
+
+					<div class="pi-form-control-inline">
+						<div class="pi-radio">
+							<input type="radio" name="shop_type" value="1" />
+							<label for="shop_type">온라인 상점</label>
+						</div>
+
+						<div class="pi-radio">
+							<input type="radio" name="shop_type" value="2" />
+							<label for="shop_type">오프라인 상점</label>
+						</div>
+					</div>
 				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
 
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.website_title') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="text" id="website" class="pi_text{{ !empty($errors->get('website')) ? ' pi_error' : '' }}" name="website" value="{{ $user_profile->website }}" >
+				<div class="pi-form-split"></div>
+
+
+				<p>프로필 판매자의 정보이며, 고객 결제 화면에 표시됩니다.</p>
+
+				<div class="pi-form-control">
+					<label for="company">{{ Lang::get('users.company_title') }}</label>
+					<input type="text" id="company" class="pi-input{{ !empty($errors->get('company')) ? ' pi-error' : '' }}" name="company" value="{{ $user_profile->company }}" >
+					<div class="pi-input-required">*</div>
 				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
 
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.phone_title') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<input type="text" id="phone" class="pi_text{{ !empty($errors->get('phone')) ? ' pi_error' : '' }}" name="phone" value="{{ $user_profile->phone }}" >
+				<div class="pi-form-control">
+					<label for="">{{ Lang::get('users.website_title') }}</label>
+					<input type="text" id="website" class="pi-input{{ !empty($errors->get('website')) ? ' pi-error' : '' }}" name="website" value="{{ $user_profile->website }}" >
 				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
 
-			<div class="form-group">
-				<label class="col-md-2 control-label col-xs-12">{{ Lang::get('users.logo_title') }}</label>
-				<div class="col-md-8 col-xs-12">
-					<img src="/image/profile_pic.png" width="80">
-					<input type="file" id="logo" class="pi_logo" name="logo">
+				<div class="pi-form-control">
+					<label for="">{{ Lang::get('users.phone_title') }}</label>
+					<input type="text" id="phone" class="pi-input{{ !empty($errors->get('phone')) ? ' pi-error' : '' }}" name="phone" value="{{ $user_profile->phone }}" >
 				</div>
-				<div class="col-md-2 hidden-xs"></div>
-			</div>
 
+				<div class="pi-form-control">
+					<label for="logo">프로필 사진</label>
+					<input type="file" id="photo" name="logo" />
 
-			<div class="form-group">
-				<div class="col-md-2"></div>
-				<div class="col-md-8 col-xs-12">
-					<button id="profileBtnSubmit" type="submit" class="pi_button">&nbsp; &nbsp; &nbsp; {{ Lang::get('users.update') }} &nbsp; &nbsp; &nbsp; </button>
+					<p>* 권장 크기: 가로 세로 512 픽셀 이하</p>
 				</div>
-				<div class="col-md-2"></div>
-			</div>
-		</form>
 
-        </div>
-    </div>
+				<!-- submit -->
+				<div class="pi-form-control">
+					<label for="profileBtnSubmit"></label><!-- Empty -->
+					<input name="profileBtnSubmit" id="profileBtnSubmit" type="submit" class="pi-button pi-theme-success" value="{{ Lang::get('users.update') }}" />
+				</div>
+			</form>
+
+
+		</div>
+	</div>
+
 @endsection
