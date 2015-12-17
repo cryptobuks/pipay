@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Account;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Cartalyst\Sentry\Sentry;
@@ -49,7 +50,7 @@ class UserController extends Controller
         // Enable the Throttling Feature
         $this->throttleProvider->enable();
 
-        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile' , 'getReset' , 'postReset' , 'agreement' , 'postAgreement' , 'postLogo' ] );
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' ] );
     }
 
     /**
@@ -69,6 +70,7 @@ class UserController extends Controller
     {
         $user = $this->sentry->getUser();
 
+        DB::beginTransaction();
         try {
             $user_key = UserKey::keyCreate( $user->id );
             $user_profile = UserProfile::create(
@@ -83,9 +85,13 @@ class UserController extends Controller
             );
 
             Account::create( [ 'user_id' => $user->id , 'currency' => 'PI' , 'balance' => 0 , 'locked' => 0  ] );        
-            Account::create( [ 'user_id' => $user->id , 'currency' => 'KRW' , 'balance' => 0 , 'locked' => 0  ] );                
-        } catch ( Exception $e) {
+            Account::create( [ 'user_id' => $user->id , 'currency' => 'KRW' , 'balance' => 0 , 'locked' => 0  ] );  
+            DB::commit();
 
+        } catch ( Exception $e) {
+            DB::rollback();
+
+            dd( $e );
         }
 
         return redirect('dashboard');
@@ -196,30 +202,6 @@ class UserController extends Controller
         $this->sentry->logout();
         Event::fire('users.logout');        
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');      
-     }
-
-     /**
-     * Delete a user.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function postDelete(Request $request , $id )
-     {
-        try
-        {
-            $user = $this->sentry->findUserById($id);
-            $user->delete();
-
-        } catch(UserNotFoundException $e)
-        {
-            flash()->overlay( trans('users.unableDelete')  , 'Message');
-            return redirect($this->redirectPath());
-        }
-
-        flash()->overlay( trans('users.deletedUser')  , 'Message');
-        return redirect($this->redirectPath());
-
      }
 
 
@@ -409,7 +391,8 @@ class UserController extends Controller
             'shop_type' => 'required' ,                       
             'company' => 'required' ,                                   
             'website' => 'required' , 
-            'phone' => 'required' ,             
+            'phone' => 'required' ,      
+            'logo' => 'mimes:png,jpg,jpeg',                   
         ]);
 
         try{
@@ -422,6 +405,14 @@ class UserController extends Controller
             $user_profile->website = e( $input['website'] );
             $user_profile->phone = e( $input['phone'] );  
 
+            if( $request->hasFile('logo') ) {
+                $logoName = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
+                $path = public_path() . '/upload/profile/';
+                
+                Image::make( $request->file('logo')->getRealPath() )->resize(200, 200)->save($path . $logoName);
+                $user_profile->logo = $logoName;              
+            }
+            
             if ($user_profile->save())
             {
                 // User saved
@@ -438,7 +429,6 @@ class UserController extends Controller
         }
         catch (Exception $e)
         {
-            dd ( $e );
             $result['success'] = false;         
             $result['message'] = trans('users.notfound'); 
         }       
@@ -447,289 +437,6 @@ class UserController extends Controller
         return Redirect::action('UserController@getProfile');
 
     }
-
-     /**
-     * Activate an existing user.
-     *
-     * @param int   $id
-     * @param string $code 
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function getActivate( $id , $code)
-     {
-        if( !$id  || !$code ) {
-            throw new BadRequestHttpException();
-        }
-
-        $result = array();
-
-        try{
-            $user = $this->sentry->findUserById($id);
-            //print_r($user);
-                
-            if($user->attemptActivation($code))
-            {
-                $result['success'] = true;  
-                $url = URL::route('user.login');            
-                $result['message'] =  trans('users.activated', array('url' => $url));
-            } 
-            else 
-            {
-                $result['success'] = false;                             
-                $result['message']  =trans('users.notactivated');
-            }
-
-        }
-        catch(\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
-        {
-            $result['success'] = false;                             
-            $result['message']  = trans('users.alreadyactive');
-        }
-        catch(\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            $result['success'] = false;                             
-            $result['message']  = trans('users.exists');
-        }
-        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
-        {
-            $result['success'] = false;
-                $result['message'] =  trans('users.notfound');
-        }
-        
-        if( $result['success'] ) 
-        {
-            flash()->overlay( $result['message']  , 'Success');
-        }
-         else 
-        {
-            flash()->overlay( $result['message']  , 'Failed');
-        }
-
-        return redirect('/');        
-
-     }   
-
-     /**
-     * Display the resend form.
-     *
-     * @return \Illuminate\View\View
-     */
-
-     public function getResend()
-     {
-        return view('users.resend');                             
-     }   
-
-     /**
-     * Queue the sending of the activation email.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function postResend(Request $request)
-     {
-        $input = $request->all();
-        $result = array();
-
-        if ( ! $user = Sentinel::check())
-        {
-            return Redirect::to('/user/login');
-        }
-
-        $activation = Activation::exists($user) ?: Activation::create($user);
-        
-//     Activation::complete($user, $activation->code);
-
-        $code = $activation->code;
-
-        $mail = [
-            'email' => $user->email ,               
-            'url' => URL::to(Config::get('app.url','/')),
-            'link' => URL::route('user.activate', ['id' => $user->id , 'code' => $code ]),
-        ];
-
-        Event::fire('user.signup', $mail  );
-
-        $result['message'] = trans('users.resend'); 
-        $result['success'] = true;          
-
-        flash()->overlay( $result['message'] , 'Message');
-
-        return redirect($this->redirectPath());
-
-     }   
-
-     /**
-     * Display the password reset form.
-     *
-     * @return \Illuminate\View\View
-     */
-
-     public function getReset()
-     {
-        return view('users.reset');                                      
-     }   
-
-     /**
-     * Queue the sending of the password reset email.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function postReset(Request $request)
-     {
-        $input = $request->all();
-        $result = array();
-
-        try
-        {
-            // Find the user using the user email address
-            $user = Sentry::findUserByLogin(e($input ('email') ) );
-
-            // Get the password reset code
-            $resetCode = $user->getResetPasswordCode();
-
-            // Now you can send this code to your user via email for example.
-            $result['success'] = true;
-            $result['message']  = trans('users.resendpword');
-
-                $mail = [
-                    'email' => e($input['email'])  , 
-                    'userId' => $user->getId() ,
-                    'resetCode' => $user->getResetPasswordCode() 
-                ] ;
-
-            Event::fire('user.forgot', $mail );         
-
-        }
-        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            $result['message']  = trans('users.notfound');
-        }
-
-        flash()->overlay( $result['message'] , 'Message');
-        return redirect($this->redirectPath());
-
-     }   
-
-
-
-     /**
-     * Display the password forgot Form.
-     *
-     * @return \Illuminate\View\View
-     */
-
-     public function getForgot()
-     {
-        return view('users.forgot');
-     }
-
-     public function postForgot(Request $request)
-     {
-        $input = $request->all();
-
-        $this->validate( $request , [
-            'email' => 'required|email|max:128',
-        ]);
-
-        $result = array();
-
-        try
-        {
-            $user = $this->sentry->getUserProvider()->findByLogin(e($input['email']));
-
-            $result['success'] = true;
-                $result['message'] = trans('users.emailinfo');
-                $mail = [
-                    'email' => e($input['email'])  , 
-                    'userId' => $user->getId() ,
-                    'resetCode' => $user->getResetPasswordCode() 
-                 ] ;
-
-                    Event::fire('user.forgot', $mail );
-
-            }
-                catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            $result['success'] = false;
-                $result['message'] = trans('users.notfound');
-        }
-
-        if($result['success'])
-        {
-            flash()->overlay( $result['message'] , 'Message');
-            return redirect($this->redirectPath());
-        } else {
-            return redirect('/user/forgot')
-                ->withErrors([
-                    'email' => $result['message'] ,
-            ]);
-        }
-
-
-     }
-
-     /**
-     * Queue the sending of the password reset email.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function getPassword( $id , $code )
-     {
-        if( !$id  || !$code ) {
-            throw new BadRequestHttpException();
-        }
-
-        $result = array();
-        try
-        {
-            // Find the user
-            $user = $this->sentry->getUserProvider()->findById($id);
-            $newPassword = _generatePassword(8,8);
-
-            // Attempt to reset the user password
-            if ($user->attemptResetPassword($code, $newPassword))
-            {
-                // Email the reset code to the user
-                    $result['success'] = true;
-                    $result['message'] = trans('users.emailpassword');
-                    $mail = [
-                        'email' => $user->getLogin() ,                  
-                        'newPassword' => $newPassword , 
-                     ] ;
-
-                Event::fire('user.newpassword', $mail );
-
-            }
-            else
-            {
-                // Password reset failed
-                $result['success'] = false;
-                $result['message'] = trans('users.problem');
-            }
-        }
-        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            $result['success'] = false;
-            $result['message'] = trans('users.notfound');
-        }
-
-        if( $result['success'] ) 
-        {
-            flash()->overlay( $result['message']  , 'Success');
-            return redirect('/');
-        }
-         else 
-        {
-            flash()->overlay( $result['message']  , 'Failed');
-            return redirect('/');
-        }
-
-     }       
 
     /**
      * Check the user model.

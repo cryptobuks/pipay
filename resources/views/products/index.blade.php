@@ -12,7 +12,7 @@
     <div id="pi_product">
         <div class="pi-container">
             <div class="pi-button-container">
-            	<a href="#" id="addProduct" class="pi-button pi-theme-success">결제 상품 추가하기</a>
+            	<a href="/product/create" id="addProduct" class="pi-button pi-theme-success">결제 상품 추가하기</a>
             </div>
 
             <table class="pi-table">
@@ -26,23 +26,30 @@
             		</tr>
             	</thead>
             	<tbody>
+			@foreach($product as $item)
 					<tr>
-						<td>야구공</td>
-						<td>1234567</td>
-						<td>5,000 KRW</td>
-						<td>온라인</td>
-						<td>KRW</td>
+						<td>{{ $item->item_desc }}</td>
+						<td>{{ $item->order_id }}</td>
+						<td>{{ $item->amount }}KRW</td>
+						<td>
+							@if ( $item->usage == 1)
+								온라인
+							@elseif ( $item->usage == 2)
+								기부
+							@elseif ( $item->usage == 3)
+								오프라인
+							@endif
+						</td>
+						<td>{{ $item->currency }}</td>
 					</tr>
-					<tr>
-						<td>축구공</td>
-						<td>1231323</td>
-						<td>10,000 KRW</td>
-						<td>온라인</td>
-						<td>Pi</td>
-					</tr>
+			@endforeach
             	</tbody>
             </table>
         </div>
     </div>
+
+	<div class="col-md-12">
+		{!! $product->render(); !!}
+	</div>
 
 @endsection
