@@ -101,7 +101,7 @@
 
 				<!-- submit -->
 				<div class="pi-form-control">
-					<label for="profileBtnSubmit"></label><!-- Empty -->
+					<div class="pi-form-control-space"></div>
 					<input name="profileBtnSubmit" id="profileBtnSubmit" type="submit" class="pi-button pi-theme-success" value="{{ Lang::get('users.update') }}" />
 				</div>
 			</form>

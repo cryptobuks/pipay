@@ -235,11 +235,17 @@ table.pi-table {
 		color: #4c5356;
 		padding: 8px 0;
 	}
+	> h2 {
+		font-size: 18px;
+		color: #4c5356;
+		padding: 8px 0;
+	}
 	> p {
 		font-size: 12px;
 		color: #4c5356;
 		padding: 4px 0;
 	}
+	
 
 	> .pi-form-control {
 		margin: 16px 0;
@@ -254,6 +260,12 @@ table.pi-table {
 		vertical-align: middle;
 	}
 
+	> div.pi-form-control-space {
+		width: 20%;
+		color: #4c5356;
+		text-align: right;
+		margin-right: 5%;
+	}
 	> label {
 		width: 20%;
 		color: #4c5356;
@@ -289,7 +301,7 @@ table.pi-table {
 	clear: both;
 	height: 1px;
 	background-color: #e6e6e6;
-	margin: 32px 0;
+	margin: 16px 0;
 }
 
 .pi-checkbox, .pi-radio {

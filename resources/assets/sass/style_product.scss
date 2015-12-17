@@ -1,4 +1,4 @@
-#pi_product {
+#pi_product, #pi_product_create {
 	padding: 32px 0;
 
 	> .pi-container {
@@ -17,4 +17,17 @@
 	position: absolute;
 	bottom: 0;
 	left: 0;
+}
+
+#createProductForm {
+	margin: 16px 0;
+	
+	> .pi-form-control {
+		width: 70%;
+	}
+}
+
+#createProductSubmit {
+    font-size: 16px;
+    padding: 16px 48px;
 }

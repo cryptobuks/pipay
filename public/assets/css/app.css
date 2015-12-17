@@ -305,6 +305,12 @@ table.pi-table > tbody > tr:nth-child(2n) {
   padding: 8px 0;
 }
 
+.pi-form > h2 {
+  font-size: 18px;
+  color: #4c5356;
+  padding: 8px 0;
+}
+
 .pi-form > p {
   font-size: 12px;
   color: #4c5356;
@@ -322,6 +328,13 @@ table.pi-table > tbody > tr:nth-child(2n) {
 .pi-form-control > * {
   display: inline-block;
   vertical-align: middle;
+}
+
+.pi-form-control > div.pi-form-control-space {
+  width: 20%;
+  color: #4c5356;
+  text-align: right;
+  margin-right: 5%;
 }
 
 .pi-form-control > label {
@@ -359,7 +372,7 @@ table.pi-table > tbody > tr:nth-child(2n) {
   clear: both;
   height: 1px;
   background-color: #e6e6e6;
-  margin: 32px 0;
+  margin: 16px 0;
 }
 
 .pi-checkbox,
@@ -961,7 +974,6 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 #profileFrm {
   margin: 16px 0;
-  float: left;
 }
 
 #profileFrm > .pi-form-control {
@@ -983,11 +995,13 @@ table.pi-table > tbody > tr:nth-child(2n) {
   height: auto;
 }
 
-#pi_product {
+#pi_product,
+#pi_product_create {
   padding: 32px 0;
 }
 
-#pi_product > .pi-container > .pi-button-container {
+#pi_product > .pi-container > .pi-button-container,
+#pi_product_create > .pi-container > .pi-button-container {
   position: relative;
   margin-bottom: 32px;
 }
@@ -1001,6 +1015,19 @@ table.pi-table > tbody > tr:nth-child(2n) {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+#createProductForm {
+  margin: 16px 0;
+}
+
+#createProductForm > .pi-form-control {
+  width: 70%;
+}
+
+#createProductSubmit {
+  font-size: 16px;
+  padding: 16px 48px;
 }
 
 #pi_ledger {
