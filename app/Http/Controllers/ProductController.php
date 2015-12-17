@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Product;
 
 class ProductController extends Controller
 {
@@ -32,7 +34,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $product = Product::orderBy( 'id' , 'desc' )->paginate(15);
+        //dd($product);
+        return view('products.index', compact('product'));
     }
 
     /**
@@ -73,6 +77,21 @@ class ProductController extends Controller
      */
     public function store( Request $request )
     {
+        $input = $request->all();
+        
+        $user = $this->sentry->getUser();
+        $input['user_id'] = $user->id;
+        
+        unset($input['chk']);
+        $input['customer_email'] = (\Input::has('customer_email')) ? true : false;
+        $input['customer_name'] = (\Input::has('customer_name')) ? true : false;
+        $input['customer_phone'] = (\Input::has('customer_phone')) ? true : false;
+        $input['customer_address'] = (\Input::has('customer_address')) ? true : false;
+        $input['customer_custom'] = (\Input::has('customer_custom')) ? true : false;
+
+        // dd($input);
+        $product = Product::create($input);
+
         return redirect( 'product' );
     }
     
