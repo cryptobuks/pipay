@@ -25,7 +25,7 @@
 			</div>
 
 			<!-- profile form! -->
-			<form id="profileFrm" class="pi-form" method="POST" action="{{ url('/user/profile' , $user->id  ) }}" enctype="multipart/form-data">
+			<form id="profileFrm" class="pi-form" method="POST" action="{{ url('/user/profile' , $user->id ) }}" enctype="multipart/form-data">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				<input type="hidden" id="user_id" name="user_id" value="{{ $user->id }}">
 				<input type="hidden" id="shop_type" name="shop_type" value="1">	
@@ -44,12 +44,12 @@
 
 					<div class="pi-form-control-inline">
 						<div class="pi-radio">
-							<input type="radio" name="shop_type" value="1" />
+							<input type="radio" name="shop_type" value="1" <?= ($user_profile->shop_type === '1') ? "checked" : "" ?>/>
 							<label for="shop_type">온라인 상점</label>
 						</div>
 
 						<div class="pi-radio">
-							<input type="radio" name="shop_type" value="2" />
+							<input type="radio" name="shop_type" value="2" <?= ($user_profile->shop_type === '2') ? "checked" : "" ?>/>
 							<label for="shop_type">오프라인 상점</label>
 						</div>
 					</div>
@@ -81,6 +81,22 @@
 					<input type="file" id="photo" name="logo" />
 
 					<p>* 권장 크기: 가로 세로 512 픽셀 이하</p>
+				</div>
+
+<?php
+	$userProfile = $user_profile->logo;
+
+	if(!$userProfile || is_null($userProfile)) {
+		$userProfile = asset('image/profile_pic.png');
+	}
+	else {
+		$userProfile = url('/upload/profile/', $userProfile);
+	}
+?>
+
+				<!-- user image -->
+				<div id="userPhoto">
+					<img src="{{ $userProfile }}" />
 				</div>
 
 				<!-- submit -->

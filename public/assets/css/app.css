@@ -973,21 +973,14 @@ table.pi-table > tbody > tr:nth-child(2n) {
   padding: 16px 48px;
 }
 
-#photoupload {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: auto;
+#userPhoto {
+  margin-left: 18%;
 }
 
-#photoupload > #userPhoto {
-  width: 160px;
-  height: 160px;
-}
-
-#photoupload > p {
-  font-size: 10px;
-  margin: 8px 0;
+#userPhoto > img {
+  display: block;
+  width: 100px;
+  height: auto;
 }
 
 #pi_product {
