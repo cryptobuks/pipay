@@ -333,8 +333,7 @@ class UserController extends Controller
 
         try
         {
-            $logoName_m = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
-            $logoName_s = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();            
+            $logoName = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
             $path = public_path() . '/upload/profile/';
             
             /*
@@ -350,6 +349,7 @@ class UserController extends Controller
             $result['status'] = 'success' ; 
         } catch ( Exception $e ) {
             $result['status'] = 'error' ; 
+            dd( $e );
         }
 
         if( $result['status'] == 'success') {
