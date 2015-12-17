@@ -406,13 +406,13 @@ class UserController extends Controller
             $user_profile->phone = e( $input['phone'] );  
 
             if( $request->hasFile('logo') ) {
-                $logoName = $user->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
+                $logoName = $user_profile->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
                 $path = public_path() . '/upload/profile/';
                 
                 Image::make( $request->file('logo')->getRealPath() )->resize(200, 200)->save($path . $logoName);
                 $user_profile->logo = $logoName;              
             }
-            
+
             if ($user_profile->save())
             {
                 // User saved
