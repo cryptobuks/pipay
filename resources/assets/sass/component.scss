@@ -245,7 +245,20 @@ table.pi-table {
 		color: #4c5356;
 		padding: 4px 0;
 	}
-	
+	> .form-sprite-title {
+		> * {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		> p {
+			font-size: 18px;
+			color: #4c5356;
+			padding: 8px 0;
+		}
+		> div {
+			margin-left: 4px;
+		}
+	}
 
 	> .pi-form-control {
 		margin: 16px 0;
@@ -273,7 +286,7 @@ table.pi-table {
 		margin-right: 5%;
 	}
 	> .pi-input {
-		width: 70%;
+		width: 60%;
 	}
 	> p {
 		display: block;

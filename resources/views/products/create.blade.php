@@ -13,7 +13,10 @@
 				<h1>1. 상품정보</h1>
 				<div class="pi-form-split"></div>
 
-				<h2>파이 결제 방법 선택</h2>
+				<div class="form-sprite-title">
+					<p>파이 결제 방법 선택</p>
+					<div class="sprite-question" id="question_purchase"></div>
+				</div>
 				<!-- web standard -->
 				<label for="usage"></label>
 				<div class="pi-form-control">
@@ -48,6 +51,7 @@
 					{!! Form::label('amount', '상품가격'  , array('class' => '')) !!}
 					{!! Form::select( 'settlement_currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input'  )) !!}
 					{!! Form::text( 'amount', null , array('class' => ''  )) !!}
+					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 				
 				<div class="pi-form-control">
@@ -60,6 +64,8 @@
 						{!! Form::radio( 'currency', 'PI', array('class' => ''  )) !!}
 						<label for="currency">PI</label>
 					</div>
+
+					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 
 				<div class="pi-form-control">
@@ -76,53 +82,63 @@
 				</div>
 
 				<!-- advanced -->
-
-
-				<div class="pi-form-control">
-					{!! Form::label('customer_email', '고객 이메일'  , array('class' => '')) !!}
-					<div class="pi-checkbox">
-						{!! Form::checkbox( 'customer_email', '이메일' , array('class' => ''  )) !!}
-						{!! Form::label('chk', '고객 이메일'  , array('class' => '')) !!}
-					</div>
+				<div id="advancedControl" class="pi-form-control">
+					<div class="pi-form-control-space"></div>
+					<p id="advanced">고급기능</p>
 				</div>
+				
+				<div id="advanced-list">
+					<div class="pi-form-control">
+						{!! Form::label('customer_email', '고객 이메일'  , array('class' => '')) !!}
+						<div class="pi-checkbox">
+							{!! Form::checkbox( 'customer_email', '이메일' , array('class' => ''  )) !!}
+							{!! Form::label('chk', '고객 이메일'  , array('class' => '')) !!}
+						</div>
+					</div>
 
-				<div class="pi-form-control">
-					{!! Form::label('customer_address', '고객 주소'  , array('class' => '')) !!}
-					<div class="pi-checkbox">
-						{!! Form::checkbox( 'customer_address', '주소' , array('class' => ''  )) !!}
+					<div class="pi-form-control">
 						{!! Form::label('customer_address', '고객 주소'  , array('class' => '')) !!}
+						<div class="pi-checkbox">
+							{!! Form::checkbox( 'customer_address', '주소' , array('class' => ''  )) !!}
+							{!! Form::label('customer_address', '고객 주소'  , array('class' => '')) !!}
+						</div>
 					</div>
-				</div>
 
-				<div class="pi-form-control">
-					{!! Form::label('customer_name', '고객 이름'  , array('class' => '')) !!}
-					<div class="pi-checkbox">
-						{!! Form::checkbox( 'customer_name', '이름' , array('class' => ''  )) !!}
+					<div class="pi-form-control">
 						{!! Form::label('customer_name', '고객 이름'  , array('class' => '')) !!}
+						<div class="pi-checkbox">
+							{!! Form::checkbox( 'customer_name', '이름' , array('class' => ''  )) !!}
+							{!! Form::label('customer_name', '고객 이름'  , array('class' => '')) !!}
+						</div>
 					</div>
-				</div>
 
-				<div class="pi-form-control">
-					{!! Form::label('customer_custom', '고객 추가입력'  , array('class' => '')) !!}
-					<div class="pi-checkbox">
-						{!! Form::checkbox( 'customer_custom', '추가 입력 사항' , array('class' => ''  )) !!}
+					<div class="pi-form-control">
 						{!! Form::label('customer_custom', '고객 추가입력'  , array('class' => '')) !!}
+						<div class="pi-checkbox">
+							{!! Form::checkbox( 'customer_custom', '추가 입력 사항' , array('class' => ''  )) !!}
+							{!! Form::label('customer_custom', '고객 추가입력'  , array('class' => '')) !!}
+						</div>
 					</div>
 				</div>
 
+				
+
 				<div class="pi-form-control">
-					{!! Form::label('redirect', '결제후 Redirect URL'  , array('class' => '')) !!}
+					{!! Form::label('redirect', '결제 후 이동할 주소'  , array('class' => '')) !!}
 					{!! Form::text( 'redirect', null , array('class' => 'pi-input'  )) !!}
+					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 
 				<div class="pi-form-control">
-					{!! Form::label('callback', '결제후 Callback URL'  , array('class' => '')) !!}
+					{!! Form::label('callback', '결제 후 실행할 주소'  , array('class' => '')) !!}
 					{!! Form::text( 'callback', null , array('class' => 'pi-input'  )) !!}
+					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 
 				<div class="pi-form-control">
 					{!! Form::label('ipn', 'Instant Payment Notification URL'  , array('class' => '')) !!}
 					{!! Form::text( 'ipn', null , array('class' => 'pi-input'  )) !!}
+					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 
 

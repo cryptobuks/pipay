@@ -317,6 +317,21 @@ table.pi-table > tbody > tr:nth-child(2n) {
   padding: 4px 0;
 }
 
+.pi-form > .form-sprite-title > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-form > .form-sprite-title > p {
+  font-size: 18px;
+  color: #4c5356;
+  padding: 8px 0;
+}
+
+.pi-form > .form-sprite-title > div {
+  margin-left: 4px;
+}
+
 .pi-form > .pi-form-control {
   margin: 16px 0;
 }
@@ -345,7 +360,7 @@ table.pi-table > tbody > tr:nth-child(2n) {
 }
 
 .pi-form-control > .pi-input {
-  width: 70%;
+  width: 60%;
 }
 
 .pi-form-control > p {
@@ -517,7 +532,8 @@ table.pi-table > tbody > tr:nth-child(2n) {
 .sprite-arrow-left,
 .sprite-arrow-right,
 .sprite-refresh,
-.sprite-disk {
+.sprite-disk,
+.sprite-question {
   width: 32px;
   height: 32px;
   background-image: url("../../image/sprites_v1.png");
@@ -538,6 +554,10 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 .sprite-disk {
   background-position: 0px -96px;
+}
+
+.sprite-question {
+  background-position: 0px -128px;
 }
 
 #pi_gnb {
@@ -1028,6 +1048,29 @@ table.pi-table > tbody > tr:nth-child(2n) {
 #createProductSubmit {
   font-size: 16px;
   padding: 16px 48px;
+}
+
+#question_purchase {
+  cursor: pointer;
+}
+
+#advancedControl {
+  margin: 4px 0;
+}
+
+#advanced {
+  color: #0c69b8;
+  cursor: pointer;
+}
+
+#advanced-list {
+  overflow: hidden;
+  height: 0;
+  /* to 160px */
+}
+
+#advanced-list > .pi-form-control {
+  margin: 16px 0;
 }
 
 #pi_ledger {
