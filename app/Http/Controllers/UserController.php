@@ -13,6 +13,7 @@ use Cartalyst\Sentry\Users\LoginRequiredException;
 use Cartalyst\Sentry\Users\PasswordRequiredException;
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Exception;
+use Crypt;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\RedirectResponse;
 use App\UserKey;
 use App\UserProfile;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class UserController extends Controller
 {
@@ -51,6 +53,38 @@ class UserController extends Controller
         $this->throttleProvider->enable();
 
         $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' ] );
+    }
+
+    public function decrypt( Request $request  , $crypt ) {
+
+        $input = $request->only( 'lang' , 'livemode' );
+
+        try {
+            $decrypted = Crypt::decrypt( $crypt );
+            $param = json_decode( $decrypted );
+        } catch ( DecryptException $e) {
+            //
+        }
+        return Response::json ( [ $param , $input ] , 200 );
+    }
+
+    public function getEncrypt( ) {
+        return view('users.encrypt');
+    }
+
+    public function encrypt( Request $request ) {
+
+        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount' , 'settlement_currency' , 'email' , 'redirect' , 'ipn' );
+
+        $param = [];
+        foreach ( $input as $k => $v ) {
+            $param[] = $v;
+        }
+
+        $return = json_encode( $param ,  JSON_UNESCAPED_UNICODE ) ;
+        $crypt = Crypt::encrypt( $return );
+
+        return Response::json( [ 'crypt' => $crypt ] , 200 );
     }
 
     /**

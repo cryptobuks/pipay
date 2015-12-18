@@ -22,15 +22,22 @@ $router->get('user/logout', ['as' => 'user.logout', 'uses' => 'UserController@ge
 $router->get('user/agreement', ['as' => 'user.agreement', 'uses' => 'UserController@agreement']);   // 약관 페이지 
 $router->post('user/agreement', ['as' => 'user.agreement.post', 'uses' => 'UserController@postAgreement']);   // 약관 페이지  처리 로직
 
+
+$router->get('user/encrypt', ['as' => 'user.encrypt', 'uses' => 'UserController@getEncrypt']);   // 로그인 뷰 
+$router->post('user/encrypt', ['as' => 'user.encrypt.post', 'uses' => 'UserController@encrypt']);   // 로그인 뷰 
+$router->get('user/decrypt/{crypt}', ['as' => 'user.decrypt.post', 'uses' => 'UserController@decrypt']);  // 로그인 액션
+
 $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);   // 유저 프로파일
 $router->post('user/profile/{id}', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);   // 유저 프로파일 처리
 $router->post('user/upload/logo' , ['as' => 'user.upload.logo' , 'uses' => 'UserController@postLogo' ]);   // 유저 사진 업로드 
 
+/*
 Route::group(['middleware' => 'auth'], function () {
     Route::get('user/upload', function () {
        return view( 'users.upload' );
     });
 });
+*/
 
 // product routes
 /*
@@ -40,6 +47,8 @@ $router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@
 $router->get('product/{id}', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);  // 수정 
 $router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);  // 수정 저장 
 */
+
+
 
 // tool routes
 $router->get('tool', ['as' => 'tool.index', 'uses' => 'ToolController@index']);   // 결제도구 메인
