@@ -23,9 +23,9 @@ $router->get('user/agreement', ['as' => 'user.agreement', 'uses' => 'UserControl
 $router->post('user/agreement', ['as' => 'user.agreement.post', 'uses' => 'UserController@postAgreement']);   // 약관 페이지  처리 로직
 
 
-$router->get('user/encrypt', ['as' => 'user.encrypt', 'uses' => 'UserController@getEncrypt']);   // 로그인 뷰 
-$router->post('user/encrypt', ['as' => 'user.encrypt.post', 'uses' => 'UserController@encrypt']);   // 로그인 뷰 
-$router->get('user/decrypt/{crypt}', ['as' => 'user.decrypt.post', 'uses' => 'UserController@decrypt']);  // 로그인 액션
+$router->get('user/encrypt', ['as' => 'user.encrypt', 'uses' => 'UserController@getEncrypt']);   // 암호 테스트 뷰
+$router->post('user/encrypt', ['as' => 'user.encrypt.post', 'uses' => 'UserController@encrypt']);   // 암호 인코딩 
+$router->get('user/decrypt/{crypt}', ['as' => 'user.decrypt.post', 'uses' => 'UserController@decrypt']);  // 암호 디코딩 
 
 $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@getProfile']);   // 유저 프로파일
 $router->post('user/profile/{id}', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);   // 유저 프로파일 처리
