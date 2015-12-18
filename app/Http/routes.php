@@ -33,11 +33,19 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 // product routes
+/*
 $router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);   // 목록
 $router->get('product/create', ['as' => 'product.create', 'uses' => 'ProductController@create']);  // 추가 
 $router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@store']);  // 추가 저장 
 $router->get('product/{id}', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);  // 수정 
 $router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);  // 수정 저장 
+*/
+
+// tool routes
+$router->get('tool', ['as' => 'tool.index', 'uses' => 'ToolController@index']);   // 결제도구 메인
+$router->get('tool/generate/button', ['as' => 'tool.generate.button', 'uses' => 'ToolController@generateButton']);   // 결제 버튼 생성 폼 페이지 
+$router->get('tool/generate/link', ['as' => 'tool.generate.link', 'uses' => 'ToolController@generateLink']);   // 결제 링크 생성 폼 페이지 
+$router->post('tool/encrypt', ['as' => 'tool.encrypt', 'uses' => 'ToolController@encrypt']);   // 결제 값들 암호화 
 
 // payment routes
 $router->get('payment', ['as' => 'payment.index', 'uses' => 'PaymentController@index']);  // 거래 목록 

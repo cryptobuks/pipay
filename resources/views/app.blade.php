@@ -91,7 +91,7 @@
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
             @else
                 <li{{ Request::is('dashborad') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
-                <li{{ Request::is('product') ? ' class="active"' : null }}><a href="{{ URL::to('/product') }}">제품</a></li>
+                <li{{ Request::is('tool') ? ' class="active"' : null }}><a href="{{ URL::to('/tool') }}">결제도구</a></li>
                 <li{{ Request::is('payment') ? ' class="active"' : null }}><a href="{{ URL::to('/payment') }}">결제</a></li>
                 <li{{ Request::is('ledger') ? ' class="active"' : null }}><a href="{{ URL::to('/ledger') }}">정산내역</a></li>
                 <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/support') }}">고객센터</a></li>
