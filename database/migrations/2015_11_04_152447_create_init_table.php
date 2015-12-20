@@ -248,14 +248,15 @@ class CreateInitTable extends Migration
             $table->string('email');
             $table->string('username')->nullable();
             $table->string('cellphone' , 32 )->nullable();            
-            $table->smallInteger('level' )->nullable();
-            $table->integer('category' )->nullable();
-            $table->tinyInteger('shop_type' )->nullable(); 
+            $table->smallInteger( 'level' )->nullable();
+            $table->integer( 'category' )->nullable();
+            $table->tinyInteger( 'shop_type' )->nullable(); 
             $table->string('company' )->nullable();   
             $table->string('website' )->nullable();             
             $table->string('phone' )->nullable();     
             $table->string('logo' )->nullable();                 
             $table->boolean('agreement' )->default(0);            
+            $table->char('settlement_currency' , 5 )->default('PI');            
             $table->timestamps();
 
             $table->engine = 'InnoDB';

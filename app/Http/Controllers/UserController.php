@@ -52,7 +52,7 @@ class UserController extends Controller
         // Enable the Throttling Feature
         $this->throttleProvider->enable();
 
-        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' ] );
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' , 'decrypt' , 'getEncrypt' , 'encrypt' ] );
     }
 
     public function decrypt( Request $request  , $crypt ) {
@@ -74,12 +74,16 @@ class UserController extends Controller
 
     public function encrypt( Request $request ) {
 
-        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount' , 'settlement_currency' , 'email' , 'redirect' , 'ipn' );
+        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount'  , 'email' , 'redirect' , 'ipn' );
 
         $param = [];
         foreach ( $input as $k => $v ) {
-            $param[] = $v;
+            if(!empty( $v ) ) $param[$k] = $v;
         }
+
+        $user = $this->sentry->getUser();
+        $user_key = UserKey::find( $user->id );
+        $param['api_key'] = $user_key->live_api_key;
 
         $return = json_encode( $param ,  JSON_UNESCAPED_UNICODE ) ;
         $crypt = Crypt::encrypt( $return );
