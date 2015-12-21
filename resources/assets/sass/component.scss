@@ -245,6 +245,10 @@ table.pi-table {
 		color: #4c5356;
 		padding: 4px 0;
 	}
+	> h1.emp, > h2.emp, > p.emp {
+		color: #0c69b8;
+		font-weight: bold;
+	}
 	> .form-sprite-title {
 		> * {
 			display: inline-block;

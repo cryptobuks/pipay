@@ -1,0 +1,60 @@
+#pi_product, #pi_product_create {
+	padding: 32px 0;
+
+	> .pi-container {
+		> h1 {
+			font-size: 24px;
+			color: #4c5356;
+			padding: 8px 0;
+			color: #0c69b8;
+			font-weight: bold;
+		}
+
+		> .pi-button-container {
+			position: relative;
+			margin-bottom: 32px;
+		}
+	}
+}
+
+#addProduct {
+	font-size: 16px;
+	padding: 16px 48px;
+}
+#refresh {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+#createProductForm {
+	margin: 16px 0;
+	
+	> .pi-form-control {
+		width: 70%;
+	}
+}
+
+#createProductSubmit {
+    font-size: 16px;
+    padding: 16px 48px;
+}
+#question_purchase {
+	cursor: pointer;
+}
+
+#advancedControl {
+	margin: 4px 0;
+}
+#advanced {
+	color: #0c69b8;
+	cursor: pointer;
+}
+#advanced-list {
+	overflow: hidden;
+	height: 0;	/* to 160px */
+
+	> .pi-form-control {
+		margin: 16px 0;
+	}
+}

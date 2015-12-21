@@ -317,6 +317,13 @@ table.pi-table > tbody > tr:nth-child(2n) {
   padding: 4px 0;
 }
 
+.pi-form > h1.emp,
+.pi-form > h2.emp,
+.pi-form > p.emp {
+  color: #0c69b8;
+  font-weight: bold;
+}
+
 .pi-form > .form-sprite-title > * {
   display: inline-block;
   vertical-align: middle;
@@ -557,7 +564,9 @@ table.pi-table > tbody > tr:nth-child(2n) {
 }
 
 .sprite-question {
-  background-position: 0px -128px;
+  width: 16px;
+  height: 16px;
+  background-position: 0px -64px;
 }
 
 #pi_gnb {
@@ -1018,6 +1027,15 @@ table.pi-table > tbody > tr:nth-child(2n) {
 #pi_product,
 #pi_product_create {
   padding: 32px 0;
+}
+
+#pi_product > .pi-container > h1,
+#pi_product_create > .pi-container > h1 {
+  font-size: 24px;
+  color: #4c5356;
+  padding: 8px 0;
+  color: #0c69b8;
+  font-weight: bold;
 }
 
 #pi_product > .pi-container > .pi-button-container,

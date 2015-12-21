@@ -33,12 +33,14 @@
 				<h1>{{ Lang::get('users.profile') }}</h1>
 				<p>사업의 종류를 선택해주세요.</p>
 
+				<!-- category -->
 				<div class="pi-form-control">
 					<label for="category">{{ Lang::get('users.category_title') }}</label>
 					{!! Form::select( 'category' , $user_categories , old('category' , $user_profile->category ) , array( 'class' => 'pi-input' ) ) !!}
 					<div class="pi-input-required">*</div>
 				</div>
 
+				<!-- type -->
 				<div class="pi-form-control">
 					<label for="shop_type"></label>
 
@@ -55,27 +57,46 @@
 					</div>
 				</div>
 
+				<!-- settlement currency -->
+				<div class="pi-form-control">
+					{!! Form::label('settlement_currency', '정산통화'  , array('class' => '')) !!}
+					<div class="pi-radio">
+						{!! Form::radio('settlement_currency', 'KRW' , array('class' => ''  )) !!}
+						<label for="currency">KRW</label>
+					</div>
+					<div class="pi-radio">
+						{!! Form::radio('settlement_currency', 'PI', array('class' => ''  )) !!}
+						<label for="currency">PI</label>
+					</div>
+
+					<div class="pi-form-control-icon sprite-question"></div>
+				</div>
+
 				<div class="pi-form-split"></div>
 
 
 				<p>프로필 판매자의 정보이며, 고객 결제 화면에 표시됩니다.</p>
 
+				<!-- company name -->
 				<div class="pi-form-control">
 					<label for="company">{{ Lang::get('users.company_title') }}</label>
 					<input type="text" id="company" class="pi-input{{ !empty($errors->get('company')) ? ' pi-error' : '' }}" name="company" value="{{ $user_profile->company }}" >
 					<div class="pi-input-required">*</div>
 				</div>
 
+				<!-- website -->
 				<div class="pi-form-control">
 					<label for="">{{ Lang::get('users.website_title') }}</label>
 					<input type="text" id="website" class="pi-input{{ !empty($errors->get('website')) ? ' pi-error' : '' }}" name="website" value="{{ $user_profile->website }}" >
 				</div>
 
+				<!-- contact -->
 				<div class="pi-form-control">
 					<label for="">{{ Lang::get('users.phone_title') }}</label>
 					<input type="text" id="phone" class="pi-input{{ !empty($errors->get('phone')) ? ' pi-error' : '' }}" name="phone" value="{{ $user_profile->phone }}" >
 				</div>
 
+				<!-- profile image -->
 				<div class="pi-form-control">
 					<label for="logo">프로필 사진</label>
 					<input type="file" id="photo" name="logo" />

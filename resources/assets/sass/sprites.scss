@@ -25,5 +25,7 @@ $sprite-src: url('../../image/sprites_v1.png');
 }
 .sprite-question {
 	@extend .sprite_basic;
-	background-position: 0px -128px;
+	width: 16px;
+	height: 16px;
+	background-position: 0px -64px;
 }
