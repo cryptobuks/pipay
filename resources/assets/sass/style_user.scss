@@ -28,3 +28,14 @@
 		height: auto;
 	}
 }
+#pi-ucp {
+	> div {
+		display: block;
+		margin-top: 16px;
+
+		> span {
+			font-size: 18px;
+		}
+	}
+	
+}

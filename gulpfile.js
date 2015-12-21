@@ -38,6 +38,7 @@ elixir(function(mix) {
         'reserved/locale.js',
         'reserved/widget.js',
         'reserved/comparator.js',
+        'reserved/http.js',
         //Application source
     ], 'public/assets/js/architekt_modules.js');
 

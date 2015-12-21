@@ -18,10 +18,16 @@
 	<div id="pi_profile">
 		<div class="pi-container">
 			<!-- user info -->
-			<div class="pi-info pi-info-inline">
+			<div class="pi-info pi-info-inline" id="pi-ucp">
 				<h1>{{ $user->level_name }}</h1>
-				<p>|</p>
+				<span class="inline-seperator">|</span>
 				<h1>{{ $user->username }}  {{ $user->email }}</h1>
+				<!-- keys -->
+				<div>
+					<span>Live API Key: {{ $user_key->live_api_key }}</span>
+					<span>|</span>
+					<span>Test API Key: {{ $user_key->test_api_key }}</span>
+				</div>
 			</div>
 
 			<!-- profile form! -->
@@ -58,14 +64,25 @@
 				</div>
 
 				<!-- settlement currency -->
+<?php
+
+	$settlementCurrency = $user->settlementCurrency;
+	if(is_null($settlementCurrency)) $settlementCurrency = 'KRW';
+
+	$settlementCurrency = strtoupper($settlementCurrency);
+
+	$isCurrencyKrw = $settlementCurrency === 'KRW';
+	$isCurrencyPi = $settlementCurrency === 'PI';
+
+?>
 				<div class="pi-form-control">
 					{!! Form::label('settlement_currency', '정산통화'  , array('class' => '')) !!}
 					<div class="pi-radio">
-						{!! Form::radio('settlement_currency', 'KRW' , array('class' => ''  )) !!}
+						{!! Form::radio('settlement_currency', 'KRW' , $isCurrencyKrw, array('class' => ''  )) !!}
 						<label for="currency">KRW</label>
 					</div>
 					<div class="pi-radio">
-						{!! Form::radio('settlement_currency', 'PI', array('class' => ''  )) !!}
+						{!! Form::radio('settlement_currency', 'PI', $isCurrencyPi, array('class' => ''  )) !!}
 						<label for="currency">PI</label>
 					</div>
 

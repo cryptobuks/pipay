@@ -406,7 +406,7 @@ class UserController extends Controller
         }
 
         $user_categories = Config::get('common.user_categories');
-        $user_levels = Config::get('common.user_levels');        
+        $user_levels = Config::get('common.user_levels');
         $user->level_name = $user_levels[$user_profile->level];
 
         return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories'  , 'user_key' ) );

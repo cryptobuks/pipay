@@ -271,7 +271,9 @@ table.pi-table > tbody > tr:nth-child(2n) {
   display: block;
   text-align: center;
   padding: 24px;
+  font-size: 0;
   background-color: #d9ecff;
+  color: #4c5356;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -280,18 +282,20 @@ table.pi-table > tbody > tr:nth-child(2n) {
 }
 
 .pi-info > h1 {
-  color: #4c5356;
   font-size: 18px;
 }
 
 .pi-info > p {
-  color: #4c5356;
   font-size: 12px;
 }
 
 .pi-info.pi-info-inline > * {
   display: inline-block;
   vertical-align: middle;
+}
+
+.inline-seperator {
+  margin: 0 8px;
 }
 
 .pi-form {
@@ -1024,6 +1028,15 @@ table.pi-table > tbody > tr:nth-child(2n) {
   height: auto;
 }
 
+#pi-ucp > div {
+  display: block;
+  margin-top: 16px;
+}
+
+#pi-ucp > div > span {
+  font-size: 18px;
+}
+
 #pi_product,
 #pi_product_create {
   padding: 32px 0;
@@ -1042,6 +1055,12 @@ table.pi-table > tbody > tr:nth-child(2n) {
 #pi_product_create > .pi-container > .pi-button-container {
   position: relative;
   margin-bottom: 32px;
+}
+
+#pi_product > .pi-container > .pi-form,
+#pi_product_create > .pi-container > .pi-form {
+  margin-left: 5%;
+  width: 90%;
 }
 
 #addProduct {

@@ -9,10 +9,13 @@
 			color: #0c69b8;
 			font-weight: bold;
 		}
-
 		> .pi-button-container {
 			position: relative;
 			margin-bottom: 32px;
+		}
+		> .pi-form {
+		    margin-left: 5%;
+    		width: 90%;
 		}
 	}
 }

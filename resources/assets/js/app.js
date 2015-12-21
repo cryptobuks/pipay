@@ -12,14 +12,50 @@ Architekt.event.on('ready', function() {
 
 
 	/* Create product */
-	var advList = $('#advanced-list');
-	var advListOn = false;
-	$('#advanced').click(function() {
-		var animationObject = {};
+	var _isSubmittingCreateProduct = false;
+	$('#createProductForm').submit(function() {
+		if(_isSubmittingCreateProduct) return;
 
-		animationObject.height = advListOn ? '0px' : '160px';
+		var url = $(this).attr('action');
+		var Notice = Architekt.module.Widget.Notice;
 
-		advListOn = !advListOn;
-		advList.stop(true, true).animate(animationObject);
+		//validations
+		var itemDesc = $('#item_desc');
+		var orderId = $('#order_id');
+		var amount = $('#amount');
+		var email = $('#email');
+		var redirectUrl = $('#redirect');
+		var ipn = $('#ipn');
+
+
+		_isSubmittingCreateProduct = true;
+
+		//Send POST request
+		Architekt.module.Http.post({
+			url: url,
+			dataObject: {
+				'item_desc': itemDesc.val(),
+				'order_id': orderId.val(),
+				amount: amount.val(),
+				email: email.val(),
+				redirect: redirectUrl.val(),
+				ipn: ipn.val(),
+			},
+			success: function(data) {
+				new Notice({
+					text: data,
+				});
+			},
+			error: function(text, status) {
+				new Notice({
+					text: (text + status).join(", "),
+				});
+			},
+			complete: function() {
+				_isSubmittingCreateProduct = false;
+			}
+		});
+
+		return false;
 	});
 });
