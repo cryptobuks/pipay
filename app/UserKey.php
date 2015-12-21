@@ -25,7 +25,7 @@ class UserKey extends Model
 	];
 
 	/**
-	 * [keyCreate description]
+	 * [keyCreate ]
 	 * @param  [type] $user_id [ user's id ]
 	 * @return [type]          [ return userKey object ]
 	 */
@@ -41,21 +41,38 @@ class UserKey extends Model
 	}
 
 	/**
-	 * [authenticate description]
+	 * [authenticate ]
 	 * @param  [type]  $credentials   [ user's api_key ]
-	 * @param  boolean $test_mode [ test_mode check]
 	 * @return [type]             [ return userKey ]
 	 */
 	public static function authenticate( $credentials ) {
 		$api_key = $credentials['api_key'];
 		$livemode = $credentials['livemode'];
 
-		if( $livemode == '1' ) {
+		if( preg_match( "/test/" , $api_key ) ) {
 			$userKey = $this->whereLiveApiKey ( $api_key )->first();
 		} else {
 			$userKey = $this->whereTestApiKey ( $api_key )->first();
 		}
 
 		return static::$userKey;		
+	}
+
+	/**
+	 * [getResourceOwnerId]
+	 * @param  [type]  $api_key   [ user's api_key ]
+	 * @return [type] [ return user id]
+	 */
+	public static function getResourceOwnerId( $api_key ) {
+
+		if( preg_match( "/test/" , $api_key ) ) {
+			$userKey = $this->whereLiveApiKey ( $api_key)->first();
+		} else {
+			$userKey = $this->whereTestApiKey ( $api_key)->first();
+		}
+
+		$id = $userKey->id;
+
+		return static::$id;
 	}
 }

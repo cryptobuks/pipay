@@ -69,7 +69,7 @@ return array(
     "unique"            => ":attribute은(는) 이미 사용중 입니다.",
     "url"               => ":attribute 형식은 유효하지 않습니다.",
 
-    "phone" => "The :attribute field contains an invalid number.",
+    "phone" => ":attribute 필드가 전화번호 형식에  맞지 않습니다.",
 
     /*
     |--------------------------------------------------------------------------

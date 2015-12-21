@@ -52,7 +52,7 @@ class UserController extends Controller
         // Enable the Throttling Feature
         $this->throttleProvider->enable();
 
-        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' , 'decrypt' , 'getEncrypt' , 'encrypt' ] );
+        $this->middleware( 'auth' , ['only' => 'getProfile' , 'postProfile'  , 'agreement' , 'postAgreement' , 'postLogo' ] );
     }
 
     public function decrypt( Request $request  , $crypt ) {
@@ -74,16 +74,12 @@ class UserController extends Controller
 
     public function encrypt( Request $request ) {
 
-        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount'  , 'email' , 'redirect' , 'ipn' );
+        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount' , 'settlement_currency' , 'email' , 'redirect' , 'ipn' );
 
         $param = [];
         foreach ( $input as $k => $v ) {
-            if(!empty( $v ) ) $param[$k] = $v;
+            $param[] = $v;
         }
-
-        $user = $this->sentry->getUser();
-        $user_key = UserKey::find( $user->id );
-        $param['api_key'] = $user_key->live_api_key;
 
         $return = json_encode( $param ,  JSON_UNESCAPED_UNICODE ) ;
         $crypt = Crypt::encrypt( $return );
@@ -410,8 +406,9 @@ class UserController extends Controller
 
         $user_categories = Config::get('common.user_categories');
         $user_levels = Config::get('common.user_levels');        
-
-        return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories' , 'user_levels' ) );
+        $user->level_name = $user_levels[$user_profile->level];
+        
+        return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories'  ) );
     }
 
     /**
@@ -425,11 +422,12 @@ class UserController extends Controller
         $input = $request->all();
 
         $this->validate( $request , [
-            'category' => 'required' ,
-            'shop_type' => 'required' ,                       
-            'company' => 'required' ,                                   
-            'website' => 'required' , 
-            'phone' => 'required' ,      
+            'category' => 'required|numeric' ,
+            'shop_type' => 'required|numeric' ,                       
+            'settlement_currency' => 'required|alpha|max:5' ,                       
+            'company' => 'required|max:255' ,                                   
+            'website' => 'url' , 
+            'phone' => 'phone:KR' ,      
             'logo' => 'mimes:png,jpg,jpeg',                   
         ]);
 
@@ -442,6 +440,7 @@ class UserController extends Controller
             $user_profile->company = e( $input['company'] );
             $user_profile->website = e( $input['website'] );
             $user_profile->phone = e( $input['phone'] );  
+            $user_profile->settlement_currency = e( $input['settlement_currency'] );              
 
             if( $request->hasFile('logo') ) {
                 $logoName = $user_profile->id . '_' . time() . '_logo.' . $request->file('logo')->getClientOriginalExtension();
