@@ -396,6 +396,7 @@ class UserController extends Controller
                 return redirect($this->redirectPath());
             }
             $user_profile = UserProfile::find( $user->id );
+            $user_key = UserKey::find( $user->id );
 
         }
         catch (UserNotFoundException $e)
@@ -407,8 +408,8 @@ class UserController extends Controller
         $user_categories = Config::get('common.user_categories');
         $user_levels = Config::get('common.user_levels');        
         $user->level_name = $user_levels[$user_profile->level];
-        
-        return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories'  ) );
+
+        return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories'  , 'user_key' ) );
     }
 
     /**
