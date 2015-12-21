@@ -9,7 +9,7 @@
 
 	<div id="pi_product_create">
 		<div class="pi-container">
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => '/product', 'id' => 'createProductForm')) !!}
+			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => '/tool/encrypt', 'id' => 'createProductForm')) !!}
 				<h1>1. 상품정보</h1>
 				<div class="pi-form-split"></div>
 
@@ -151,3 +151,4 @@
 			{!! Form::close() !!}
 		</div>
 	</div>
+	@include( 'errors.input_errors') 

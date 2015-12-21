@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
+use App\UserKey;
 use Crypt;
 
 class ToolController extends Controller
@@ -66,18 +68,18 @@ class ToolController extends Controller
     public function encrypt(Request $request)
     {
         
+        $this->validate( $request , [
+            'item_desc' => 'required|min:2',
+            'order_id' => 'alpha_num',
+            'amount' => 'required|numeric',
+            'email' => 'email|max:128',
+            'redirect' => 'url',
+            'ipn' => 'url'
+        ]);
+
         $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount'  , 'email' , 'redirect' , 'ipn' );
 
-        // $this->validate( $request , [
-        //     'item_desc' => 'required|min:2',
-        //     'order_id' => 'alpha_num',
-        //     'amount' => 'required|min:1|numeric',
-        //     'email' => 'email|max:128',
-        //     'redirect' => 'url',
-        //     'ipn' => 'url'
-        // ]);
-        // dd($input);
-        
+
         $param = [];
         foreach ( $input as $k => $v ) {
             if(!empty( $v ) ) $param[$k] = $v;
@@ -90,7 +92,9 @@ class ToolController extends Controller
         $return = json_encode( $param ,  JSON_UNESCAPED_UNICODE ) ;
         $crypt = Crypt::encrypt( $return );
 
-        return Response::json( [ 'crypt' => $crypt ] , 200 );
+        $result = 'success';
+
+        return Response::json( [ 'crypt' => $crypt , 'status' => $result ] , 200 );
     }
 
 }
