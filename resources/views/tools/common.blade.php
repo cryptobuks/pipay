@@ -6,20 +6,20 @@
 				<!-- product name -->
 				<div class="pi-form-control">
 					{!! Form::label('item_desc', '상품명', array('class' => '')) !!}
-					{!! Form::text('item_desc', null , array('class' => 'pi-input')) !!} 
+					{!! Form::text('item_desc', null , array('class' => 'pi-input', 'id' => 'item_desc')) !!} 
 					<div class="pi-input-required">*</div>
 				</div>
 
 				<!-- product number -->
 				<div class="pi-form-control">
 					{!! Form::label('order_id', '상품번호'  , array('class' => '')) !!}
-					{!! Form::text('order_id', null , array('class' => 'pi-input')) !!}
+					{!! Form::text('order_id', null , array('class' => 'pi-input', 'id' => 'order_id')) !!}
 				</div>
 				
 				<!-- price -->
 				<div class="pi-form-control">
 					{!! Form::label('amount', '상품가격'  , array('class' => '')) !!}
-					{!! Form::select( 'currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input'  )) !!}
+					{!! Form::select( 'currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input', 'id' => 'currency'  )) !!}
 					{!! Form::text( 'amount', null , array('class' => ''  )) !!}
 					<div class="pi-input-required">*</div>
 				</div>
@@ -27,20 +27,20 @@
 				<!-- payment confirm email address -->
 				<div class="pi-form-control">
 					{!! Form::label('email', '결제 확인 이메일'  , array('class' => '')) !!}
-					{!! Form::text( 'email', null , array('class' => 'pi-input'  )) !!}
+					{!! Form::text( 'email', null , array('class' => 'pi-input', 'id' => 'email'  )) !!}
 				</div>
 				
 				<!-- redirect after purchase -->
 				<div class="pi-form-control">
 					{!! Form::label('redirect', '결제 후 이동할 주소'  , array('class' => '')) !!}
-					{!! Form::text( 'redirect', null , array('class' => 'pi-input'  )) !!}
+					{!! Form::text( 'redirect', null , array('class' => 'pi-input', 'id' => 'redirect'  )) !!}
 					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 
 				<!-- instant payment notify url -->
 				<div class="pi-form-control">
 					{!! Form::label('ipn', 'Instant Payment Notification URL'  , array('class' => '')) !!}
-					{!! Form::text( 'ipn', null , array('class' => 'pi-input'  )) !!}
+					{!! Form::text( 'ipn', null , array('class' => 'pi-input', 'id' => 'ipn' )) !!}
 					<div class="pi-form-control-icon sprite-question"></div>
 				</div>
 

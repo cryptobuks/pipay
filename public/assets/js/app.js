@@ -27,13 +27,15 @@ Architekt.event.on('ready', function() {
 		var redirectUrl = $('#redirect');
 		var ipn = $('#ipn');
 
+		console.log('item_desc: ' + itemDesc.val());
+
 
 		_isSubmittingCreateProduct = true;
 
 		//Send POST request
 		Architekt.module.Http.post({
 			url: url,
-			dataObject: {
+			data: {
 				'item_desc': itemDesc.val(),
 				'order_id': orderId.val(),
 				amount: amount.val(),

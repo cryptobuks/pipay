@@ -1110,6 +1110,47 @@ table.pi-table > tbody > tr:nth-child(2n) {
   margin: 16px 0;
 }
 
+#tool_buttons > a {
+  position: relative;
+  display: block;
+  width: 80%;
+  margin: 32px auto;
+  padding: 32px;
+  border: 1px solid #63a9ee;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -o-border-radius: 20px;
+  -ms-border-radius: 20px;
+  cursor: pointer;
+}
+
+#tool_buttons > a > h1 {
+  color: #0c69b8;
+  font-size: 20px;
+  margin: 8px 0;
+}
+
+#tool_buttons > a > p {
+  color: #4b5457;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+#tool_buttons > a > img {
+  position: absolute;
+  top: 50%;
+  right: 32px;
+  bottom: unset;
+  left: unset;
+  height: 80px;
+  margin-top: -40px;
+}
+
+#tool_buttons > a:hover {
+  background-color: #d6e8fb;
+}
+
 #pi_ledger {
   padding: 32px 0;
 }

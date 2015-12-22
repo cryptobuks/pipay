@@ -61,3 +61,36 @@
 		margin: 16px 0;
 	}
 }
+
+#tool_buttons {
+	> a {
+		position: relative;
+		display: block;
+		width: 80%;
+		margin: 32px auto;
+		padding: 32px;
+		border: 1px solid #63a9ee;
+		@include createBorderRadius(20px);
+		cursor: pointer;
+
+		> h1 {
+			color: #0c69b8;
+			font-size: 20px;
+			margin: 8px 0;
+		}
+		> p {
+			color: #4b5457;
+			font-size: 16px;
+			margin: 8px 0;
+		}
+		> img {
+			@include createPosition(absolute, 50%, 32px, unset, unset);
+			height: 80px;
+			margin-top: -40px;
+		}
+
+		&:hover {
+			background-color: lighten(#63a9ee, 25%);
+		}
+	}
+}
