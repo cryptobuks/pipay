@@ -13,7 +13,9 @@ return array(
 	'pi' => array(
 	    'rpc'      => env('COIN_RPC', 'http://pak36:cjsWocjswOSksm3!@127.0.0.1:18545') ,
 	    'blockchain' => 'http://blockchainkk.info/tx/{txid}',
-	    'exchange' => 'https://www.pi-pay.net/api/v1/',
+	    'exchange' => 'https://pay.pi-pay.net/api/v1/',
+	    'instant_name' => 'pipayment_instant',	
+	    'rate'  => 10000 ,
 	),
 
 );

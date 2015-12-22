@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\UserKey;
+use Illuminate\Support\Facades\Response;
 
 class ApiAuthMiddleware
 {
@@ -21,8 +22,7 @@ class ApiAuthMiddleware
 
         if( !$user = UserKey::authenticate( $credentials ) ) {
             $response = Response::json ( [
-                'error' => 'Unauthorized' ,
-                'code' = 401    ],
+                'error' => 'Unauthorized'  ],
                 401
             );
             
