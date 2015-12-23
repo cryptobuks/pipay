@@ -93,6 +93,9 @@ class UserController extends Controller
      */
     public function agreement()
     {
+        
+        Session::put( 'hide_navigation' , 'Y' );
+
         return view('users.agreement');
     }
 
