@@ -17,6 +17,10 @@ elixir(function(mix) {
         'app.scss',
     ], 'public/assets/css');
 
+    mix.sass([
+        'pi_payment.scss'
+    ], 'public/assets/css/pi_payment.css');
+
     //Merge dependencies
     //translate to CDN service later.
     mix.scripts([
@@ -39,6 +43,7 @@ elixir(function(mix) {
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
+        'reserved/validator.js',
         'reserved/widget.js',
         //Application source
     ], 'public/assets/js/architekt_modules.js');

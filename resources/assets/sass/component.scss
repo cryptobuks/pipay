@@ -415,6 +415,7 @@ $widget-control-fontColor: #5f6268;
 			color: $widget-font-color;
 			padding-bottom: 16px;
 			border-bottom: 1px solid $widget-border-color;
+			word-wrap: break-word;
 		}
 		> .architekt-widget-buttonContainer {
 			padding-top: 16px;

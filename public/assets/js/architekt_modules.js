@@ -52,11 +52,18 @@ Architekt.module.reserv('Comparator', function(options) {
 		},
 	};
 });
+/****************************************************************************************************
+ *
+ *      Architekt.module.dataTable: DataTable component module
+ *		- options
+ *			bool pagenate: show the cursor and trigger paginating events on click. default is false.
+ *
+ ****************************************************************************************************/
+
 Architekt.module.reserv('DataTable', function(options) {
 	return function(options) {
 		options = typeof options === 'object' ? options : {};
-		var showCursor = typeof options.showCursor !== 'undefined' ? !!options.showCursor : false;
-		console.log(showCursor);
+		var pagenate = typeof options.pagenate !== 'undefined' ? !!options.pagenate : false;
 
 		var self = this;
 
@@ -66,6 +73,9 @@ Architekt.module.reserv('DataTable', function(options) {
 		var dom = $('<div></div>').addClass('pi-table-container');
 		var tableDom = $('<table></table>').addClass('pi-table').appendTo(dom);
 		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
+
+		var thead = $('<thead></thead>').appendTo(tableDom);
+		var tbody = $('<tbody></tbody>').appendTo(tableDom);
 
 		//onclick
 		tableDom.click(function() {
@@ -106,51 +116,69 @@ Architekt.module.reserv('DataTable', function(options) {
 			_columns = columns;
 			return this;
 		};
-		//Architekt.module.DataTable.render(): Render the DataTable
-		this.render = function(options) {
-			options = typeof options === 'object' ? options : {};
-			var animate = typeof options.animate !== 'undefined' ? !!options.animate : false;
-			var animationDuration = typeof options.animationDuration !== 'undefined' ? +options.animationDuration : 300;
+		//Architekt.module.DataTable.render(renderOptions): Render the DataTable
+		this.render = function(renderOptions) {
+			renderOptions = typeof renderOptions === 'object' ? renderOptions : {};
+			var animate = typeof renderOptions.animate !== 'undefined' ? !!renderOptions.animate : false;
 
-			tableDom.empty();
+			var animationDuration = typeof renderOptions.animationDuration !== 'undefined' ? +renderOptions.animationDuration : 300;
+			var updateHeader = typeof renderOptions.updateHeader !== 'undefined' ? !!renderOptions.updateHeader : true;
+			var updateItems = typeof renderOptions.updateItems !== 'undefined' ? !!renderOptions.updateItems : true;
 
-			//make thead and tbody
-			var thead = $('<thead></thead>');
-			var tbody = $('<tbody></tbody>');
-
-			//render headers
-			var tr = $('<tr></tr>').click(function(e) {
-				self.event.fire('onheaderclick', e);
-			});
-
-			for(var i = 0, len = _header.length; i < len; i++) {
-				var th = $('<th></th>').text(_header[i]).appendTo(tr);
-
-				tr.appendTo(thead);
+			function animateCell(cell, duration) {
+				cell.delay(animationDuration).css('opacity', '0.0').animate({
+					'opacity': '1.0'
+				}, duration);
 			}
 
-			//render items. note that items are 2d array
-			for(var i = 0, len = _columns.length; i < len; i++) {
-				(function(i) {
-					var tr = $('<tr></tr>').click(function(e) {
-						e.clickedIndex = i;
-						e.column = _columns[i];
-						self.event.fire('onitemclick', e);
-					});
+			var subAnimDuration = parseInt(animationDuration / 4);
+			
+			//update header!
+			if(updateHeader) {
+				thead.empty();
 
-					for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {
-						var td = $('<td></td>').html(_columns[i][j]).appendTo(tr);
+				//render headers
+				var tr = $('<tr></tr>').click(function(e) {
+					self.event.fire('onheaderclick', e);
+				});
 
-						tr.appendTo(tbody);
-					}
-				})(i);
+				for(var i = 0, len = _header.length; i < len; i++) {
+					var th = $('<th></th>').text(_header[i]).appendTo(tr);
+					tr.appendTo(thead);
+				}
+
+				if(animate) {
+					animateCell(tr, subAnimDuration);
+				}
 			}
 
-			thead.appendTo(tableDom);
-			tbody.appendTo(tableDom);
 
-			//draw cursor
-			if(showCursor) {
+			//update items!
+			if(updateItems) {
+				tbody.empty();
+
+				//render items. note that items are 2d array
+				for(var i = 0, len = _columns.length; i < len; i++) {
+					(function(i) {
+						var tr = $('<tr></tr>').click(function(e) {
+							e.clickedIndex = i;
+							e.column = _columns[i];
+							self.event.fire('onitemclick', e);
+						});
+
+						for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {
+							var td = $('<td></td>').html(_columns[i][j]).appendTo(tr);
+							tr.appendTo(tbody);
+						}
+
+						if(animate) animateCell(tr, i * subAnimDuration);
+					})(i);
+				}	
+			}
+			
+
+			//draw cursor only it has pagenate feature
+			if(pagenate) {
 				$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
 					e.currentPage = _page;
 					self.event.fire('onprevious', e);
@@ -162,7 +190,19 @@ Architekt.module.reserv('DataTable', function(options) {
 				}).appendTo(dom);	
 			}
 
-			if(animate) tableDom.hide().fadeIn(animationDuration);;
+			if(animate) {
+				var origHeight = dom.height();
+
+				dom.css({
+					'height': '0',
+					'overflow': 'hidden'
+				}).animate({
+					'height': origHeight + 'px',
+				}, animationDuration, 'swing', function() {
+					dom.css('overflow', 'visible');
+				});
+			}
+
 			return this;
 		};
 		//Architekt.module.DataTable.appendTo(object parentDom): Append DataTable to parentDom
@@ -173,7 +213,22 @@ Architekt.module.reserv('DataTable', function(options) {
  
 	};
 });
+/****************************************************************************************************
+ *
+ *      Architekt.module.Http: Asynchronous HTTP request module
+ *
+ ****************************************************************************************************/
 Architekt.module.reserv('Http', function(options) {
+	var log = function() {};
+	var warn = function() {};
+	var error = function() {};
+
+	Architekt.event.on('ready', function() {
+		log = Architekt.module.Printer.log;
+		warn = Architekt.module.Printer.warn;
+		error = Architekt.module.Printer.error;
+	});
+
 	//AJAX REQUEST function
 	//Requres console.js
 	//ajaxRequest({ dataObject, headers, dataType, url, success, error, complete, after })
@@ -192,9 +247,9 @@ Architekt.module.reserv('Http', function(options) {
 		var comp = typeof data.complete === "function" ? data.complete : function () { };
 		var after = typeof data.after === "function" ? data.after : function () { };
 		
-		console.log('********** Sending XMLHttpRequest **********');
-		console.log(method.toUpperCase() + ' ' + url);
-		console.log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
+		log('Architekt.module.Http: send HTTP request...');
+		log(method.toUpperCase() + ' ' + url);
+		log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
 
 		$.ajax({
 			timeout: 20000, //maximum 20seconds to timeout
@@ -204,9 +259,9 @@ Architekt.module.reserv('Http', function(options) {
 			'type': method,
 			dataType: dataType,
 			success: function (result) {
-				console.log('AJAX Scucess');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log(JSON.stringify(result));
+				log('Architekt.module.Http: Http sent success.');
+				log(method.toUpperCase() + ' ' + url);
+				log(JSON.stringify(result));
 				suc(result);
 			},
 			error: function (response, status, error) {
@@ -221,19 +276,19 @@ Architekt.module.reserv('Http', function(options) {
 				//Check timeout
 				if(status === 'timeout') responseText.error = 'timeout';
 				
-				console.error('Error occured while AJAX requesting.');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log('Sent Header: ' + JSON.stringify(headers));
-				console.log('Sent Data:' + JSON.stringify(dataObject));
-				console.log('Response: ' + JSON.stringify(response));
-				console.log('Code: ' + response.status);
-				console.log('Message: ' + response.responseText);
-				console.log('Error: ' + error);
+				error('Architekt.module.Http: server sent error');
+				log(method.toUpperCase() + ' ' + url);
+				log('Sent Header: ' + JSON.stringify(headers));
+				log('Sent Data:' + JSON.stringify(dataObject));
+				log('Response: ' + JSON.stringify(response));
+				log('Code: ' + response.status);
+				log('Message: ' + response.responseText);
+				log('Error: ' + error);
 				err(responseText, response.status)
 			},
 			complete: function () {
 				_ajax_work = false;
-				console.log('********** REQUEST OVER **********');
+				log('Architekt.module.Http: request over.');
 				comp();
 				after();
 			}
@@ -242,7 +297,7 @@ Architekt.module.reserv('Http', function(options) {
 		//Give notice if processing take too long
 		setTimeout(function() {
 			if(_ajax_work) {
-				console.log('Process taking so long');
+				log('Architekt.module.Http: request taking too long ( >=5000ms )');
 			}
 		}, 5000);
 	}
@@ -481,6 +536,68 @@ Architekt.module.reserv('Printer', function(options) {
 			}
 		}
 	}
+});
+/****************************************************************************************************
+ *
+ *      Architekt.module.Validator: Validation module
+ *
+ ****************************************************************************************************/
+
+Architekt.module.reserv('Validator', function(options) {
+	//regex objects container
+	var formular = {
+		email: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+		url: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+		number: /^\d+$/,
+		alphabet: /^[a-zA-Z]*$/,
+		alphanumeric: /^[a-z0-9]+$/i,
+	};
+
+	//equations
+	formular.numeric = formular.number;
+
+	return {
+		//Architekt.module.Validator.check(string type, string string): Validate string
+		check: function(type, string) {
+			var noneSupported = false;
+
+			switch(type) {
+				case 'email':
+				case 'url':
+				case 'number':
+				case 'numeric':
+				case 'alphabet':
+				case 'alphanumeric':
+					type = type;
+					break;
+				default:
+					noneSupported = true;
+					break;
+			}
+
+			if(noneSupported)
+				throw new Error('Architekt.module.Validator: unsupported validation type ' + type);
+			
+
+			var result = formular[type].test(string);
+
+			if(result) return true;
+			else return false;
+		},
+		//Architekt.module.Validator.empty(string string): Returns true if the string is empty or null or undefined
+		empty: function(string) {
+			if(typeof string === 'undefined' || string === '' || string === null) return true;
+			return false;
+		},
+		//Architekt.module.Vaditor.checkIfNotEmpty(string type, string string): Check the string is validate if it is not empty. If it is empty, returns true.
+		checkIfNotEmpty: function(type, string) {
+			if(!this.empty(string)) {
+				return this.check(type, string);
+			}
+
+			return true;
+		},
+	};
 });
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {

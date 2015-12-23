@@ -18,7 +18,6 @@
 html,
 body {
   width: 100%;
-  height: 100%;
 }
 
 img {
@@ -512,6 +511,7 @@ table.pi-table > tbody > tr:nth-child(2n) {
   color: #464e57;
   padding-bottom: 16px;
   border-bottom: 1px solid #959595;
+  word-wrap: break-word;
 }
 
 .architekt-widget-background > .architekt-widget-container > .architekt-widget-buttonContainer {
@@ -1172,6 +1172,12 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 #tool_buttons > a:hover {
   background-color: #d6e8fb;
+}
+
+/* Page after product generated */
+
+#pi_product_generated {
+  display: none;
 }
 
 #pi_payment {

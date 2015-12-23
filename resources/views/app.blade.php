@@ -85,7 +85,7 @@
             </a>
 
             <ul id="pi_gnb_list">
-            @if ( ! Sentry::check())
+            @if ( ! Sentry::check() || Session::has('hide_navigation') )
                 <li{{ Request::is('/') ? ' class="active"' : null }}><a href="{{ URL::to('/') }}">메인</a></li>
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a href="{{ URL::to('user/login') }}">로그인</a></li>
                 <li{{ Request::is('register') ? ' class="active"' : null }}><a id="nav_register" href="{{ URL::to('user/register') }}">회원가입</a></li>
@@ -97,7 +97,7 @@
                 <li{{ Request::is('support') ? ' class="active"' : null }}><a href="{{ URL::to('/support') }}">고객센터</a></li>
 
                 <li{{ Request::is('login') ? ' class="active"' : null }}><a id="gnb_profile" href="{{ URL::to('user/profile') }}"><img src="{{ asset('image/profile_pic.png') }}" /></a></li>
-        @endif
+            @endif
             </ul>
 
         @if (Sentry::check())

@@ -1,0 +1,36 @@
+.pi-payment-button {
+  display: inline-block;
+  border: 1px solid #4c97e3;
+  color: #1f4864;
+  font-size: 18px;
+  text-align: center;
+  padding: 12px 32px;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fefffe+0,dbecfc+100 */
+  background: #fefffe;
+  /* Old browsers */
+  /* FF3.6-15 */
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #fefffe 0%, #dbecfc 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefffe', endColorstr='#dbecfc',GradientType=0 );
+  /* IE6-9 */
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -o-border-radius: 30px;
+  -ms-border-radius: 30px;
+}
+
+.pi-payment-button > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pi-payment-button > img {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.pi-payment-button > span {
+  font-size: 18px;
+}

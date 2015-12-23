@@ -6,20 +6,20 @@
 				<!-- product name -->
 				<div class="pi-form-control">
 					{!! Form::label('item_desc', '상품명', array('class' => '')) !!}
-					{!! Form::text('item_desc', null , array('class' => 'pi-input', 'id' => 'item_desc')) !!} 
+					{!! Form::text('item_desc', null , array('class' => 'pi-input', 'id' => 'item_desc', 'placeholder' => '상품명은 2글자 이상입니다.')) !!} 
 					<div class="pi-input-required">*</div>
 				</div>
 
 				<!-- product number -->
 				<div class="pi-form-control">
 					{!! Form::label('order_id', '상품번호'  , array('class' => '')) !!}
-					{!! Form::text('order_id', null , array('class' => 'pi-input', 'id' => 'order_id')) !!}
+					{!! Form::text('order_id', null , array('class' => 'pi-input', 'id' => 'order_id', 'placeholder' => '상품번호는 영문자와 숫자의 조합으로 입력해주세요.')) !!}
 				</div>
 				
 				<!-- price -->
 				<div class="pi-form-control">
 					{!! Form::label('amount', '상품가격'  , array('class' => '')) !!}
-					{!! Form::select( 'currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input', 'id' => 'currency'  )) !!}
+					{!! Form::select( 'currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input', 'id' => 'currency', 'placeholder' => '상품가격은 숫자로만 입력해주세요.'  )) !!}
 					{!! Form::text( 'amount', null , array('class' => ''  )) !!}
 					<div class="pi-input-required">*</div>
 				</div>

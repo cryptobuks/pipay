@@ -9,19 +9,21 @@
             });
             //create DataTable component
             paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
+
             
             @foreach ($invoices as $invoice)
                 paymentTable.addColumn(
-                    [ '{{ $invoice->id }}' ,
-                    '{{ $invoice->created_at }}' ,
-                    '{{ $invoice->item_desc }}' ,
-                    '{{ $invoice->amount }}' ,
-                    '<span class="pi-theme-waiting"> {{ $invoice->status }} </span>' ,
-                    '{{ $invoice->pi_amount_received }} / {{ $invoice->pi_amount }}' ]
+                    [
+                        '{{ $invoice->id }}' ,
+                        '{{ $invoice->created_at }}' ,
+                        '{{ $invoice->item_desc }}' ,
+                        '{{ $invoice->amount }}' ,
+                        '<span class="pi-theme-waiting"> {{ $invoice->status }} </span>' ,
+                        '{{ $invoice->pi_amount_received }} / {{ $invoice->pi_amount }}'
+                    ]
                 );   //add items
             @endforeach
 
-            // paymentTable.addColumn( [2, new Date().toGMTString(), '음식물 쓰레기 MK2', '2,500,000', '<span class="pi-theme-waiting">처리중</span>', 250] );   //add items
 
             paymentTable.appendTo($('#pi_payment > .pi-container'));    //append to body
             paymentTable.render({ animate: true });      //render the datatable
@@ -55,7 +57,7 @@
             });
 
             //print items on console
-            Architekt.module.Printer.inspect(paymentTable.getColumns());
+            //Architekt.module.Printer.inspect(paymentTable.getColumns());
         });
     </script>
 

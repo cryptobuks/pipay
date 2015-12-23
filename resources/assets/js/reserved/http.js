@@ -4,6 +4,16 @@
  *
  ****************************************************************************************************/
 Architekt.module.reserv('Http', function(options) {
+	var log = function() {};
+	var warn = function() {};
+	var error = function() {};
+
+	Architekt.event.on('ready', function() {
+		log = Architekt.module.Printer.log;
+		warn = Architekt.module.Printer.warn;
+		error = Architekt.module.Printer.error;
+	});
+
 	//AJAX REQUEST function
 	//Requres console.js
 	//ajaxRequest({ dataObject, headers, dataType, url, success, error, complete, after })
@@ -22,9 +32,9 @@ Architekt.module.reserv('Http', function(options) {
 		var comp = typeof data.complete === "function" ? data.complete : function () { };
 		var after = typeof data.after === "function" ? data.after : function () { };
 		
-		console.log('********** Sending XMLHttpRequest **********');
-		console.log(method.toUpperCase() + ' ' + url);
-		console.log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
+		log('Architekt.module.Http: send HTTP request...');
+		log(method.toUpperCase() + ' ' + url);
+		log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
 
 		$.ajax({
 			timeout: 20000, //maximum 20seconds to timeout
@@ -34,9 +44,9 @@ Architekt.module.reserv('Http', function(options) {
 			'type': method,
 			dataType: dataType,
 			success: function (result) {
-				console.log('AJAX Scucess');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log(JSON.stringify(result));
+				log('Architekt.module.Http: Http sent success.');
+				log(method.toUpperCase() + ' ' + url);
+				log(JSON.stringify(result));
 				suc(result);
 			},
 			error: function (response, status, error) {
@@ -51,19 +61,19 @@ Architekt.module.reserv('Http', function(options) {
 				//Check timeout
 				if(status === 'timeout') responseText.error = 'timeout';
 				
-				console.error('Error occured while AJAX requesting.');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log('Sent Header: ' + JSON.stringify(headers));
-				console.log('Sent Data:' + JSON.stringify(dataObject));
-				console.log('Response: ' + JSON.stringify(response));
-				console.log('Code: ' + response.status);
-				console.log('Message: ' + response.responseText);
-				console.log('Error: ' + error);
+				error('Architekt.module.Http: server sent error');
+				log(method.toUpperCase() + ' ' + url);
+				log('Sent Header: ' + JSON.stringify(headers));
+				log('Sent Data:' + JSON.stringify(dataObject));
+				log('Response: ' + JSON.stringify(response));
+				log('Code: ' + response.status);
+				log('Message: ' + response.responseText);
+				log('Error: ' + error);
 				err(responseText, response.status)
 			},
 			complete: function () {
 				_ajax_work = false;
-				console.log('********** REQUEST OVER **********');
+				log('Architekt.module.Http: request over.');
 				comp();
 				after();
 			}
@@ -72,7 +82,7 @@ Architekt.module.reserv('Http', function(options) {
 		//Give notice if processing take too long
 		setTimeout(function() {
 			if(_ajax_work) {
-				console.log('Process taking so long');
+				log('Architekt.module.Http: request taking too long ( >=5000ms )');
 			}
 		}, 5000);
 	}

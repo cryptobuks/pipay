@@ -20,6 +20,9 @@ Architekt.module.reserv('DataTable', function(options) {
 		var tableDom = $('<table></table>').addClass('pi-table').appendTo(dom);
 		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
 
+		var thead = $('<thead></thead>').appendTo(tableDom);
+		var tbody = $('<tbody></tbody>').appendTo(tableDom);
+
 		//onclick
 		tableDom.click(function() {
 			self.event.fire('onclick');
@@ -59,51 +62,69 @@ Architekt.module.reserv('DataTable', function(options) {
 			_columns = columns;
 			return this;
 		};
-		//Architekt.module.DataTable.render(): Render the DataTable
-		this.render = function(options) {
-			options = typeof options === 'object' ? options : {};
-			var animate = typeof options.animate !== 'undefined' ? !!options.animate : false;
-			var animationDuration = typeof options.animationDuration !== 'undefined' ? +options.animationDuration : 300;
+		//Architekt.module.DataTable.render(renderOptions): Render the DataTable
+		this.render = function(renderOptions) {
+			renderOptions = typeof renderOptions === 'object' ? renderOptions : {};
+			var animate = typeof renderOptions.animate !== 'undefined' ? !!renderOptions.animate : false;
 
-			tableDom.empty();
+			var animationDuration = typeof renderOptions.animationDuration !== 'undefined' ? +renderOptions.animationDuration : 300;
+			var updateHeader = typeof renderOptions.updateHeader !== 'undefined' ? !!renderOptions.updateHeader : true;
+			var updateItems = typeof renderOptions.updateItems !== 'undefined' ? !!renderOptions.updateItems : true;
 
-			//make thead and tbody
-			var thead = $('<thead></thead>');
-			var tbody = $('<tbody></tbody>');
-
-			//render headers
-			var tr = $('<tr></tr>').click(function(e) {
-				self.event.fire('onheaderclick', e);
-			});
-
-			for(var i = 0, len = _header.length; i < len; i++) {
-				var th = $('<th></th>').text(_header[i]).appendTo(tr);
-
-				tr.appendTo(thead);
+			function animateCell(cell, duration) {
+				cell.delay(animationDuration).css('opacity', '0.0').animate({
+					'opacity': '1.0'
+				}, duration);
 			}
 
-			//render items. note that items are 2d array
-			for(var i = 0, len = _columns.length; i < len; i++) {
-				(function(i) {
-					var tr = $('<tr></tr>').click(function(e) {
-						e.clickedIndex = i;
-						e.column = _columns[i];
-						self.event.fire('onitemclick', e);
-					});
+			var subAnimDuration = parseInt(animationDuration / 4);
+			
+			//update header!
+			if(updateHeader) {
+				thead.empty();
 
-					for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {
-						var td = $('<td></td>').html(_columns[i][j]).appendTo(tr);
+				//render headers
+				var tr = $('<tr></tr>').click(function(e) {
+					self.event.fire('onheaderclick', e);
+				});
 
-						tr.appendTo(tbody);
-					}
-				})(i);
+				for(var i = 0, len = _header.length; i < len; i++) {
+					var th = $('<th></th>').text(_header[i]).appendTo(tr);
+					tr.appendTo(thead);
+				}
+
+				if(animate) {
+					animateCell(tr, subAnimDuration);
+				}
 			}
 
-			thead.appendTo(tableDom);
-			tbody.appendTo(tableDom);
 
-			//draw cursor
-			if(showCursor) {
+			//update items!
+			if(updateItems) {
+				tbody.empty();
+
+				//render items. note that items are 2d array
+				for(var i = 0, len = _columns.length; i < len; i++) {
+					(function(i) {
+						var tr = $('<tr></tr>').click(function(e) {
+							e.clickedIndex = i;
+							e.column = _columns[i];
+							self.event.fire('onitemclick', e);
+						});
+
+						for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {
+							var td = $('<td></td>').html(_columns[i][j]).appendTo(tr);
+							tr.appendTo(tbody);
+						}
+
+						if(animate) animateCell(tr, i * subAnimDuration);
+					})(i);
+				}	
+			}
+			
+
+			//draw cursor only it has pagenate feature
+			if(pagenate) {
 				$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
 					e.currentPage = _page;
 					self.event.fire('onprevious', e);
@@ -115,7 +136,19 @@ Architekt.module.reserv('DataTable', function(options) {
 				}).appendTo(dom);	
 			}
 
-			if(animate) tableDom.hide().fadeIn(animationDuration);;
+			if(animate) {
+				var origHeight = dom.height();
+
+				dom.css({
+					'height': '0',
+					'overflow': 'hidden'
+				}).animate({
+					'height': origHeight + 'px',
+				}, animationDuration, 'swing', function() {
+					dom.css('overflow', 'visible');
+				});
+			}
+
 			return this;
 		};
 		//Architekt.module.DataTable.appendTo(object parentDom): Append DataTable to parentDom
