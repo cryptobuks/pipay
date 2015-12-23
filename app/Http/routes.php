@@ -78,6 +78,10 @@ Route::group(array('prefix' => 'api/v1'), function()
     Route::post('invoice', 'API\V1\InvoiceController@index');  // 결제 요청 
 });
 
+Route::post('oauth/access_token', function() {
+    return Response::json(Authorizer::issueAccessToken());
+});
+
 
 // User login event
 Event::listen('users.login', function($userId, $email)

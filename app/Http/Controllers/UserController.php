@@ -125,10 +125,11 @@ class UserController extends Controller
             Account::create( [ 'user_id' => $user->id , 'currency' => 'KRW' , 'balance' => 0 , 'locked' => 0  ] );  
             DB::commit();
 
+            Session::forget( 'hide_navigation' );
+
         } catch ( Exception $e) {
             DB::rollback();
-
-            dd( $e );
+            redirect('user/agreement');
         }
 
         return redirect('dashboard');
