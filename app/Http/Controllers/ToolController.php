@@ -93,7 +93,6 @@ class ToolController extends Controller
         $crypt = Crypt::encrypt( $return );
 
         $result = 'success';
-
         return Response::json( [ 'crypt' => $crypt , 'status' => $result ] , 200 );
     }
 

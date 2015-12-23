@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
+use App\Invoice;
 
 class PaymentController extends Controller
 {
@@ -32,7 +34,9 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return view('payments.index');
+        $invoices = Invoice::orderBy( 'id' , 'desc' )->paginate(15);
+
+        return view('payments.index', compact('invoices') );
     }
 
     /**
@@ -42,7 +46,9 @@ class PaymentController extends Controller
      */
     public function show( $id )
     {
-        return view('payments.show');
+        $invoice = Invoice::find( $id );
+
+        return view('payments.show', compact('invoice'));
     }
 
     /**
@@ -52,7 +58,9 @@ class PaymentController extends Controller
      */
     public function receipt( $id )
     {
-        return view('payments.receipt');
+        $invoice = Invoice::where('token', '=',  $id )->first();
+
+        return view('payments.receipt', compact('invoice'));
     }
     
 }
