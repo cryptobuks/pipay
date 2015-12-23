@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Config;
 use App\Invoice;
 
 class PaymentController extends Controller
