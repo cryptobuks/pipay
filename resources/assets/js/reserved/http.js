@@ -1,3 +1,8 @@
+/****************************************************************************************************
+ *
+ *      Architekt.module.Http: Asynchronous HTTP request module
+ *
+ ****************************************************************************************************/
 Architekt.module.reserv('Http', function(options) {
 	//AJAX REQUEST function
 	//Requres console.js

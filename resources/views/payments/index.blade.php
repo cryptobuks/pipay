@@ -4,7 +4,10 @@
     <script>
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;
-            var paymentTable = new Architekt.module.DataTable();    //create DataTable component
+            var paymentTable = new Architekt.module.DataTable({
+                pagenate: true,
+            });
+            //create DataTable component
             paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
             paymentTable.addColumn( [1, new Date().toGMTString(), '음식물 쓰레기', '1,000,000', '<span class="pi-theme-complete">완료</span>', 100] );   //add items
             paymentTable.addColumn( [2, new Date().toGMTString(), '음식물 쓰레기 MK2', '2,500,000', '<span class="pi-theme-waiting">처리중</span>', 250] );   //add items
@@ -64,8 +67,6 @@
                     <p>내보내기</p>
                 </a>
             </div>
-
-            
         </div>
     </div>
 

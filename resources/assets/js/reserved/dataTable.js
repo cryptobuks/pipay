@@ -1,5 +1,16 @@
+/****************************************************************************************************
+ *
+ *      Architekt.module.dataTable: DataTable component module
+ *		- options
+ *			bool pagenate: show the cursor and trigger paginating events on click. default is false.
+ *
+ ****************************************************************************************************/
+
 Architekt.module.reserv('DataTable', function(options) {
-	return function() {
+	return function(options) {
+		options = typeof options === 'object' ? options : {};
+		var pagenate = typeof options.pagenate !== 'undefined' ? !!options.pagenate : false;
+
 		var self = this;
 
 		var _page = 0;
@@ -92,15 +103,17 @@ Architekt.module.reserv('DataTable', function(options) {
 			tbody.appendTo(tableDom);
 
 			//draw cursor
-			$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
-				e.currentPage = _page;
-				self.event.fire('onprevious', e);
-			}).appendTo(dom);
+			if(showCursor) {
+				$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onprevious', e);
+				}).appendTo(dom);
 
-			$('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
-				e.currentPage = _page;
-				self.event.fire('onnext', e);
-			}).appendTo(dom);
+				$('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onnext', e);
+				}).appendTo(dom);	
+			}
 
 			if(animate) tableDom.hide().fadeIn(animationDuration);;
 			return this;
