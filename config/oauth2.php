@@ -28,7 +28,6 @@ return [
     */
 
     'grant_types' => [
-
     ],
 
     /*

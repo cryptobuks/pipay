@@ -106,6 +106,7 @@ class UserController extends Controller
     public function postAgreement()
     {
         $user = $this->sentry->getUser();
+        Session::forget( 'hide_navigation' );
 
         DB::beginTransaction();
         try {
@@ -124,8 +125,6 @@ class UserController extends Controller
             Account::create( [ 'user_id' => $user->id , 'currency' => 'PI' , 'balance' => 0 , 'locked' => 0  ] );        
             Account::create( [ 'user_id' => $user->id , 'currency' => 'KRW' , 'balance' => 0 , 'locked' => 0  ] );  
             DB::commit();
-
-            Session::forget( 'hide_navigation' );
 
         } catch ( Exception $e) {
             DB::rollback();
@@ -218,7 +217,7 @@ class UserController extends Controller
             }
 
             //flash()->overlay( $result['message']  , 'Message');
-            return redirect('dashboard');
+            return redirect('/');
         } else {
             return redirect($this->loginPath())
                 ->withInput($request->only('email', 'remember'))

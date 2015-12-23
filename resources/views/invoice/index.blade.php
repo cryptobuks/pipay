@@ -38,10 +38,9 @@
 			});
 		});
 	</script>
-
 	<div id="pi_auth">
 		<div class="pi-container">
-			<form action="{{ url('/oauth/login') }}" method="post" class="pi-form" id="frmLogin">
+			<form action="{{ url('/oauth/loginOnce') }}" method="post" class="pi-form" id="frmLogin">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
 				<h1>간편 결제</h1>

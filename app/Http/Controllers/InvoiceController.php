@@ -47,7 +47,11 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::where( 'token' , $token )->first();
 
-        return view('invoice.index' , compact ( 'invoice' ) );
+        if( $invoice ) {
+            return view('invoice.index' , compact ( 'invoice' ) );
+        } else {
+            return "server error!!!";
+        }
     }
 
     
