@@ -77,5 +77,15 @@ return [
 		4 => '법인회원',
 	],
 
+	'invoice_status' => [
+		'new' => '대기' , 
+		'pending' => '결제확인중' , 
+		'confirmed' => '결제완료' , 		
+		'failed' => '결제실패' , 				
+		'expired' => '결제만료' , 						
+		'refunded' => '전액환불' , 
+		'refunded_partial' => '일부환불' , 		
+	] , 
+
 
 ];
