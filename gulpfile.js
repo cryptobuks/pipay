@@ -34,11 +34,12 @@ elixir(function(mix) {
     //Merge modules
     //CDN too? i dunno
     mix.scripts([
-        'reserved/printer.js',
-        'reserved/locale.js',
-        'reserved/widget.js',
         'reserved/comparator.js',
+        'reserved/dataTable.js',
         'reserved/http.js',
+        'reserved/locale.js',
+        'reserved/printer.js',
+        'reserved/widget.js',
         //Application source
     ], 'public/assets/js/architekt_modules.js');
 

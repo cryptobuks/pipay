@@ -27,9 +27,6 @@ Architekt.event.on('ready', function() {
 		var redirectUrl = $('#redirect');
 		var ipn = $('#ipn');
 
-		console.log('item_desc: ' + itemDesc.val());
-
-
 		_isSubmittingCreateProduct = true;
 
 		//Send POST request

@@ -222,7 +222,7 @@ table.pi-table > thead > tr {
 }
 
 table.pi-table > thead > tr > th,
-table.pi-table > thead > tr td {
+table.pi-table > thead > tr > td {
   padding: 12px;
   text-align: center;
   vertical-align: middle;
@@ -231,7 +231,7 @@ table.pi-table > thead > tr td {
 }
 
 table.pi-table > thead > tr > th:last-child,
-table.pi-table > thead > tr td:last-child {
+table.pi-table > thead > tr > td:last-child {
   border-right: none;
 }
 
@@ -240,7 +240,7 @@ table.pi-table > tbody > tr {
 }
 
 table.pi-table > tbody > tr:hover {
-  background-color: #d6d6d6 !important;
+  background-color: #D6E7F9 !important;
 }
 
 table.pi-table > tbody > tr > td {
@@ -257,6 +257,29 @@ table.pi-table > tbody > tr > td:last-child {
 
 table.pi-table > tbody > tr:nth-child(2n) {
   background-color: #f6f6f6;
+}
+
+.pi-table-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.pi-table-container > .pi-table-prev {
+  position: absolute;
+  top: 50%;
+  right: unset;
+  bottom: unset;
+  left: -64px;
+  margin-top: -16px;
+}
+
+.pi-table-container > .pi-table-next {
+  position: absolute;
+  top: 50%;
+  right: -64px;
+  bottom: unset;
+  left: unset;
+  margin-top: -16px;
 }
 
 .pi-theme-complete {
@@ -1149,6 +1172,19 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 #tool_buttons > a:hover {
   background-color: #d6e8fb;
+}
+
+#pi_payment {
+  padding: 32px 0;
+}
+
+#pi_payment > .pi-container > .pi-button-container {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+#pi_payment_list > tbody > tr > td {
+  cursor: pointer;
 }
 
 #pi_ledger {

@@ -1,3 +1,317 @@
+Architekt.module.reserv('Comparator', function(options) {
+	var results = [];
+	var texts = [];
+	var startTime = null;
+	var endTime = null;
+
+	return {
+		//Architekt.module.Comparator.start(): Begins measuring
+		start: function() {
+			results = [];
+			texts = [];
+			startTime = new Date();
+
+			results.push(0);
+			texts.push('Begins');
+			console.log('Architekt.module.Comparator: Start perfomance measuring at ' + startTime.toGMTString());
+
+			return this;
+		},
+		//Architekt.module.Comparator.stop(): Stops measuring
+		stop: function() {
+			endTime = new Date();
+
+			results.push(endTime.getTime() - startTime.getTime());
+			texts.push('Ends');
+			console.log('Architekt.module.Comparator: Stop perfomance measuring at ' + startTime.toGMTString());
+
+			return this.result();
+		},
+		//Architekt.module.Comparator.check(): Add checkpoint
+		check: function(text) {
+			var currentTime = new Date();
+
+			text = typeof text !== 'undefined' ? text : 'Checkpoint';
+
+			results.push(currentTime.getTime() - startTime.getTime());
+			texts.push(text);
+			console.log('Architekt.module.Comparator: Add checkpoint at ' + startTime.toGMTString());
+
+			return this;
+		},
+		//Architekt.module.Comparator.result(): Get result
+		result: function() {
+			var resultObject = [];
+			for(var i = 0, len = results.length; i < len; i++)
+				resultObject.push({
+					time: results[i],
+					message: texts[i]
+				});
+
+			return resultObject;
+		},
+	};
+});
+Architekt.module.reserv('DataTable', function(options) {
+	return function() {
+		var self = this;
+
+		var _page = 0;
+		var _header = [];
+		var _columns = [];
+		var dom = $('<div></div>').addClass('pi-table-container');
+		var tableDom = $('<table></table>').addClass('pi-table').appendTo(dom);
+		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
+
+		//onclick
+		tableDom.click(function() {
+			self.event.fire('onclick');
+		});
+
+		//Architekt.module.DataTable.getHeaderColumn(void): Get header column
+		this.getHeaderColumn = function() {
+			return _header;
+		};
+		//Architekt.module.DataTable.setHeaderColumn(array headerColumn): Set header column
+		this.setHeaderColumn = function(headerColumn) {
+			_header = headerColumn;
+			return this;
+		};
+		//Architekt.module.DataTable.getColumn(int index): Get specified index
+		this.getColumn = function(index) {
+			return _columns[i];
+		};
+		//Architekt.module.DataTable.getColumns(): Get all item columns
+		this.getColumns = function() {
+			return _columns;
+		};
+		//Architekt.module.DataTable.addColumn(array column): Add item column
+		this.addColumn = function(column) {
+			_columns.push(column);
+			return this;
+		};
+		//Architekt.module.DataTable.addColumns(2ndArray columns): Add item columns
+		this.addColumns = function(columns) {
+			for(var i = 0, len = columns.length; i < len; i++)
+				_columns.push(columns[i]);
+
+			return this;
+		};
+		//Architekt.module.DataTable.setColumns(2ndArray columns): Set item columns(replace)
+		this.setColumns = function(columns) {
+			_columns = columns;
+			return this;
+		};
+		//Architekt.module.DataTable.render(): Render the DataTable
+		this.render = function(options) {
+			options = typeof options === 'object' ? options : {};
+			var animate = typeof options.animate !== 'undefined' ? !!options.animate : false;
+			var animationDuration = typeof options.animationDuration !== 'undefined' ? +options.animationDuration : 300;
+
+			tableDom.empty();
+
+			//make thead and tbody
+			var thead = $('<thead></thead>');
+			var tbody = $('<tbody></tbody>');
+
+			//render headers
+			var tr = $('<tr></tr>').click(function(e) {
+				self.event.fire('onheaderclick', e);
+			});
+
+			for(var i = 0, len = _header.length; i < len; i++) {
+				var th = $('<th></th>').text(_header[i]).appendTo(tr);
+
+				tr.appendTo(thead);
+			}
+
+			//render items. note that items are 2d array
+			for(var i = 0, len = _columns.length; i < len; i++) {
+				(function(i) {
+					var tr = $('<tr></tr>').click(function(e) {
+						e.clickedIndex = i;
+						e.column = _columns[i];
+						self.event.fire('onitemclick', e);
+					});
+
+					for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {
+						var td = $('<td></td>').html(_columns[i][j]).appendTo(tr);
+
+						tr.appendTo(tbody);
+					}
+				})(i);
+			}
+
+			thead.appendTo(tableDom);
+			tbody.appendTo(tableDom);
+
+			//draw cursor
+			$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
+				e.currentPage = _page;
+				self.event.fire('onprevious', e);
+			}).appendTo(dom);
+
+			$('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
+				e.currentPage = _page;
+				self.event.fire('onnext', e);
+			}).appendTo(dom);
+
+			if(animate) tableDom.hide().fadeIn(animationDuration);;
+			return this;
+		};
+		//Architekt.module.DataTable.appendTo(object parentDom): Append DataTable to parentDom
+		this.appendTo = function(parentDom) {
+			dom.appendTo(parentDom);
+			return this;
+		};
+ 
+	};
+});
+Architekt.module.reserv('Http', function(options) {
+	//AJAX REQUEST function
+	//Requres console.js
+	//ajaxRequest({ dataObject, headers, dataType, url, success, error, complete, after })
+	function request(data) {
+		if (typeof data !== 'object' || typeof data.url === 'undefined') return false;
+		
+		var _ajax_work = true;
+
+		var dataObject = typeof data.data === 'object' ? data.data : {};
+		var headers = typeof data.headers !== 'undefined' ? data.headers : {};
+		var method = typeof data.method !== 'undefined' ? data.method : 'post';
+		var dataType = typeof data.dataType !== 'undefined' ? data.dataType : 'json';
+		var url = typeof data.url !== 'undefined' ? data.url : '';
+		var suc = typeof data.success === "function" ? data.success : function () { };
+		var err = typeof data.error === "function" ? data.error : function () { };
+		var comp = typeof data.complete === "function" ? data.complete : function () { };
+		var after = typeof data.after === "function" ? data.after : function () { };
+		
+		console.log('********** Sending XMLHttpRequest **********');
+		console.log(method.toUpperCase() + ' ' + url);
+		console.log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
+
+		$.ajax({
+			timeout: 20000, //maximum 20seconds to timeout
+			url: url,
+			data: dataObject,
+			headers: headers,
+			'type': method,
+			dataType: dataType,
+			success: function (result) {
+				console.log('AJAX Scucess');
+				console.log(method.toUpperCase() + ' ' + url);
+				console.log(JSON.stringify(result));
+				suc(result);
+			},
+			error: function (response, status, error) {
+				var responseText = false;
+				if(typeof response.responseText !== 'undefined') {
+					responseText = JSON.parse(response.responseText);
+				}
+				else {
+					responseText = { message: 'undefined' };
+				}
+				
+				//Check timeout
+				if(status === 'timeout') responseText.error = 'timeout';
+				
+				console.error('Error occured while AJAX requesting.');
+				console.log(method.toUpperCase() + ' ' + url);
+				console.log('Sent Header: ' + JSON.stringify(headers));
+				console.log('Sent Data:' + JSON.stringify(dataObject));
+				console.log('Response: ' + JSON.stringify(response));
+				console.log('Code: ' + response.status);
+				console.log('Message: ' + response.responseText);
+				console.log('Error: ' + error);
+				err(responseText, response.status)
+			},
+			complete: function () {
+				_ajax_work = false;
+				console.log('********** REQUEST OVER **********');
+				comp();
+				after();
+			}
+		});
+		
+		//Give notice if processing take too long
+		setTimeout(function() {
+			if(_ajax_work) {
+				console.log('Process taking so long');
+			}
+		}, 5000);
+	}
+
+	function get(data) {
+		data.method = 'get';
+		request(data);
+	}
+
+	function post(data) {
+		data.method = 'post';
+		request(data);
+	}
+
+
+
+	return {
+		//Architekt.module.Http.request(): Request HTTP
+		request: request,
+		//Architekt.module.Http.get(): Request GET
+		get: get,
+		//Architekt.module.Http.post(): Request POST
+		post: post,
+	};
+});
+Architekt.module.reserv('Locale', function(options) {
+	var namespace = this;
+	var currentLocale = 'ko';
+	var localeStrings = {
+		"ko": {
+
+		},
+		"en": {
+
+		},
+	};
+
+	return {
+		//Architekt.module.Locale.setLocale(string newLocale): Set new locale
+		setLocale: function(newLocale) {
+			//If new locale is not supported, use english instead.
+			if(typeof localeStrings[newLocale] === 'undefined') {
+				currentLocale = 'en';
+				console.warn('Architekt.module.Locale: [WARN] Unsupported locale ' + newLocale);
+			}
+			else
+				currentLocale = newLocale;
+			
+			return this;
+		},
+		//Architekt.module.Locale.getCurrentLocale(void): Get current locale
+		getCurrentLocale: function() {
+			return currentLocale;
+		},
+		//Architekt.module.Locale.getString(string key, object replacements): Get string
+		getString: function(key, replacements) {
+			var text = localeStrings[currentLocale][key];
+
+			if(typeof text !== 'undefined') {
+				//Replace the replacements
+				if(typeof replacements === 'object') {
+					for(var key in replacements) {
+						var replacement = replacements[key];
+						text = text.replace(new RegExp("{" + key + "}"), replacement);	//Replace the text that has same replacement character
+					}
+				}
+
+				return text;
+			}
+			//If locale string does not exists, just return the key
+			else
+				return key;
+		}
+	};
+});
 /****************************************************************************************************
  *
  *      Architekt.module.Printer: Debugging helper for Architekt
@@ -162,56 +476,6 @@ Architekt.module.reserv('Printer', function(options) {
 		}
 	}
 });
-Architekt.module.reserv('Locale', function(options) {
-	var namespace = this;
-	var currentLocale = 'ko';
-	var localeStrings = {
-		"ko": {
-
-		},
-		"en": {
-
-		},
-	};
-
-	return {
-		//Architekt.module.Locale.setLocale(string newLocale): Set new locale
-		setLocale: function(newLocale) {
-			//If new locale is not supported, use english instead.
-			if(typeof localeStrings[newLocale] === 'undefined') {
-				currentLocale = 'en';
-				console.warn('Architekt.module.Locale: [WARN] Unsupported locale ' + newLocale);
-			}
-			else
-				currentLocale = newLocale;
-			
-			return this;
-		},
-		//Architekt.module.Locale.getCurrentLocale(void): Get current locale
-		getCurrentLocale: function() {
-			return currentLocale;
-		},
-		//Architekt.module.Locale.getString(string key, object replacements): Get string
-		getString: function(key, replacements) {
-			var text = localeStrings[currentLocale][key];
-
-			if(typeof text !== 'undefined') {
-				//Replace the replacements
-				if(typeof replacements === 'object') {
-					for(var key in replacements) {
-						var replacement = replacements[key];
-						text = text.replace(new RegExp("{" + key + "}"), replacement);	//Replace the text that has same replacement character
-					}
-				}
-
-				return text;
-			}
-			//If locale string does not exists, just return the key
-			else
-				return key;
-		}
-	};
-});
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');
@@ -308,155 +572,6 @@ Architekt.module.reserv('Widget', function(options) {
 			if(typeof newTexts.close !== 'undefined') defaultText.close = newTexts.close;
 			if(typeof newTexts.cancel !== 'undefined') defaultText.cancel = newTexts.cancel;
 		}
-	};
-});
-Architekt.module.reserv('Comparator', function(options) {
-	var results = [];
-	var texts = [];
-	var startTime = null;
-	var endTime = null;
-
-	return {
-		//Architekt.module.Comparator.start(): Begins measuring
-		start: function() {
-			results = [];
-			texts = [];
-			startTime = new Date();
-
-			results.push(0);
-			texts.push('Begins');
-			console.log('Architekt.module.Comparator: Start perfomance measuring at ' + startTime.toGMTString());
-
-			return this;
-		},
-		//Architekt.module.Comparator.stop(): Stops measuring
-		stop: function() {
-			endTime = new Date();
-
-			results.push(endTime.getTime() - startTime.getTime());
-			texts.push('Ends');
-			console.log('Architekt.module.Comparator: Stop perfomance measuring at ' + startTime.toGMTString());
-
-			return this.result();
-		},
-		//Architekt.module.Comparator.check(): Add checkpoint
-		check: function(text) {
-			var currentTime = new Date();
-
-			text = typeof text !== 'undefined' ? text : 'Checkpoint';
-
-			results.push(currentTime.getTime() - startTime.getTime());
-			texts.push(text);
-			console.log('Architekt.module.Comparator: Add checkpoint at ' + startTime.toGMTString());
-
-			return this;
-		},
-		//Architekt.module.Comparator.result(): Get result
-		result: function() {
-			var resultObject = [];
-			for(var i = 0, len = results.length; i < len; i++)
-				resultObject.push({
-					time: results[i],
-					message: texts[i]
-				});
-
-			return resultObject;
-		},
-	};
-});
-Architekt.module.reserv('Http', function(options) {
-	//AJAX REQUEST function
-	//Requres console.js
-	//ajaxRequest({ dataObject, headers, dataType, url, success, error, complete, after })
-	function request(data) {
-		if (typeof data !== 'object' || typeof data.url === 'undefined') return false;
-		
-		var _ajax_work = true;
-
-		var dataObject = typeof data.data === 'object' ? data.data : {};
-		var headers = typeof data.headers !== 'undefined' ? data.headers : {};
-		var method = typeof data.method !== 'undefined' ? data.method : 'post';
-		var dataType = typeof data.dataType !== 'undefined' ? data.dataType : 'json';
-		var url = typeof data.url !== 'undefined' ? data.url : '';
-		var suc = typeof data.success === "function" ? data.success : function () { };
-		var err = typeof data.error === "function" ? data.error : function () { };
-		var comp = typeof data.complete === "function" ? data.complete : function () { };
-		var after = typeof data.after === "function" ? data.after : function () { };
-		
-		console.log('********** Sending XMLHttpRequest **********');
-		console.log(method.toUpperCase() + ' ' + url);
-		console.log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
-
-		$.ajax({
-			timeout: 20000, //maximum 20seconds to timeout
-			url: url,
-			data: dataObject,
-			headers: headers,
-			'type': method,
-			dataType: dataType,
-			success: function (result) {
-				console.log('AJAX Scucess');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log(JSON.stringify(result));
-				suc(result);
-			},
-			error: function (response, status, error) {
-				var responseText = false;
-				if(typeof response.responseText !== 'undefined') {
-					responseText = JSON.parse(response.responseText);
-				}
-				else {
-					responseText = { message: 'undefined' };
-				}
-				
-				//Check timeout
-				if(status === 'timeout') responseText.error = 'timeout';
-				
-				console.error('Error occured while AJAX requesting.');
-				console.log(method.toUpperCase() + ' ' + url);
-				console.log('Sent Header: ' + JSON.stringify(headers));
-				console.log('Sent Data:' + JSON.stringify(dataObject));
-				console.log('Response: ' + JSON.stringify(response));
-				console.log('Code: ' + response.status);
-				console.log('Message: ' + response.responseText);
-				console.log('Error: ' + error);
-				err(responseText, response.status)
-			},
-			complete: function () {
-				_ajax_work = false;
-				console.log('********** REQUEST OVER **********');
-				comp();
-				after();
-			}
-		});
-		
-		//Give notice if processing take too long
-		setTimeout(function() {
-			if(_ajax_work) {
-				console.log('Process taking so long');
-			}
-		}, 5000);
-	}
-
-	function get(data) {
-		data.method = 'get';
-		request(data);
-	}
-
-	function post(data) {
-		data.method = 'post';
-		request(data);
-	}
-
-
-
-	return {
-		//Architekt.module.Http.request(): Request HTTP
-		request: request,
-		//Architekt.module.Http.get(): Request GET
-		get: get,
-		//Architekt.module.Http.post(): Request POST
-		post: post,
 	};
 });
 //# sourceMappingURL=architekt_modules.js.map
