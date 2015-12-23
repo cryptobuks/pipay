@@ -30,7 +30,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        if( $this->sentry->check() ) {
+            return view('dashboard');            
+        } else {
+            return view('home');
+        }
     }
 
     /**

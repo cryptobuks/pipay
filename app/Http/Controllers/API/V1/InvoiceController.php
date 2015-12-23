@@ -94,11 +94,9 @@ class InvoiceController extends Controller
         $ipn = e( $input['ipn'] );                                                
         $email = e( $input['email'] ); 
         $reference = e( $input['reference'] ); 
-        if ($request->has('lang')) {
-            $lang = $input['lang'];
-        } else {
-            $lang = 'ko' ;
-        }
+
+        if ($request->has('lang')) $lang = e($input['lang']);
+        else  $lang = 'ko' ;
 
         $user_id = UserKey::getResourceOwnerId( $api_key );
 
