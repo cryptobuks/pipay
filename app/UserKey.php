@@ -48,14 +48,16 @@ class UserKey extends Model
 	public static function authenticate( $credentials ) {
 		$api_key = $credentials['api_key'];
 		$livemode = $credentials['livemode'];
+		
+		$model = new static;
 
 		if( preg_match( "/test/" , $api_key ) ) {
-			$userKey = $this->whereLiveApiKey ( $api_key )->first();
+			$userKey = $model->where( 'test_api_key' , $api_key )->first();
 		} else {
-			$userKey = $this->whereTestApiKey ( $api_key )->first();
+			$userKey = $model->where ( 'live_api_key' , $api_key )->first();
 		}
 
-		return static::$userKey;		
+		return $userKey;		
 	}
 
 	/**
@@ -65,14 +67,24 @@ class UserKey extends Model
 	 */
 	public static function getResourceOwnerId( $api_key ) {
 
+		$model = new static;
+
 		if( preg_match( "/test/" , $api_key ) ) {
-			$userKey = $this->whereLiveApiKey ( $api_key)->first();
+			$userKey = $model->where( 'test_api_key' , $api_key )->first();
 		} else {
-			$userKey = $this->whereTestApiKey ( $api_key)->first();
+			$userKey = $model->where ( 'live_api_key' , $api_key )->first();
 		}
 
 		$id = $userKey->id;
 
-		return static::$id;
+		return $id;
+	}
+
+	public static function getLiveMode( $api_key ) {
+		if( preg_match( "/test/" , $api_key ) ) {	
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 }

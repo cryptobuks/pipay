@@ -74,7 +74,7 @@ class UserController extends Controller
 
     public function encrypt( Request $request ) {
 
-        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount' , 'settlement_currency' , 'email' , 'redirect' , 'ipn' );
+        $input = $request->only( 'item_desc' , 'order_id' , 'currency' , 'amount'  , 'email' , 'redirect' , 'ipn' );
 
         $param = [];
         foreach ( $input as $k => $v ) {
@@ -406,7 +406,7 @@ class UserController extends Controller
         }
 
         $user_categories = Config::get('common.user_categories');
-        $user_levels = Config::get('common.user_levels');
+        $user_levels = Config::get('common.user_levels');        
         $user->level_name = $user_levels[$user_profile->level];
 
         return view( 'users.profile' , compact('user' , 'user_profile' ,  'user_categories'  , 'user_key' ) );

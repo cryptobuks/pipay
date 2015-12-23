@@ -6,6 +6,19 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\UserKey;
+use App\UserProfile;
+use App\Invoice;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
+use Validator;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -19,8 +32,8 @@ class InvoiceController extends Controller
      */
     public function __construct( Sentry $sentry)
     {
-        $this->sentry = $sentry;
 
+        $this->sentry = $sentry;
         $this->middleware( 'guest'  );
 
     }
@@ -30,19 +43,11 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request  , $token )
     {
-        return view('checkout.index');
-    }
+        $invoice = Invoice::where( 'token' , $token )->first();
 
-    /**
-     * Display a show of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show( $id )
-    {
-        return view('checkout.show');
+        return view('invoice.index' , compact ( 'invoice' ) );
     }
 
     

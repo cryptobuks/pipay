@@ -22,7 +22,6 @@ class CreateInitTable extends Migration
             $table->decimal( 'amount' , 24 , 8 )->default(0); 
             $table->char( 'currency' , 5 ); 
             $table->smallinteger( 'usage' )->default(1); 
-            $table->char( 'settlement_currency' , 5 );                         
             $table->string('email')->nullable();
             $table->string('redirect')->nullable();
             $table->string('callback')->nullable();
@@ -55,13 +54,15 @@ class CreateInitTable extends Migration
             $table->decimal( 'rate' , 24 , 8 )->default(0);            
             $table->char( 'currency' , 5 ); 
             $table->string( 'inbound_address' )->nullable();
-            $table->string( 'refund_address' )->nullable();            
+            $table->string( 'refund_address' )->nullable();     
             $table->boolean('livemode')->default(1);
             $table->string('item_desc')->nullable();                        
             $table->string('order_id')->nullable();             
             $table->string('reference')->nullable();    
-            $table->string('email')->nullable();            
-            $table->timestamp('expiration_at');
+            $table->string('email')->nullable();     
+            $table->char( 'lang' , 3 )->default('ko');            // 추가 
+            $table->timestamp('expiration_at')->nullable();
+            $table->timestamp('completed_at')->nullable(); 
             $table->string( 'url' );              
             $table->string( 'payment_url' );
             $table->string('customer_email')->nullable();
@@ -84,14 +85,11 @@ class CreateInitTable extends Migration
             $table->integer('account_id')->unsigned();                                    
             $table->string( 'api_key' , 40 );            
             $table->integer('buyer_id')->unsigned()->nullable();                        
-            $table->integer('invoice_id')->unsigned();            
-            $table->string( 'invoice_token' , 40 );             
+            $table->integer('invoice_id')->unsigned();       // 변경      
             $table->decimal( 'amount' , 24 , 8 )->default(0);     
             $table->decimal( 'amount_refunded' , 24 , 8 )->default(0); 
-            $table->integer('refund_id')->unsigned()->nullable();            
+            $table->char( 'currency' , 5 );             
             $table->decimal( 'fee' , 24 , 8 )->default(0);       
-            $table->integer('fee_id')->unsigned();             
-            $table->char( 'currency' , 5 ); 
             $table->boolean('livemode')->default(1);
             $table->timestamps();
 
@@ -128,7 +126,8 @@ class CreateInitTable extends Migration
         Schema::create('refunds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('payment_id')->unsigned();             
+            $table->integer('invoice_id')->unsigned();     
+            $table->string( 'address' )->nullable();     
             $table->decimal( 'amount' , 24 , 8 )->default(0);         
             $table->decimal( 'pi_amount' , 24 , 8 )->default(0);                             
             $table->char( 'currency' , 5 ); 
@@ -136,14 +135,16 @@ class CreateInitTable extends Migration
             $table->timestamps();
 
             $table->engine = 'InnoDB';
-            $table->index('user_id');                        
+            $table->index('user_id');  
+            $table->index('invoice_id');                                                                      
         });
 
         // 파이 수수료 
         Schema::create('fees', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('payment_id')->unsigned();             
+            $table->integer('invoice_id')->unsigned();             
+            $table->integer('payment_id')->unsigned();                         
             $table->decimal( 'amount' , 24 , 8 )->default(0);         
             $table->char( 'currency' , 5 ); 
             $table->string( 'description' )->nullable();   
@@ -248,15 +249,14 @@ class CreateInitTable extends Migration
             $table->string('email');
             $table->string('username')->nullable();
             $table->string('cellphone' , 32 )->nullable();            
-            $table->smallInteger( 'level' )->nullable();
-            $table->integer( 'category' )->nullable();
-            $table->tinyInteger( 'shop_type' )->nullable(); 
+            $table->smallInteger('level' )->nullable();
+            $table->integer('category' )->nullable();
+            $table->tinyInteger('shop_type' )->nullable(); 
             $table->string('company' )->nullable();   
             $table->string('website' )->nullable();             
             $table->string('phone' )->nullable();     
             $table->string('logo' )->nullable();                 
             $table->boolean('agreement' )->default(0);            
-            $table->char('settlement_currency' , 5 )->default('PI');            
             $table->timestamps();
 
             $table->engine = 'InnoDB';
