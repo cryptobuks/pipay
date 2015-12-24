@@ -28,6 +28,10 @@ Architekt.module.reserv('DataTable', function(options) {
 			self.event.fire('onclick');
 		});
 
+		//Architekt.module.DataTable.getCurrentPage(void): Get current page
+		this.getCurrentPage = function() {
+			return page;
+		};
 		//Architekt.module.DataTable.getHeaderColumn(void): Get header column
 		this.getHeaderColumn = function() {
 			return _header;

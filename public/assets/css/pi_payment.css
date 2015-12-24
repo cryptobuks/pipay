@@ -1,5 +1,6 @@
 .pi-payment-button {
   display: inline-block;
+  cursor: pointer;
   border: 1px solid #4c97e3;
   color: #1f4864;
   font-size: 18px;

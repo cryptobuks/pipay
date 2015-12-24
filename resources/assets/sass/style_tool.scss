@@ -99,4 +99,27 @@
 /* Page after product generated */
 #pi_product_generated {
 	display: none;
+
+	> .pi-form {
+		> .pi-form-control {
+			text-align: center;
+			margin: 40px 0;
+
+			> .pi-radio {
+			    margin: 0 32px;
+			}
+		}
+
+		> .pi-button-container {
+			margin: 16px 0;
+		}
+	}
+}
+#pi_generated {
+	height: 180px;
+	@include createBorderRadius(16px);
+}
+#codeCopy {
+	font-size: 18px;
+    padding: 18px 38px;
 }

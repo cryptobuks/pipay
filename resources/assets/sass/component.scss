@@ -207,7 +207,19 @@ table.pi-table {
 
 
 .pi-text {
-	
+	display: block;
+	width: 100%;
+	border: none;
+	resize: none;
+
+	&.pi-text-readonly {
+		cursor: default;
+		background-color: #e8e8e8;
+		color: #4c5356;
+		padding: 24px;
+		margin: 16px 0;
+		word-wrap: break-word;
+	}
 }
 
 .pi-theme-complete {

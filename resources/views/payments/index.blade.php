@@ -7,24 +7,9 @@
             var paymentTable = new Architekt.module.DataTable({
                 pagenate: true,
             });
+            
             //create DataTable component
             paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
-
-            
-            @foreach ($invoices as $invoice)
-                paymentTable.addColumn(
-                    [
-                        '{{ $invoice->id }}' ,
-                        '{{ $invoice->created_at }}' ,
-                        '{{ $invoice->item_desc }}' ,
-                        '{{ $invoice->amount }}' ,
-                        '<span class="pi-theme-waiting"> {{ $invoice->status }} </span>' ,
-                        '{{ $invoice->pi_amount_received }} / {{ $invoice->pi_amount }}'
-                    ]
-                );   //add items
-            @endforeach
-
-
             paymentTable.appendTo($('#pi_payment > .pi-container'));    //append to body
             paymentTable.render({ animate: true });      //render the datatable
 
