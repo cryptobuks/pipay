@@ -13,7 +13,7 @@ Architekt.module.reserv('DataTable', function(options) {
 
 		var self = this;
 
-		var _page = 0;
+		var _page = 1;
 		var _header = [];
 		var _columns = [];
 		var dom = $('<div></div>').addClass('pi-table-container');
@@ -28,9 +28,20 @@ Architekt.module.reserv('DataTable', function(options) {
 			self.event.fire('onclick');
 		});
 
+
+		//Architekt.module.DataTable.resetHeaderColumn(void): Reset header column
+		this.resetHeaderColumn = function() {
+			_header = [];
+			return this;
+		}
+		//Architekt.module.DataTable.resetColumns(void): Reset item columns
+		this.resetColumns = function() {
+			_columns = [];
+			return this;
+		}
 		//Architekt.module.DataTable.getCurrentPage(void): Get current page
 		this.getCurrentPage = function() {
-			return page;
+			return _page;
 		};
 		//Architekt.module.DataTable.getHeaderColumn(void): Get header column
 		this.getHeaderColumn = function() {
@@ -140,18 +151,17 @@ Architekt.module.reserv('DataTable', function(options) {
 				}).appendTo(dom);	
 			}
 
-			if(animate) {
-				var origHeight = dom.height();
 
-				dom.css({
-					'height': '0',
-					'overflow': 'hidden'
-				}).animate({
-					'height': origHeight + 'px',
-				}, animationDuration, 'swing', function() {
-					dom.css('overflow', 'visible');
-				});
-			}
+			var origHeight = dom.height();
+
+			dom.css({
+				'height': '0',
+				'overflow': 'hidden'
+			}).animate({
+				'height': origHeight + 'px',
+			}, animationDuration, 'swing', function() {
+				dom.css('overflow', 'visible');
+			});
 
 			return this;
 		};
