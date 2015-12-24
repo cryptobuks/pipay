@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Transaction;
 
 class LedgerController extends Controller
 {
@@ -32,7 +33,10 @@ class LedgerController extends Controller
      */
     public function index()
     {
-        return view('ledgers.index');
+        $transactions = Transaction::orderBy( 'id' , 'desc' )->paginate(15);
+        $transactions->load('account');
+        dd($transactions);
+        return view('ledgers.index', compact('transactions'));
     }
 
 }
