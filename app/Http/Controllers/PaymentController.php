@@ -8,7 +8,6 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use App\Invoice;
-use App\Http\Requests\UserFormRequest;
 
 class PaymentController extends Controller
 {
@@ -51,7 +50,7 @@ class PaymentController extends Controller
         }
 
         if ($request->ajax()) {
-            return Response::json( [ 'jsonTable' => $jsonTable ] , 200 );
+            return $jsonTable;
         }
 
         return view('payments.index', compact('jsonTable') );

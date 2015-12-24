@@ -35,7 +35,19 @@ class LedgerController extends Controller
     {
         $transactions = Transaction::orderBy( 'id' , 'desc' )->paginate(15);
         $transactions->load('account');
-        dd($transactions);
+        
+        $jsonTable = [];
+            
+        foreach ( $transactions as $transaction){
+            $jsonTable[] = array(
+                'id' => $transaction->id
+            );
+        }
+
+        if ($request->ajax()) {
+            return $jsonTable;
+        }
+        dd($jsonTable);
         return view('ledgers.index', compact('transactions'));
     }
 
