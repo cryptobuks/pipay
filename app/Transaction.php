@@ -22,4 +22,10 @@ class Transaction extends Model
 		'user_id', 'account_id' , 'currency', 'fee', 'fee_id' , 'amount' , 'net' , 'source_id' , 'source_type', 'status', 'type' , 'url' , 'description' ,
 	];
 
+
+	public function account()
+	{
+		return $this->belongsTo('App\Account');
+	}
+
 }

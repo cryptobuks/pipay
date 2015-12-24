@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 use App\Invoice;
+use App\Http\Requests\UserFormRequest;
 
 class PaymentController extends Controller
 {
@@ -31,11 +33,28 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request )
     {
         $invoices = Invoice::orderBy( 'id' , 'desc' )->paginate(15);
+        $jsonTable = [];
+            
+        foreach ( $invoices as $invoice){
+            $jsonTable[] = array(
+                'id' => $invoice->id,
+                'created_at' => $invoice->created_at,
+                'item_desc' => $invoice->item_desc,
+                'amount' => $invoice->amount,
+                'status' => $invoice->status,
+                'pi_amount_received' => $invoice->pi_amount_received,
+                'pi_amount' => $invoice->pi_amount
+            );
+        }
 
-        return view('payments.index', compact('invoices') );
+        if ($request->ajax()) {
+            return Response::json( [ 'jsonTable' => $jsonTable ] , 200 );
+        }
+
+        return view('payments.index', compact('jsonTable') );
     }
 
     /**
