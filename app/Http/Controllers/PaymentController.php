@@ -40,7 +40,7 @@ class PaymentController extends Controller
         foreach ( $invoices as $invoice){
             $jsonTable[] = array(
                 'id' => $invoice->id,
-                'created_at' => $invoice->created_at,
+                'created_at' => $invoice->created_at->format('Y-m-d H:i:s'),
                 'item_desc' => $invoice->item_desc,
                 'amount' => $invoice->amount,
                 'status' => $invoice->status,
