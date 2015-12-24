@@ -13,8 +13,30 @@ Architekt.event.on('ready', function() {
 
 	/* Create product */
 	var _isSubmittingCreateProduct = false;
+	var generated = false;
+	var token = '';
+
+	function generateCode(lan, token) {
+		lan = lan.toLowerCase();
+
+		var buttonText = null;
+
+		switch(lan) {
+			case 'en':
+				buttonText = 'Pay with PI';
+				break;
+			case 'ko':
+				buttonText = '파이결제';
+				break;
+		}
+
+		$('#pi_generated').val('<a href="#" class="pi-payment-button" data-token="' + token + '" data-lang="' + lan + '" data-btn="0" data-livemode="1"><img src="/image/pi-payment-logo.png" /><span>' + buttonText + '</span></a>');
+	}
+
+	//submit generate product
 	$('#createProductForm').submit(function() {
-		if(_isSubmittingCreateProduct) return;
+		if(generated) return false;;
+		if(_isSubmittingCreateProduct) return false;;
 
 		var url = $(this).attr('action');
 		var Notice = Architekt.module.Widget.Notice;
@@ -91,8 +113,12 @@ Architekt.event.on('ready', function() {
 			success: function(data) {
 				var cipher = data.crypt;
 
-				$('#pi_product_generate').fadeOut(600, function() {
+				token = cipher;
 
+				generated = true;
+				generateCode('ko', token);
+
+				$('#pi_product_generate').fadeOut(600, function() {
 					$('#pi_product_generated').fadeIn(600);
 				});
 			},
@@ -107,5 +133,22 @@ Architekt.event.on('ready', function() {
 		});
 
 		return false;
+	});
+	//change language
+	$('.controlLan').click(function() {
+		var lan = $(this).val();
+		generateCode(lan, token);
+	});
+	//if user clicked "button", make radio click
+	$('.pi-payment-button').click(function() {
+		$(this).prev().trigger('click');
+	});
+	//copy button
+	$('#codeCopy').click(function() {
+		Architekt.module.Clipboard.copy($('#pi_generated'));
+
+		new Architekt.module.Widget.Notice({
+			text: '복사되었습니다.',
+		});
 	});
 });

@@ -38,6 +38,7 @@ elixir(function(mix) {
     //Merge modules
     //CDN too? i dunno
     mix.scripts([
+        'reserved/clipboard.js',
         'reserved/comparator.js',
         'reserved/dataTable.js',
         'reserved/http.js',

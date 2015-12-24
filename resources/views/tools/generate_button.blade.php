@@ -23,40 +23,32 @@
 			<div class="pi-form">
 				<div class="pi-form-control">
 					<div class="pi-radio">
-						<input type="radio" name="button_lan" value="ko" checked="checked" />
-						<a href="#" class="pi-payment-button">
+						<input type="radio" class="controlLan" name="button_lan" value="ko" checked="checked" />
+						<div class="pi-payment-button">
 							<img src="{{ asset('image/pi-payment-logo.png') }}" />
 							<span>파이결제</span>
-						</a>
+						</div>
 					</div>
 
 					<div class="pi-radio">
-						<input type="radio" name="button_lan" value="en" checked="checked" />
-						<a href="#" class="pi-payment-button">
+						<input type="radio" class="controlLan" name="button_lan" value="en" />
+						<div class="pi-payment-button">
 							<img src="{{ asset('image/pi-payment-logo.png') }}" />
 							<span>Pay with PI</span>
-						</a>
+						</div>
 					</div>
 				</div>
 
 				<h1>HTML 코드 사용하기</h1>
 				<p>아래의 HTML 코드를 복사하여 웹 페이지에 붙여넣으시면 버튼이 생성됩니다.</p>
 
-				<div class="pi-text pi-text-readonly">
-<code>
-&lt;a href="#" class="pi-payment-button" data-token="" data-lang="" data-btn="" data-livemode=""&gt;
-	&lt;img src="{{ asset('image/pi-payment-logo.png') }}" /&gt;
-	&lt;span>파이결제&lt;/span&gt;
-&lt;/a&gt;
-</code>
+				<textarea id="pi_generated" class="pi-text pi-text-readonly" disabled="disabled"></textarea>
+
+				<div class="pi-button-container">
+					<button id="codeCopy" class="pi-button pi-theme-success">복사하기</button>
 				</div>
-
-
-
 			</div>
 			
-
-
 		</div>
 	</div>
 

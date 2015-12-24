@@ -281,6 +281,22 @@ table.pi-table > tbody > tr:nth-child(2n) {
   margin-top: -16px;
 }
 
+.pi-text {
+  display: block;
+  width: 100%;
+  border: none;
+  resize: none;
+}
+
+.pi-text.pi-text-readonly {
+  cursor: default;
+  background-color: #e8e8e8;
+  color: #4c5356;
+  padding: 24px;
+  margin: 16px 0;
+  word-wrap: break-word;
+}
+
 .pi-theme-complete {
   color: #0c69b8;
 }
@@ -1178,6 +1194,33 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 #pi_product_generated {
   display: none;
+}
+
+#pi_product_generated > .pi-form > .pi-form-control {
+  text-align: center;
+  margin: 40px 0;
+}
+
+#pi_product_generated > .pi-form > .pi-form-control > .pi-radio {
+  margin: 0 32px;
+}
+
+#pi_product_generated > .pi-form > .pi-button-container {
+  margin: 16px 0;
+}
+
+#pi_generated {
+  height: 180px;
+  border-radius: 16px;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  -o-border-radius: 16px;
+  -ms-border-radius: 16px;
+}
+
+#codeCopy {
+  font-size: 18px;
+  padding: 18px 38px;
 }
 
 #pi_payment {
