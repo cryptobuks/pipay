@@ -43,6 +43,11 @@ Architekt.module.reserv('DataTable', function(options) {
 		this.getCurrentPage = function() {
 			return _page;
 		};
+		//Architekt.module.DataTable.setPage(void): Set page
+		this.setPage = function(newPage) {
+			_page = +newPage;
+			return this;
+		};
 		//Architekt.module.DataTable.getHeaderColumn(void): Get header column
 		this.getHeaderColumn = function() {
 			return _header;
@@ -86,10 +91,25 @@ Architekt.module.reserv('DataTable', function(options) {
 			var updateHeader = typeof renderOptions.updateHeader !== 'undefined' ? !!renderOptions.updateHeader : true;
 			var updateItems = typeof renderOptions.updateItems !== 'undefined' ? !!renderOptions.updateItems : true;
 
+
+			//resize whole container height to fit
+			function resizeContainer() {
+				var origHeight = tableDom.height();
+
+				dom.css({
+					'height': origHeight + 'px',
+					'overflow': 'visible',
+				});
+			}
+
+			//animate each column(=cell)
 			function animateCell(cell, duration) {
 				cell.delay(animationDuration).css('opacity', '0.0').animate({
 					'opacity': '1.0'
 				}, duration);
+
+				//update dom height
+				resizeContainer();
 			}
 
 			var subAnimDuration = parseInt(animationDuration / 4);
@@ -132,7 +152,9 @@ Architekt.module.reserv('DataTable', function(options) {
 							tr.appendTo(tbody);
 						}
 
-						if(animate) animateCell(tr, i * subAnimDuration);
+						if(animate) {
+							animateCell(tr, i * subAnimDuration);
+						}
 					})(i);
 				}	
 			}
@@ -151,17 +173,7 @@ Architekt.module.reserv('DataTable', function(options) {
 				}).appendTo(dom);	
 			}
 
-
-			var origHeight = dom.height();
-
-			dom.css({
-				'height': '0',
-				'overflow': 'hidden'
-			}).animate({
-				'height': origHeight + 'px',
-			}, animationDuration, 'swing', function() {
-				dom.css('overflow', 'visible');
-			});
+			if(!animate) resizeContainer();
 
 			return this;
 		};

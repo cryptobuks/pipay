@@ -12,16 +12,17 @@
             //create DataTable component
             paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
             paymentTable.appendTo($('#pi_payment > .pi-container'));    //append to body
-            paymentTable.render({ animate: true });      //render the datatable
 
+            //first draw
+            paymentTable.render({ animate: true });
 
-            function getData(page) {
+            function getData() {
                 paymentTable.resetColumns();
 
                 Architekt.module.Http.get({
                     url: currentUrl,
                     data: {
-                        'page': page,
+                        'page': paymentTable.getCurrentPage(),
                     },
                     success: function(dataObject) {
                         for(var i = 0, len = dataObject.length; i < len; i++) {
@@ -50,9 +51,7 @@
                 });    
             }
 
-
-            getData(paymentTable.getCurrentPage());
-
+            getData(paymentTable.getCurrentPage()); //update after 1 second
 
             //Event handlers
             paymentTable.event.on('itemclick', function(e) {
@@ -68,18 +67,24 @@
             paymentTable.event.on('previous', function(e) {
                 var page = e.currentPage;
 
-                new Notice({
-                    text: 'current page is ' + page
-                });
+                if(page === 1) {
+                    new Notice({
+                        text: '첫 번째 페이지입니다.'
+                    });
+                }
+                else {
+                    paymentTable.setPage(--page);
+                    getData();
+                }
             });
 
             //next
             paymentTable.event.on('next', function(e) {
                 var page = e.currentPage;
 
-                new Notice({
-                    text: 'current page is ' + page
-                });
+
+                paymentTable.setPage(++page);
+                getData();                
             });
 
             //print items on console
