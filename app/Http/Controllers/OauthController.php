@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Ouser;
 use App\Account;
+use App\Oaccount;
+use App\UserKey;
+use App\UserProfile;
+use App\TwoFactor;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Exception;
@@ -21,8 +26,6 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\RedirectResponse;
-use App\UserKey;
-use App\UserProfile;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class OauthController extends Controller
@@ -43,28 +46,16 @@ class OauthController extends Controller
         $this->middleware( 'guest' );
     }
 
-   public function login(Request $request )
-    {
-        $input = $request->all();
 
-        $this->validate( $request , [
-            'id' => 'required',
-        ]);
-
-        $id = $request->input('id');
-
-        if (Auth::loginUsingId($id)) {
-            return Response::json( [ 'status' => 'success' ,  'test' => 'test123' ] );
-        } else {
-            return Response::json( ['status' => 'failed' ]);
-        }
-
-    }
-
-
+    /**
+     * [loginOnce description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
    public function loginOnce(Request $request )
     {
         $input = $request->all();
+        $result = [];
 
         $this->validate( $request , [
             'email' => 'required|email|max:128',
@@ -73,14 +64,90 @@ class OauthController extends Controller
 
         $credentials = $request->only('email','password');
 
-        if (Auth::attempt($credentials)) {
-//        if (Auth::once($credentials)) {
-            return Response::json( [ 'status' => 'success' ,  'id' => Auth::user()->id ] );
+        if (Auth::once($credentials)) {
+            
+            $user = Auth::user();
+
+            DB::beginTransaction();
+            try {
+
+                $sms = TwoFactor::getType( $user , TWO_FACTOR_TYPE_SMS );
+                $result = $sms->valid_phone_number( $user ) ;
+                
+                if( $result['success'] == true ) {
+                    $sms->active();
+                    $sms->send_sms( $user );
+                }
+
+                DB::commit();
+
+            }  catch (Exception $e) {
+                DB::rollback();
+                return Response::json (  [ 'status' => 'save_failure' ] , 401 );
+            }
+
+            return Response::json( [ 'status' => 'success' ,  'id' => Crypt::encrypt( $user->id ) ] );
         } else {
             return Response::json( [ 'status' => 'failed' ]);
         }
 
     }
+
+
+    public function smsAuth( Request $request )
+    {
+        $input = $request->all();
+
+        $this->validate( $request , [
+            'authcode' => 'required|digits:5',
+            'cipher_id' => 'required|min:6',         
+        ]);
+
+        $input = $request->only('authcode','cipher_id');
+
+        try {
+            $id = Crypt::decrypt( $input['cipher_id'] );
+        } catch ( DecryptException $e) {
+            return 'Server encryption error!';
+        }
+
+        $user = Ouser::find( $id );
+        $account = Oaccount::whereUserId( $user->id )->whereCurrencyId( CURRENCY_COIN )->first();
+
+        $result = 'fail' ;
+        DB::beginTransaction();
+        try {
+
+            $sms = TwoFactor::getType( $user , TWO_FACTOR_TYPE_SMS );
+            $result = $sms->verify( $input['authcode'] );            
+
+            if( $result['success'] == true ) {
+                if( $this->loginUser( $id ) == true ) {
+                    $result = 'success' ;
+                }
+            }
+
+           DB::commit();
+
+        }  catch (Exception $e) {
+            DB::rollback();
+            return Response::json( [ 'status' => 'save_failure' ] );            
+        }
+
+        return Response::json( [ 'status' => $result  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] );
+
+    }
+
+   public function loginUser( $id )
+    {
+        if (Auth::loginUsingId( $id )) {
+            return true  ;
+        } else {
+            return false  ;
+        }
+
+    }
+
 
      /**
      * Logout the specified user.
@@ -88,9 +155,10 @@ class OauthController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function logout()
+     public function logout( )
      {
-        Auth::logout();        
+        Auth::logout(); 
+        return back();                     
      }
 
  

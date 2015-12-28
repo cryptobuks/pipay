@@ -28,7 +28,7 @@ return array(
 	'name'            => "Pi",
 	'register_new'    => "Register",
 	'welcome'         => "Welcome.",
-	'title1'                => "PI-PAY",
+	'title1'                => "PI-PAYMENT",
 	'sub1'                => "Easy transfer with Pi-Pay.",
 	'sub2'                => "Transfer and purchase.<br />Start with Pi.",
 	'btnStart'                => "Start Now",

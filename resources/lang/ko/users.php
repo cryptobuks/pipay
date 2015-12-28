@@ -106,6 +106,7 @@ return [
     'pincode_empty' => 'PINCODE가 설정되지 않았습니다.' ,
     'authcode_invalid' => '올바르지 않은 AUTHCODE입니다.' ,  
     'sms_auth' => '[파이페이먼트] 인증번호는 [:authcode] 입니다.' ,
+    'authcode' => '인증번호를 입력 해주세요.' , 
     'already_cellphone' => '이미 다른 사용자가 등록한 휴대폰 번호입니다. 다시 시도해 주세요.' , 
     'category_title' => '사업 종류' ,
     'company_title' => '회사명' ,    

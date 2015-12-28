@@ -71,6 +71,7 @@ $router->get('checkout/{token}', ['as' => 'checkout.index', 'uses' => 'CheckoutC
 
 // 결제 페이지 실행 
 $router->get('invoice/{token}', ['as' => 'invoice.index', 'uses' => 'InvoiceController@index']);
+$router->post('invoice/{token}/payment', ['as' => 'invoice.payment', 'uses' => 'InvoiceController@payment']);
 
 // API
 Route::group(array('prefix' => 'api/v1'), function()
@@ -86,6 +87,11 @@ Route::post('oauth/access_token', function() {
 // 결제 간단 로그인  
 $router->post('oauth/loginOnce', ['as' => 'oauth.loginOnce', 'uses' => 'OauthController@loginOnce']);
 
+// 문자 인증 
+$router->post('oauth/smsAuth', ['as' => 'oauth.smsAuth', 'uses' => 'OauthController@smsAuth']); 
+
+// 결제 로그아웃
+$router->get('oauth/logout', ['as' => 'oauth.logout', 'uses' => 'OauthController@logout']);
 
 // User login event
 Event::listen('users.login', function($userId, $email)

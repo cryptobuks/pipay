@@ -103,5 +103,12 @@ return [
     'pincode_empty' => 'Pincode has not been set.' ,
     'authcode_invalid' => 'Invalid authcode.' ,     
     'sms_auth' => '[Pi-pay] auth code : [:authcode] ' ,
+    'authcode' => 'Please input the authcode.' ,     
     'already_cellphone' => 'Already other users is registed cellphone. Try again.' ,    
+    'category_title' => 'Category' ,
+    'company_title' => 'Company' ,    
+    'website_title' => 'Website' ,    
+    'phone_title' => 'Phone' ,         
+    'logo_title'  => 'Logo' , 
+
 ];

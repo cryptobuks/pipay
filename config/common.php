@@ -87,5 +87,11 @@ return [
 		'refunded_partial' => '일부환불' , 		
 	] , 
 
+	'payment_user' => [
+		'username' => '파이페이' ,	
+		'pi_address' => 'pay@pi-works.net' ,
+		'pincode' => '71254' ,		
+	] , 
+
 
 ];

@@ -214,6 +214,7 @@ return [
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class , 
         'Sentry' => Cartalyst\Sentry\Facades\Laravel\Sentry::class,      
         'Image' => Intervention\Image\Facades\Image::class ,   
+        'Oaccount' => App\Oaccount::class ,           
     ],
 
 ];

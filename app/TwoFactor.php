@@ -3,6 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+use App\User;
+use App\Jobs\SendSms;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Queue;
+use Validator;
+
 
 class TwoFactor extends Model
 {
@@ -33,12 +40,12 @@ class TwoFactor extends Model
 
 	public $timestamps = false;
 
-	public function user()
+	public function ouser()
 	{
-		return $this->belongsTo('App\User' );
+		return $this->belongsTo('App\Ouser' );
 	}
 
-	public static function getType( User $user , $type  )
+	public static function getType( Ouser $user , $type  )
 	{
 		$param = [
 			'user_id' => $user->id ,
@@ -68,7 +75,7 @@ class TwoFactor extends Model
 		$this->refreshed_at = Carbon::now();
 	}
 
-	public function send_sms( User $user ){
+	public function send_sms( Ouser $user ){
 		if( !$this->expired() ) $this->refresh();
 		Queue::push( new SendSms(  $user->cellphone , trans( 'users.sms_auth' ,  array( 'authcode' => $this->opt_secret ) )  )  );
 	}
@@ -79,10 +86,14 @@ class TwoFactor extends Model
 	}
 
 	public function expired(){
-		$dt = new Carbon( $this->refreshed_at );
-		$dt->addSeconds( TWO_FACTOR_SINCE_TIME );
+		if( $this->refreshed_at ) {
+			$dt = new Carbon( $this->refreshed_at );
+			$dt->addSeconds( TWO_FACTOR_SINCE_TIME );
 
-		return  $dt->diffInSeconds( Carbon::now()  , false )  < 0 ;
+			return  $dt->diffInSeconds( Carbon::now()  , false )  < 0 ;
+		} else {
+			return 0;
+		}
 	}
 
 	public function verify( $authcode ){
@@ -96,7 +107,7 @@ class TwoFactor extends Model
 		}
 	}
 
-	public function valid_phone_number( User $user ) {
+	public function valid_phone_number( Ouser $user ) {
 		
 		$validator = Validator::make( 
 			 [ 'phone' => $user->cellphone ] ,

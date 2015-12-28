@@ -1,15 +1,20 @@
-<?php
-
-namespace App;
+<?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Legder;
+use App\AccountHistory;
 use Exception;
 use DB;
 
-class Account extends Model
-{
+class Oaccount extends Model  {
+
+	/**
+	 * The connection name for the model.
+	 *
+	 * @var string
+	 */
+	protected $connection = 'pi';
+
 	/**
 	 * The database table used by the model.
 	 *
@@ -23,7 +28,7 @@ class Account extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'user_id', 'currency', 'balance', 'locked'
+		'user_id', 'currency_id', 'balance', 'locked'
 	];
 
 	protected $reason = ACCOUNT_FIX;
@@ -31,15 +36,21 @@ class Account extends Model
 	protected $fee = 0;	
 	protected $opts = NULL;
 
-	public function legder()
+	public function accounthistory()
 	{
-		return $this->hasMany('App\Legder' , 'account_id');
+		return $this->hasMany('App\AccountHistory' , 'account_id');
 	}
 
-	public function userProfile()
+	public function user()
 	{
-		return $this->belongsTo('App\UserProfile');
+		return $this->belongsTo('App\Ouser');
 	}
+
+	public function currency()
+	{
+		return $this->belongsTo('App\Currency');
+	}
+
 
 	public function change_balance( $balance , $locked  ) 
 	{
@@ -59,7 +70,7 @@ class Account extends Model
 		$account_history = [
 			'user_id' => $this->user_id,
 			'account_id' => $this->id,
-			'currency' => $this->currency ,
+			'currency_id' => $this->currency_id,
 			'fun' => $this->fun,
 			'reason' => $this->reason,
 			'balance' => $balance ,
@@ -147,14 +158,4 @@ class Account extends Model
 		$this->change_balance( $locked - $amount , -$locked  );
 	}
 
-	public function account_sum_per_day( $user_id , $currency , $reason ) 
-	{
-		$balance = DB::table('account_histories')
-		->whereRaw( "user_id = ? AND currency = ? AND reason = ? AND DATE_FORMAT(updated_at, '%Y-%m-%d') = DATE_FORMAT( NOW(), '%Y-%m-%d')" , [ $user_id , $currency , $reason ] )
-		->sum('balance');
-
-		return $balance;
-	}
-
-    
 }
