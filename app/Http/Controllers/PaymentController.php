@@ -78,7 +78,6 @@ class PaymentController extends Controller
         $invoice = Invoice::where('token', '=',  $id )->first()->toJson();
 
         return $invoice;
-        // return view('payments.receipt', compact('invoice'));
     }
     
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Invoice;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -32,7 +34,9 @@ class HomeController extends Controller
     {
 
         if( $this->sentry->check() ) {
-            return view('dashboard');            
+
+            $this->dashboard();
+
         } else {
             return view('home');
         }
@@ -45,12 +49,64 @@ class HomeController extends Controller
      */
     public function dashboard()
     {
-        return view('dashboard');
+
+         // 일간 총 매출
+        $month_totalInvoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
+                                DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
+                                )
+                ->where('status', '=' ,'confirmed')
+                ->groupBy('date')
+                ->having('date', '>=' , DB::raw('left(NOW() - INTERVAL 1 MONTH ,10)'))
+                ->orderBy( 'date' , 'asc' )->get();
+        $jsonTable_monthInvoice = $this->createJsonTable($month_totalInvoice);
+
+        // 전날 총 매출
+        $day_totalInvoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
+                                DB::raw('SUM(IF(currency = "KRW", amount_received, 0)) as KRW_amount'), 
+                                DB::raw('SUM(IF(currency = "Pi", pi_amount_received,0)) as PI_amount'),
+                                DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
+                                )
+                ->where('status', '=' ,'confirmed')
+                ->groupBy('date')
+                ->having('date', '=' , DB::raw('CURDATE()  - INTERVAL 1 DAY'))->first();
+
+        return view('dashboard', compact('jsonTable_monthInvoice','day_totalInvoice'));
     }
 
     public function agreement()
     {
         return view('agreement');
     }
-    
+
+
+    // google cahrt 구조 테이블 생성
+    private function createJsonTable( &$DB )
+    {
+        $table = array();
+        
+        $table['cols'] = array(
+
+            array('label' => '날짜', 'type' => 'string'),
+            array('label' => '일 매출', 'type' => 'number'),
+
+        );
+
+        if (!is_null($DB)) 
+        {
+            $rows = array();
+
+            foreach ($DB as $tgl) 
+            {
+                $temp = array();
+
+                $temp[] = array('v' => (string) $tgl->date);
+                $temp[] = array('v' => (float) $tgl->total); 
+
+                $rows[] = array('c' => $temp);
+            }
+            $table['rows'] = $rows;
+        }
+
+        return json_encode($table);
+    }
 }
