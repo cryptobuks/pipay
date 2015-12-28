@@ -66,7 +66,6 @@ class PaymentController extends Controller
         $invoice = Invoice::find( $id )->toJson();
 
         return $invoice;
-        // return view('payments.show', compact('invoice'));
     }
 
     /**
@@ -76,9 +75,10 @@ class PaymentController extends Controller
      */
     public function receipt( $id )
     {
-        $invoice = Invoice::where('token', '=',  $id )->first();
+        $invoice = Invoice::where('token', '=',  $id )->first()->toJson();
 
-        return view('payments.receipt', compact('invoice'));
+        return $invoice;
+        // return view('payments.receipt', compact('invoice'));
     }
     
 }
