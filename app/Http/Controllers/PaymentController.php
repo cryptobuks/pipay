@@ -63,9 +63,10 @@ class PaymentController extends Controller
      */
     public function show( $id )
     {
-        $invoice = Invoice::find( $id );
+        $invoice = Invoice::find( $id )->toJson();
 
-        return view('payments.show', compact('invoice'));
+        return $invoice;
+        // return view('payments.show', compact('invoice'));
     }
 
     /**
