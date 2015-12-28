@@ -34,9 +34,7 @@ class HomeController extends Controller
     {
 
         if( $this->sentry->check() ) {
-
-            $this->dashboard();
-
+            return redirect('dashboard');
         } else {
             return view('home');
         }
