@@ -48,6 +48,6 @@
 				<!-- submit -->
 				<div class="pi-form-control">
 					<div class="pi-form-control-space"></div>
-					{!! Form::submit('저장하기',  array('class' => 'pi-button pi-theme-success', 'name' => 'createProductSubmit', 'id' => 'createProductSubmit')) !!}
+					{!! Form::submit('생성하기',  array('class' => 'pi-button pi-theme-success', 'name' => 'createProductSubmit', 'id' => 'createProductSubmit')) !!}
 				</div>
 			{!! Form::close() !!}

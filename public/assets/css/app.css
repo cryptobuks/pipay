@@ -210,77 +210,6 @@ select.pi-input {
   appearance: none;
 }
 
-table.pi-table {
-  width: 100%;
-  border-collapse: collapse;
-  cursor: default;
-}
-
-table.pi-table > thead > tr {
-  background-color: #e3e3e3;
-}
-
-table.pi-table > thead > tr > th,
-table.pi-table > thead > tr > td {
-  padding: 12px;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 1px solid #acafb8;
-  color: #4c5356;
-}
-
-table.pi-table > thead > tr > th:last-child,
-table.pi-table > thead > tr > td:last-child {
-  border-right: none;
-}
-
-table.pi-table > tbody > tr {
-  background-color: #ffffff;
-}
-
-table.pi-table > tbody > tr:hover {
-  background-color: #D6E7F9 !important;
-}
-
-table.pi-table > tbody > tr > td {
-  padding: 12px;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 1px solid #acafb8;
-  color: #6d7477;
-}
-
-table.pi-table > tbody > tr > td:last-child {
-  border-right: none;
-}
-
-table.pi-table > tbody > tr:nth-child(2n) {
-  background-color: #f6f6f6;
-}
-
-.pi-table-container {
-  position: relative;
-  cursor: pointer;
-}
-
-.pi-table-container > .pi-table-prev {
-  position: absolute;
-  top: 50%;
-  right: unset;
-  bottom: unset;
-  left: -64px;
-  margin-top: -16px;
-}
-
-.pi-table-container > .pi-table-next {
-  position: absolute;
-  top: 50%;
-  right: -64px;
-  bottom: unset;
-  left: unset;
-  margin-top: -16px;
-}
-
 .pi-text {
   display: block;
   width: 100%;
@@ -1192,16 +1121,12 @@ table.pi-table > tbody > tr:nth-child(2n) {
 
 /* Page after product generated */
 
-#pi_product_generated {
-  display: none;
-}
-
-#pi_product_generated > .pi-form > .pi-form-control {
+#pi_product_generated > .pi-form > #selectType {
   text-align: center;
   margin: 40px 0;
 }
 
-#pi_product_generated > .pi-form > .pi-form-control > .pi-radio {
+#pi_product_generated > .pi-form > #selectType > .pi-radio {
   margin: 0 32px;
 }
 
@@ -1210,12 +1135,12 @@ table.pi-table > tbody > tr:nth-child(2n) {
 }
 
 #pi_generated {
-  height: 180px;
   border-radius: 16px;
   -webkit-border-radius: 16px;
   -moz-border-radius: 16px;
   -o-border-radius: 16px;
   -ms-border-radius: 16px;
+  height: 180px;
 }
 
 #codeCopy {
@@ -1227,13 +1152,9 @@ table.pi-table > tbody > tr:nth-child(2n) {
   padding: 32px 0;
 }
 
-#pi_payment > .pi-container > .pi-button-container {
+#pi_payment > #pi_list > .pi-button-container {
   position: relative;
   margin-bottom: 32px;
-}
-
-#pi_payment_list > tbody > tr > td {
-  cursor: pointer;
 }
 
 #pi_ledger {
@@ -1265,4 +1186,79 @@ table.pi-table > tbody > tr:nth-child(2n) {
   color: #a4a9ac;
   font-size: 12px;
   margin: 8px 0;
+}
+
+.architekt-dataTable-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.architekt-dataTable-container > .pi-table-prev {
+  position: absolute;
+  top: 50%;
+  right: unset;
+  bottom: unset;
+  left: -64px;
+  margin-top: -16px;
+}
+
+.architekt-dataTable-container > .pi-table-next {
+  position: absolute;
+  top: 50%;
+  right: -64px;
+  bottom: unset;
+  left: unset;
+  margin-top: -16px;
+}
+
+table.architekt-dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  cursor: default;
+}
+
+table.architekt-dataTable.architekt-dataTable-writable > tbody > tr {
+  cursor: pointer;
+}
+
+table.architekt-dataTable > thead > tr {
+  background-color: #e3e3e3;
+}
+
+table.architekt-dataTable > thead > tr > th,
+table.architekt-dataTable > thead > tr > td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #acafb8;
+  color: #4c5356;
+}
+
+table.architekt-dataTable > thead > tr > th:last-child,
+table.architekt-dataTable > thead > tr > td:last-child {
+  border-right: none;
+}
+
+table.architekt-dataTable > tbody > tr {
+  background-color: #ffffff;
+}
+
+table.architekt-dataTable > tbody > tr:hover {
+  background-color: #D6E7F9 !important;
+}
+
+table.architekt-dataTable > tbody > tr > td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #acafb8;
+  color: #6d7477;
+}
+
+table.architekt-dataTable > tbody > tr > td:last-child {
+  border-right: none;
+}
+
+table.architekt-dataTable > tbody > tr:nth-child(2n) {
+  background-color: #f6f6f6;
 }

@@ -98,10 +98,8 @@
 
 /* Page after product generated */
 #pi_product_generated {
-	display: none;
-
 	> .pi-form {
-		> .pi-form-control {
+		> #selectType {
 			text-align: center;
 			margin: 40px 0;
 
@@ -116,8 +114,8 @@
 	}
 }
 #pi_generated {
-	height: 180px;
 	@include createBorderRadius(16px);
+	height: 180px;
 }
 #codeCopy {
 	font-size: 18px;

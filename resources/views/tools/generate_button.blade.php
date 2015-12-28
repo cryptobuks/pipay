@@ -2,6 +2,9 @@
 @section('content')
 
     <script>
+    	//global binding
+    	window.generateType = 'button';
+
     	Architekt.event.on('ready', function() {
     		//load payment module styles
     		Architekt.loadCSS("{{ asset('assets/css/pi_payment.css') }} ");
@@ -21,7 +24,7 @@
 			<div class="pi-form-split"></div>
 
 			<div class="pi-form">
-				<div class="pi-form-control">
+				<div id="selectType" class="pi-form-control">
 					<div class="pi-radio">
 						<input type="radio" class="controlLan" name="button_lan" value="ko" checked="checked" />
 						<div class="pi-payment-button">

@@ -16,8 +16,28 @@ Architekt.event.on('ready', function() {
 	var generated = false;
 	var token = '';
 
-	function generateCode(lan, token) {
+	function generateCode(type, lan, token) {
 		lan = lan.toLowerCase();
+
+		var method = function() {};;
+
+		switch(type) {
+			case 'button':
+				method = updateButton;
+				break;
+			case 'link':
+				method = updateLink;
+				break;
+			default:
+				throw new Error('unsupported type ' + type);
+				break;
+		}
+
+		//update dom
+		method.apply(null, [].slice.call(arguments, 1));
+	}
+	function updateButton(lan, token) {
+		if(typeof token === 'undefined' || token === "") return;
 
 		var buttonText = null;
 
@@ -31,6 +51,10 @@ Architekt.event.on('ready', function() {
 		}
 
 		$('#pi_generated').val('<a href="#" class="pi-payment-button" data-token="' + token + '" data-lang="' + lan + '" data-btn="0" data-livemode="1"><img src="/image/pi-payment-logo.png" /><span>' + buttonText + '</span></a>');
+	}
+	function updateLink(lan, token) {
+		if(typeof token === 'undefined' || token === "") return;
+		$('#pi_generated').val('https://pay.pi-pay.net/checkout/' + token + '?lang=' + lan + '&livemode=0');
 	}
 
 	//submit generate product
@@ -116,11 +140,10 @@ Architekt.event.on('ready', function() {
 				token = cipher;
 
 				generated = true;
-				generateCode('ko', token);
+				generateCode(window.generateType, 'ko', token);
 
-				$('#pi_product_generate').fadeOut(600, function() {
-					$('#pi_product_generated').fadeIn(600);
-				});
+				//scroll to bottom!
+				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 			},
 			error: function(text, status) {
 				new Notice({
@@ -137,7 +160,7 @@ Architekt.event.on('ready', function() {
 	//change language
 	$('.controlLan').click(function() {
 		var lan = $(this).val();
-		generateCode(lan, token);
+		generateCode('button', lan, token);
 	});
 	//if user clicked "button", make radio click
 	$('.pi-payment-button').click(function() {
@@ -145,6 +168,10 @@ Architekt.event.on('ready', function() {
 	});
 	//copy button
 	$('#codeCopy').click(function() {
+		var generatedCode = $('#pi_generated');
+
+		if(!generated || generated === "") return false;
+
 		Architekt.module.Clipboard.copy($('#pi_generated'));
 
 		new Architekt.module.Widget.Notice({

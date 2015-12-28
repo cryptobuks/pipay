@@ -1,21 +1,10 @@
 #pi_payment {
 	padding: 32px 0;
 
-	> .pi-container {
+	> #pi_list {
 		> .pi-button-container {
 			position: relative;
 			margin-bottom: 32px;
-		}
-	}
-}
-
-#pi_payment_list {
-	> tbody {
-		> tr {
-			> td {
-				cursor: pointer;
-				
-			}
 		}
 	}
 }

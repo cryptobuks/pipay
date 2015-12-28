@@ -97,6 +97,7 @@ Architekt.module.reserv('Comparator', function(options) {
  *      Architekt.module.dataTable: DataTable component module
  *		- options
  *			bool pagenate: show the cursor and trigger paginating events on click. default is false.
+ *			bool readOnly: set the cursor to pointer and trigger onitemclick event on click the item. default is true.
  *
  ****************************************************************************************************/
 
@@ -104,14 +105,19 @@ Architekt.module.reserv('DataTable', function(options) {
 	return function(options) {
 		options = typeof options === 'object' ? options : {};
 		var pagenate = typeof options.pagenate !== 'undefined' ? !!options.pagenate : false;
+		var readOnly = typeof options.readOnly !== 'undefined' ? !!options.readOnly : true;
 
 		var self = this;
 
 		var _page = 1;
 		var _header = [];
 		var _columns = [];
-		var dom = $('<div></div>').addClass('pi-table-container');
-		var tableDom = $('<table></table>').addClass('pi-table').appendTo(dom);
+		var dom = $('<div></div>').addClass('architekt-dataTable-container');
+		var tableDom = $('<table></table>').addClass('architekt-dataTable').appendTo(dom);
+
+		if(!readOnly) tableDom.addClass('architekt-dataTable-writable');
+
+		//events
 		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
 
 		var thead = $('<thead></thead>').appendTo(tableDom);
@@ -236,9 +242,11 @@ Architekt.module.reserv('DataTable', function(options) {
 				for(var i = 0, len = _columns.length; i < len; i++) {
 					(function(i) {
 						var tr = $('<tr></tr>').click(function(e) {
-							e.clickedIndex = i;
-							e.column = _columns[i];
-							self.event.fire('onitemclick', e);
+							if(!readOnly) {
+								e.clickedIndex = i;
+								e.column = _columns[i];
+								self.event.fire('onitemclick', e);	
+							}
 						});
 
 						for(var j = 0, jLen = _columns[i].length; j < jLen; j++) {

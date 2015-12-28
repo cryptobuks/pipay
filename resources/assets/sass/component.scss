@@ -145,65 +145,6 @@ select.pi-input {
     appearance: none;
 }
 
-table.pi-table {
-	width: 100%;
-    border-collapse: collapse;
-    cursor: default;
-
-	> thead {
-		> tr {
-			background-color: #e3e3e3;
-
-			> th, > td {
-				padding: 12px;
-				text-align: center;
-				vertical-align: middle;
-				border-right: 1px solid #acafb8;
-				color: #4c5356;
-			}
-			> th:last-child, > td:last-child {
-				border-right: none;
-			}
-		}
-	}
-	> tbody {
-		> tr {
-			background-color: #ffffff;
-
-			&:hover {
-				background-color: #D6E7F9 !important;	
-			}
-
-			> td {
-				padding: 12px;
-				text-align: center;
-				vertical-align: middle;
-				border-right: 1px solid #acafb8;
-				color: #6d7477;
-			}
-			> td:last-child {
-				border-right: none;
-			}
-		}
-		> tr:nth-child(2n) {
-			background-color: #f6f6f6;
-		}
-	}
-}
-
-.pi-table-container {
-	position: relative;
-	cursor: pointer;
-
-	> .pi-table-prev {
-		@include createPosition(absolute, 50%, unset, unset, -64px);
-		margin-top: -16px;
-	}
-	> .pi-table-next {
-		@include createPosition(absolute, 50%, -64px, unset, unset);
-		margin-top: -16px;
-	}
-}
 
 
 .pi-text {
