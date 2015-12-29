@@ -31,7 +31,7 @@ class LedgerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request )
     {
         $transactions = Transaction::orderBy( 'id' , 'desc' )->paginate(15);
         $transactions->load('account');
@@ -47,7 +47,7 @@ class LedgerController extends Controller
         if ($request->ajax()) {
             return $jsonTable;
         }
-        dd($jsonTable);
+
         return view('ledgers.index', compact('transactions'));
     }
 
