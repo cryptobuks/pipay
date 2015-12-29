@@ -162,6 +162,15 @@ select.pi-input {
 		word-wrap: break-word;
 	}
 }
+.pi-text-center {
+	text-align: center;
+}
+.pi-text-left {
+	text-align: left;
+}
+.pi-text-right {
+	text-align: right;
+}
 
 .pi-theme-complete {
 	color: $pi-theme-complete;
@@ -327,86 +336,4 @@ select.pi-input {
 			cursor: default;
 		}
 	}
-}
-
-
-
-
-/* Widget definitions */
-
-$widget-font-color: #464e57;
-$widget-border-color: #959595;
-$widget-control-color: #f1f2f4;
-$widget-control-fontColor: #5f6268;
-
-.architekt-widget-background {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: rgba(56, 61, 79, 0.6);
-	z-index: 210;
-
-	> .architekt-widget-container {
-		position: absolute;
-		top: 32px;
-		left: 50%;
-		width: 500px;
-		background-color: #fcfafa;
-		margin-left: -250px;
-		padding: 16px 24px;
-		@include createBorderRadius(10px);
-		@include createTransitionDuration(0.3s);
-		@include createTransform(scale(0.5));
-
-		&.on {
-			@include createTransform(scale(1.0));
-		}
-
-		> p {
-			color: $widget-font-color;
-			padding-bottom: 16px;
-			border-bottom: 1px solid $widget-border-color;
-			word-wrap: break-word;
-		}
-		> .architekt-widget-buttonContainer {
-			padding-top: 16px;
-			text-align: right;
-
-			> button {
-				margin-left: 16px;
-			}
-		}
-	}
-}
-
-.architekt-widget-button {
-	border: 1px solid $widget-border-color;
-	background-color: $widget-control-color;
-	color: $widget-control-fontColor;
-	padding: 8px 24px;
-	cursor: pointer;
-
-	&:hover {
-		background: lighten($widget-control-color, 5%);
-		@include createTransitionDuration(0.3s);
-	}
-	&:active {
-		background: lighten($widget-control-color, 20%);
-		@include createBoxShadow(inset 0 1px 2px rgba(0,0,0,.25));
-	}
-
-	&.architekt-theme-confirm {
-		background: $architekt-theme-confirm;
-		color: #fff;
-
-		&:hover {
-			background: lighten($architekt-theme-confirm, 5%);
-		}
-		&:active {
-			background: lighten($architekt-theme-confirm, 20%);
-		}
-	}
-
 }

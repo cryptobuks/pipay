@@ -6,6 +6,7 @@
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;
             var Http = Architekt.module.Http;
+            var CustomWidget = Architekt.module.CustomWidget;
 
             var currentUrl = '{{ Request::url() }}';
             var paymentTable = new Architekt.module.DataTable({
@@ -154,9 +155,7 @@
 
             //update product info on page
             function updateProduct(dataObject) {
-                new Notice({
-                    text: JSON.stringify(dataObject)
-                });
+                productDetailWidget.setData(dataObject).render().show();
             }
 
 
@@ -215,6 +214,39 @@
 
             //get data and update!
             getPaymentDataAndUpdate(paymentTable.getCurrentPage());
+
+
+
+            /* Product detail widget */
+            var productDetailWidget = new CustomWidget({ 
+                dom: $('#pi_product_widget'),
+                events: {
+                    '#refund click': 'refund',
+                    '#receipt click': 'fuck'
+                },
+                formats: { 
+                    //print to curreny format
+                    currency: function(data, args) {
+                        if(isNaN(data)) return '';
+
+                        args = args || {};
+                        symbol = args.symbol || 'KRW';   //default KRW
+
+                        data = parseFloat(data).toFixed(1);
+                        return [data, ' ', symbol.toUpperCase()].join('');
+                    },
+                    //print only if has value
+                    printIfHasValue: function(data) {
+                        return (!data || data === "") ? "" : data;
+                    }
+                },
+                refund: function(dataObject) {
+                    
+                },
+                receipt: function(dataObject) {
+
+                },
+            });
         });
     </script>
 
@@ -239,6 +271,8 @@
             </div>
         </div>
     </div>
+
+    @include('payments/widgets/productDetail')
 
 	
 

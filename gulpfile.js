@@ -40,6 +40,7 @@ elixir(function(mix) {
     mix.scripts([
         'reserved/clipboard.js',
         'reserved/comparator.js',
+        'reserved/customWidget.js',
         'reserved/dataTable.js',
         'reserved/http.js',
         'reserved/locale.js',
