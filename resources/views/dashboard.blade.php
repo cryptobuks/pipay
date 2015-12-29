@@ -44,11 +44,11 @@
     <div id="pi_dashboard">
         <div class="pi-container">
             <h1>Dashboard</h1>
-
-            {{ $day_totalInvoice->KRW_amount }}
-            {{ $day_totalInvoice->PI_amount }}
-            {{ $day_totalInvoice->total }}
-
+            @if(!empty($day_totalInvoice))
+                {{ $day_totalInvoice->KRW_amount }}
+                {{ $day_totalInvoice->PI_amount }}
+                {{ $day_totalInvoice->total }}
+            @endif
             <div id="chart_div_monthInvoice" style="width: 50%; min-height: 300px; display: inline-block; float: left; vertical-align: top; position: relative;"></div>
         </div>
     </div>
