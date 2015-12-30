@@ -41,7 +41,7 @@ class PaymentController extends Controller
             $user = $this->sentry->getUser();
             $user_id  = $user->id;
             
-            if( isset($request['filter'] ) ) {
+            if( !empty($request['filter'] ) ) {
                 $invoices = Invoice::where('user_id','=',$user_id)->where('status','=',$request['filter'] )->orderBy( 'id' , 'desc' )->paginate($pagePer);
             } else {
                 $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate($pagePer);
