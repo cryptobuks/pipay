@@ -34,7 +34,10 @@ class PaymentController extends Controller
      */
     public function index( Request $request )
     {
-        $invoices = Invoice::orderBy( 'id' , 'desc' )->paginate(15);
+        $user = $this->sentry->getUser();
+        $user_id  = $user->id;
+
+        $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate(15);
         $jsonTable = [];
             
         foreach ( $invoices as $invoice){
@@ -75,9 +78,9 @@ class PaymentController extends Controller
      */
     public function receipt( $id )
     {
-        $invoice = Invoice::where('token', '=',  $id )->first()->toJson();
+        $invoice = Invoice::where('token', '=',  $id )->first();
 
-        return $invoice;
+        return view('payments.receipt', compact('invoice') );
     }
     
 }

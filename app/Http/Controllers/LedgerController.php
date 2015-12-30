@@ -7,6 +7,7 @@ use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Transaction;
+use App\Account;
 
 class LedgerController extends Controller
 {
@@ -33,7 +34,11 @@ class LedgerController extends Controller
      */
     public function index( Request $request )
     {
-        $transactions = Transaction::orderBy( 'id' , 'desc' )->paginate(15);
+
+        $user = $this->sentry->getUser();
+        $user_id  = $user->id;
+
+        $transactions = Transaction::where('user_id', '=', $user_id)->orderBy( 'id' , 'desc' )->paginate(15);
         $transactions->load('account');
         
         $jsonTable = [];
@@ -48,7 +53,7 @@ class LedgerController extends Controller
             return $jsonTable;
         }
 
-        return view('ledgers.index', compact('transactions'));
+        return view('ledgers.index', compact('jsonTable'));
     }
 
 }

@@ -47,12 +47,15 @@ class HomeController extends Controller
      */
     public function dashboard()
     {
+        $user = $this->sentry->getUser();
+        $user_id  = $user->id;
 
          // 일간 총 매출
         $month_totalInvoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
                                 DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
                                 )
                 ->where('status', '=' ,'confirmed')
+                ->where('user_id', '=', $user_id)
                 ->groupBy('date')
                 ->having('date', '>=' , DB::raw('left(NOW() - INTERVAL 1 MONTH ,10)'))
                 ->orderBy( 'date' , 'asc' )->get();
@@ -65,6 +68,7 @@ class HomeController extends Controller
                                 DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
                                 )
                 ->where('status', '=' ,'confirmed')
+                ->where('user_id', '=', $user_id)
                 ->groupBy('date')
                 ->having('date', '=' , DB::raw('CURDATE()  - INTERVAL 1 DAY'))->first();
 
