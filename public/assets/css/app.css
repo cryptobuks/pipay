@@ -466,6 +466,18 @@ select.pi-input {
   }
 }
 
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 #pi_gnb {
   position: fixed;
   top: 0;
@@ -1349,20 +1361,20 @@ select.pi-input {
 }
 
 .architekt-dataTable-container > .architekt-dataTable-locked > div {
-  border-radius: 96px;
-  -webkit-border-radius: 96px;
-  -moz-border-radius: 96px;
-  -o-border-radius: 96px;
-  -ms-border-radius: 96px;
+  border-radius: 64px;
+  -webkit-border-radius: 64px;
+  -moz-border-radius: 64px;
+  -o-border-radius: 64px;
+  -ms-border-radius: 64px;
   position: absolute;
   top: 50%;
   right: unset;
   bottom: unset;
   left: 50%;
-  width: 96px;
-  height: 96px;
-  margin-top: -48px;
-  margin-left: -48px;
+  width: 64px;
+  height: 64px;
+  margin-top: -32px;
+  margin-left: -32px;
   border: 5px dashed #fff;
   color: #fff;
   font-size: 10px;
