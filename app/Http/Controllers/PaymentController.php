@@ -34,32 +34,33 @@ class PaymentController extends Controller
      */
     public function index( Request $request )
     {
-        $user = $this->sentry->getUser();
-        $user_id  = $user->id;
-
 
         $pagePer = 10;
 
-        $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate($pagePer);
-        $jsonTable = [];
-            
-        foreach ( $invoices as $invoice){
-            $jsonTable[] = array(
-                'id' => $invoice->id,
-                'created_at' => $invoice->created_at->format('Y-m-d H:i:s'),
-                'item_desc' => $invoice->item_desc,
-                'amount' => $invoice->amount,
-                'status' => $invoice->status,
-                'pi_amount_received' => $invoice->pi_amount_received,
-                'pi_amount' => $invoice->pi_amount
-            );
-        }
-
         if ($request->ajax()) {
+            $user = $this->sentry->getUser();
+            $user_id  = $user->id;
+
+
+            $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate($pagePer);
+            $jsonTable = [];
+                
+            foreach ( $invoices as $invoice){
+                $jsonTable[] = array(
+                    'id' => $invoice->id,
+                    'created_at' => $invoice->created_at->format('Y-m-d H:i:s'),
+                    'item_desc' => $invoice->item_desc,
+                    'amount' => $invoice->amount,
+                    'status' => $invoice->status,
+                    'pi_amount_received' => $invoice->pi_amount_received,
+                    'pi_amount' => $invoice->pi_amount
+                );
+            }
+
             return $jsonTable;
         }
 
-        return view('payments.index', compact('jsonTable', 'pagePer') );
+        return view('payments.index', compact('pagePer'));
     }
 
     /**
