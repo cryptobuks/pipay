@@ -127,8 +127,11 @@ Architekt.module.reserv('CustomWidget', function(options) {
 				var method = self.events[key];
 
 				try {
-					self.dom.find(selector).on(eventType, function() {
-						if(typeof options[method] === 'function') options[method].call(null, self.data);
+					self.dom.find(selector).on(eventType, function(e) {
+						if(typeof options[method] === 'function') {
+							self.data.originalEvent = e;
+							options[method].call(null, self.data);
+						}
 					});
 				}
 				catch(message) {

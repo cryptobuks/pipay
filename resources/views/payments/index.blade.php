@@ -45,6 +45,9 @@
                         break;
                 }
 
+                //reset page
+                paymentTable.setPage(1);
+
                 filter = _f;
                 filterDom.removeClass('on');
                 $(this).addClass('on');
@@ -292,9 +295,13 @@
                     }
                 },
                 refund: function(dataObject) {
-                    
+                    var e = dataObject.originalEvent;
+                    e.preventDefault();
                 },
                 receipt: function(dataObject) {
+                    var e = dataObject.originalEvent;
+                    e.preventDefault();
+
                     window.open('{{ url('/') }}/receipt/' + dataObject.token);
                 },
             });
