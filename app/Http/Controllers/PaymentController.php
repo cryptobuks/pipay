@@ -37,7 +37,10 @@ class PaymentController extends Controller
         $user = $this->sentry->getUser();
         $user_id  = $user->id;
 
-        $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate(15);
+
+        $pagePer = 10;
+
+        $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->paginate($pagePer);
         $jsonTable = [];
             
         foreach ( $invoices as $invoice){
@@ -56,7 +59,7 @@ class PaymentController extends Controller
             return $jsonTable;
         }
 
-        return view('payments.index', compact('jsonTable') );
+        return view('payments.index', compact('jsonTable', 'pagePer') );
     }
 
     /**
