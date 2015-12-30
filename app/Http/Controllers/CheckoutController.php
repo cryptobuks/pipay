@@ -82,6 +82,7 @@ class CheckoutController extends Controller
         DB::beginTransaction();
         try {
 
+                $currency = $param['currency'] ? strtoupper( $param['currency'] ) : 'PI';
                 $livemode = UserKey::getLiveMode( $param['api_key'] );            
                 $inbound_address = Invoice::getNewAddress();
                 $rate = Config::get( 'coin.pi.rate' );
@@ -101,7 +102,7 @@ class CheckoutController extends Controller
                     'pi_amount' => $pi_amount , 
                     'pi_amount_received' =>  NUMBER_ZERO, 
                     'rate' => $rate , 
-                    'currency' => strtoupper( $param['currency'] ) ,
+                    'currency' => $currency ,
                     'inbound_address' => $inbound_address , 
                     'refund_address' => NULL , 
                     'livemode' => $request->has('livemode') ? $input['livemode'] : $livemode ,

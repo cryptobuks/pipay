@@ -139,7 +139,6 @@
     </script>
 
     <div id="pi_top_space"></div>
-
 	<div id="pi_top_menu" style="text-align:center">    	
 	          	<a href="#" id="pi_easy_btn" ><h1>간편 결제</h1></a>
 	          	<a href="#" id="pi_address_btn"><h1>파이주소</h1></a>          	

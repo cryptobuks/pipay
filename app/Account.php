@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Legder;
+use App\Ledger;
 use Exception;
 use DB;
 
@@ -56,7 +56,7 @@ class Account extends Model
 
 	public function history_create( $balance , $locked )
 	{
-		$account_history = [
+		$ledger = [
 			'user_id' => $this->user_id,
 			'account_id' => $this->id,
 			'currency' => $this->currency ,
@@ -70,7 +70,7 @@ class Account extends Model
 			'modifiable_type' => get_class($this->opts),
 		];
 
-		return AccountHistory::create( $account_history );
+		return Ledger::firstOrCreate( $ledger );
 	}
 
 	public function plus_funds ( $amount , $fee = 0 , $reason , $obj )

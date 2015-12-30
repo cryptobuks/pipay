@@ -103,6 +103,7 @@ class InvoiceController extends Controller
         DB::beginTransaction();
         try {
 
+                $currency = $currency ? strtoupper( $currency ) : 'PI';
                 $livemode = UserKey::getLiveMode( $api_key );            
                 $inbound_address = Invoice::getNewAddress();
                 $rate = Config::get( 'coin.pi.rate' );
@@ -112,7 +113,7 @@ class InvoiceController extends Controller
                 $in_data = [
                     'user_id' => $user_id ,
                     'api_key' => $api_key ,
-                    'token' => '' ,
+                    'token' => $user_id . '_' . mt_rand( )  ,
                     'status' => 'new' ,
                     'exception_status' => NULL ,
                     'product_id' => NULL , 

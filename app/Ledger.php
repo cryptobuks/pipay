@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
 
-class Legder extends Model
+class Ledger extends Model
 {
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'legders';
+	protected $table = 'ledgers';
 
 	/**
 	 * The attributes that are mass assignable.

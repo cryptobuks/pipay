@@ -19,7 +19,7 @@ class Payment extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'user_id' , 'api_key' , 'buyer_id' , 'invoice_id' , 'amount' , 'amount_refunded' , 'refund_id' , 'fee' , 'fee_id' , 'currency' , 'livemode' , 
+		'user_id' , 'api_key' , 'buyer_id' , 'invoice_id' , 'amount' , 'amount_refunded' , 'fee' , 'fee_id' , 'currency' , 'livemode' , 'account_id' , 
 	];
    
     
