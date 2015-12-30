@@ -14,7 +14,11 @@
                 readOnly: false,
             });
             var hasNext = false;    //check for next page exists
-            var pagePer = 15;
+            var pagePer = parseInt('{{ $pagePer }}');
+            var filter = "";
+            
+            pagePer = isNaN(pagePer) ? 10 : pagePer;    //if pagePer from the server is not a number, use 10 instead.
+            var isRefresh = false;                      //if refresh and no more page, no hasNext alert.
             
             //create DataTable component
             paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
@@ -22,6 +26,32 @@
 
             //first draw
             paymentTable.render({ animate: true });
+
+
+            //filter
+            var filterDom = $('#pi_payment_filter > div');
+            filterDom.click(function() {
+                var _f = $(this).attr('data-filter');
+
+                if(_f === "all" && filter === "") return;
+                else if(_f === filter) return;
+
+                switch(_f) {
+                    case "confirmed":
+                        _f = _f;
+                        break;
+                    default:
+                        _f = "";
+                        break;
+                }
+
+                filter = _f;
+                filterDom.removeClass('on');
+                $(this).addClass('on');
+
+                $('#refresh').trigger('click'); //force refresh
+            });
+
 
             /**************************************************************************************
              *
@@ -83,7 +113,9 @@
                 getData({
                     url: currentUrl,
                     data: {
-                        'page': paymentTable.getCurrentPage()
+                        'page': paymentTable.getCurrentPage(),
+                        'pagePer': pagePer,
+                        'filter': filter,
                     },
                     callback: function(dataObject) {
                         if(typeof callback === 'function') callback(dataObject);
@@ -99,12 +131,16 @@
                 if(len === 0) {
                     hasNext = false;
                     paymentTable.setPage(paymentTable.getCurrentPage() - 1);    //decrease page numb
-                    noMoreData();
+
+                    if(!isRefresh) noMoreData();    //if the refresh, don't show up.
                 }
                 else {
+                    paymentTable.resetColumns();
+
                     //if length of list items are shorter than number of paging per that means no more page.
                     //but if len = pagePer, it can be has next page so be cautious!
-                    hasNext = (len < pagePer);
+
+                    hasNext = (len >= pagePer);
 
                     for(var i = 0; i < len; i++) {
                         var data = dataObject[i];
@@ -125,13 +161,18 @@
                     //on update only has data
                     paymentTable.render({ animate: true, updateHeader: false });
                 }
+
+                isRefresh = false;
             }
 
             //fetch payment list data from server and update
             function getPaymentDataAndUpdate() {
-                paymentTable.resetColumns();
+                paymentTable.lock({
+                    loading: true
+                });
 
                 getPaymentData(function(dataObject) {
+                    paymentTable.unlock();
                     updatePaymentTable(dataObject);
                 });
             }
@@ -209,21 +250,22 @@
 
             //refresh
             $('#refresh').click(function() {
+                isRefresh = true;
                 getPaymentDataAndUpdate();
                 return false;
             });
 
             //export as excel
             $('#exportExcel').click(function() {
-
+                new Notice({
+                    text: '준비 중입니다.'
+                });
                 return false;
             });
 
 
-
             //get data and update!
-            getPaymentDataAndUpdate(paymentTable.getCurrentPage());
-
+            $('#refresh').trigger('click');
 
 
             /* Product detail widget */
@@ -263,9 +305,9 @@
 
     <div id="pi_payment">
         <div id="pi_list" class="pi-container">
-            <div class="pi-abstract-nav">
-                <div class="pi-abstract-nav-item on">전부</div>
-                <div class="pi-abstract-nav-item">완료</div>
+            <div id="pi_payment_filter" class="pi-abstract-nav">
+                <div data-filter="all" class="pi-abstract-nav-item on">전부</div>
+                <div data-filter="confirmed" class="pi-abstract-nav-item">완료</div>
             </div>
 
             <div class="pi-button-container">
@@ -282,7 +324,5 @@
     </div>
 
     @include('payments/widgets/productDetail')
-
-	
 
 @endsection

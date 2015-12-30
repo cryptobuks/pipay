@@ -16,6 +16,8 @@
 	<script>
 		Architekt.event.on('ready', function() {
 			function _error(text, focus, reset) {
+				if(focus) focus.blur();
+
 				new Architekt.module.Widget.Notice({
 					text: text,
 					callback: function() {

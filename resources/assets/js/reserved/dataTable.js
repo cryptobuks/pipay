@@ -26,11 +26,15 @@ Architekt.module.reserv('DataTable', function(options) {
 			//paginator.generate(): Generate new paginator
 			generate: function() {
 				paginator.left = $('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
+					if(isLocked) return;
+
 					e.currentPage = _page;
 					self.event.fire('onprevious', e);
 				}).appendTo(this.container);
 
 				paginator.right = $('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
+					if(isLocked) return;
+
 					e.currentPage = _page;
 					self.event.fire('onnext', e);
 				}).appendTo(this.container);
@@ -47,6 +51,7 @@ Architekt.module.reserv('DataTable', function(options) {
 		};
 		var tableDom = $('<table></table>').addClass('architekt-dataTable').appendTo(dom);
 
+		var isLocked = false;
 		var lockDom = $('<div></div>').hide().addClass('architekt-dataTable-locked').appendTo(dom);
 		var loadingDom = $('<div></div>').hide().appendTo(lockDom);
 
@@ -79,13 +84,39 @@ Architekt.module.reserv('DataTable', function(options) {
 			else
 				loadingDom.hide();
 
-			lockDom.show();
+			if(paginator.left) {
+				var cssObj = {
+					'opacity': '0.5',
+					'cursor': 'not-allowed',
+				};
+
+				paginator.left.css(cssObj);
+				paginator.right.css(cssObj);
+			}
+
+			isLocked = true;
+			lockDom.fadeIn();
 			return this;
 		};
 		//Architekt.module.DataTable.unlock(void): Unlock the DataTable
 		this.unlock = function(options) {
-			lockDom.hide();
+			isLocked = false;
+			lockDom.fadeOut(200);
+
+			if(paginator.left) {
+				var cssObj = {
+					'opacity': '1.0',
+					'cursor': 'pointer',
+				};
+
+				paginator.left.css(cssObj);
+				paginator.right.css(cssObj);
+			}
 			return this;
+		};
+		//Architekt.module.DataTable.isLocked(void): Returns the value that the DataTable is locked
+		this.isLocked = function() {
+			return isLocked;
 		};
 		//Architekt.module.DataTable.resetHeaderColumn(void): Reset header column
 		this.resetHeaderColumn = function() {
