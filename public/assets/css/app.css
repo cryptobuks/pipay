@@ -9,6 +9,9 @@
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   -ms-box-sizing: border-box;
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
 }
 
 *:focus {
@@ -451,6 +454,16 @@ select.pi-input {
   width: 16px;
   height: 16px;
   background-position: 0px -64px;
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 #pi_gnb {
@@ -1164,6 +1177,10 @@ select.pi-input {
   text-decoration: underline;
 }
 
+#pi_product_widget_container {
+  top: 50% !important;
+}
+
 #pi_ledger {
   padding: 32px 0;
 }
@@ -1224,11 +1241,6 @@ select.pi-input {
   -moz-border-radius: 10px;
   -o-border-radius: 10px;
   -ms-border-radius: 10px;
-  transition-duration: 0.3s;
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  -ms-transition-duration: 0.3s;
   transform: scale(0.5);
   -webkit-transform: scale(0.5);
   -moz-transform: scale(0.5);
@@ -1237,6 +1249,11 @@ select.pi-input {
 }
 
 .architekt-widget-background > .architekt-widget-container.on {
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
   transform: scale(1);
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
@@ -1304,7 +1321,7 @@ select.pi-input {
   cursor: pointer;
 }
 
-.architekt-dataTable-container > .pi-table-prev {
+.architekt-dataTable-container > .architekt-dataTable-paginator > .pi-table-prev {
   position: absolute;
   top: 50%;
   right: unset;
@@ -1313,13 +1330,67 @@ select.pi-input {
   margin-top: -16px;
 }
 
-.architekt-dataTable-container > .pi-table-next {
+.architekt-dataTable-container > .architekt-dataTable-paginator > .pi-table-next {
   position: absolute;
   top: 50%;
   right: -64px;
   bottom: unset;
   left: unset;
   margin-top: -16px;
+}
+
+.architekt-dataTable-container > .architekt-dataTable-locked {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.architekt-dataTable-container > .architekt-dataTable-locked > div {
+  border-radius: 96px;
+  -webkit-border-radius: 96px;
+  -moz-border-radius: 96px;
+  -o-border-radius: 96px;
+  -ms-border-radius: 96px;
+  position: absolute;
+  top: 50%;
+  right: unset;
+  bottom: unset;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  margin-top: -48px;
+  margin-left: -48px;
+  border: 5px dashed #fff;
+  color: #fff;
+  font-size: 10px;
+  text-align: center;
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 2.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: spin;
+  -moz-animation-duration: 2.5s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  -ms-animation-name: spin;
+  -ms-animation-duration: 2.5s;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+  -o-animation-name: spin;
+  -o-animation-duration: 2.5s;
+  -o-animation-iteration-count: infinite;
+  -o-animation-timing-function: linear;
+  -webkit-animation-name: spin;
+  animation-name: spin;
+  -webkit-animation-duration: 2.5s;
+  animation-duration: 2.5s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
 }
 
 table.architekt-dataTable {

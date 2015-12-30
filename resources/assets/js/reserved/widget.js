@@ -22,8 +22,13 @@ Architekt.module.reserv('Widget', function(options) {
 		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.cancel;
 
 		this.destruct = function() {
-			this.controlObject.remove();
-			this.controlObject = null;
+			var co = this.controlObject;
+
+			co.fadeOut(200, function() {
+				co.remove();
+				co = null;
+			});
+
 			return this;	
 		};
 	}

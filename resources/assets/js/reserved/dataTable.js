@@ -19,9 +19,43 @@ Architekt.module.reserv('DataTable', function(options) {
 		var _header = [];
 		var _columns = [];
 		var dom = $('<div></div>').addClass('architekt-dataTable-container');
+		var paginator = {
+			container: $('<div></div>').addClass('architekt-dataTable-paginator').appendTo(dom),
+			left: false,
+			right: false,
+			//paginator.generate(): Generate new paginator
+			generate: function() {
+				paginator.left = $('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onprevious', e);
+				}).appendTo(this.container);
+
+				paginator.right = $('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onnext', e);
+				}).appendTo(this.container);
+
+				return this;
+			},
+			//paginator.destroy(): Destroy paginator
+			destroy: function() {
+				if(this.left) this.left.remove();
+				if(this.right) this.right.remove();
+
+				return this;
+			}
+		};
 		var tableDom = $('<table></table>').addClass('architekt-dataTable').appendTo(dom);
 
+		var lockDom = $('<div></div>').hide().addClass('architekt-dataTable-locked').appendTo(dom);
+		var loadingDom = $('<div></div>').hide().appendTo(lockDom);
+
+
 		if(!readOnly) tableDom.addClass('architekt-dataTable-writable');
+
+		//create generator if has pagenate option
+		if(pagenate) paginator.generate();
+
 
 		//events
 		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
@@ -35,6 +69,24 @@ Architekt.module.reserv('DataTable', function(options) {
 		});
 
 
+		//Architekt.module.DataTable.lock(object options): Lock the DataTable
+		this.lock = function(options) {
+			options = typeof options === 'object' ? options : {};
+			var loading = options.loading ? !!options.loading : false;
+
+			if(loading)
+				loadingDom.show();
+			else
+				loadingDom.hide();
+
+			lockDom.show();
+			return this;
+		};
+		//Architekt.module.DataTable.unlock(void): Unlock the DataTable
+		this.unlock = function(options) {
+			lockDom.hide();
+			return this;
+		};
 		//Architekt.module.DataTable.resetHeaderColumn(void): Reset header column
 		this.resetHeaderColumn = function() {
 			_header = [];
@@ -167,19 +219,9 @@ Architekt.module.reserv('DataTable', function(options) {
 				}	
 			}
 			
-
-			//draw cursor only it has pagenate feature
-			if(pagenate) {
-				$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
-					e.currentPage = _page;
-					self.event.fire('onprevious', e);
-				}).appendTo(dom);
-
-				$('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
-					e.currentPage = _page;
-					self.event.fire('onnext', e);
-				}).appendTo(dom);	
-			}
+			//create generator if has pagenate option
+			if(pagenate) paginator.destroy().generate();
+			
 
 			if(!animate) resizeContainer();
 

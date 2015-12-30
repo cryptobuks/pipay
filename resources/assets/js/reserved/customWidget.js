@@ -1,9 +1,6 @@
 /****************************************************************************************************
  *
- *      Architekt.module.CustomWidget: Custom UI Widget
- *
- *
- *
+ *                        Architekt.module.CustomWidget: Custom UI Widget
  *
  ****************************************************************************************************/
 
@@ -64,6 +61,10 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		this.dom.show();
 
+		//move the widget to half of the screen
+		var height = this.container.height();
+		this.container.css('margin-top', '-' + parseInt(height / 2) + 'px');
+
 		//Fancy scale up animation
 		setTimeout(function() {
 			self.container.addClass('on');
@@ -74,8 +75,10 @@ Architekt.module.reserv('CustomWidget', function(options) {
 	CustomWidget.prototype.hide = function() {
 		var self = this;
 
-		this.dom.fadeOut();
-		this.container.removeClass('on');
+		this.dom.fadeOut(200, function() {
+			self.container.removeClass('on');
+		});
+		
 		return this;
 	};
 	CustomWidget.prototype.destroy = function() {
@@ -144,7 +147,6 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		return this;
 	};
-
 
 	return CustomWidget;
 });

@@ -39,6 +39,7 @@
                 options = typeof options === 'object' ? options : {};
                 var url = typeof options.url !== 'undefined' ? options.url : '';
                 var callback = typeof options.callback === 'function' ? options.callback : function() {};
+                var complete = typeof options.complete === 'function' ? options.complete : function() {};
                 var data = typeof options.data === 'object' ? options.data : {};
 
                 _isFetching = true;
@@ -56,6 +57,7 @@
                     },
                     complete: function() {
                         _isFetching = false;
+                        complete();
                     }
                 });    
             }
@@ -145,10 +147,17 @@
 
              //get specified product info
             function getProduct(id, callback) {
+                paymentTable.lock({
+                    loading: true
+                });
+
                 getData({
                     url: [currentUrl, id].join("/"),
                     callback: function(dataObject) {
                         if(typeof callback === 'function') callback(dataObject);
+                    },
+                    complete: function() {
+                        paymentTable.unlock();
                     }
                 });
             }
@@ -222,7 +231,7 @@
                 dom: $('#pi_product_widget'),
                 events: {
                     '#refund click': 'refund',
-                    '#receipt click': 'fuck'
+                    '#receipt click': 'receipt'
                 },
                 formats: { 
                     //print to curreny format
@@ -244,7 +253,7 @@
                     
                 },
                 receipt: function(dataObject) {
-
+                    window.open('{{ url('/') }}/receipt/' + dataObject.token);
                 },
             });
         });

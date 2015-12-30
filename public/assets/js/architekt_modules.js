@@ -94,10 +94,7 @@ Architekt.module.reserv('Comparator', function(options) {
 });
 /****************************************************************************************************
  *
- *      Architekt.module.CustomWidget: Custom UI Widget
- *
- *
- *
+ *                        Architekt.module.CustomWidget: Custom UI Widget
  *
  ****************************************************************************************************/
 
@@ -158,6 +155,10 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		this.dom.show();
 
+		//move the widget to half of the screen
+		var height = this.container.height();
+		this.container.css('margin-top', '-' + parseInt(height / 2) + 'px');
+
 		//Fancy scale up animation
 		setTimeout(function() {
 			self.container.addClass('on');
@@ -168,8 +169,10 @@ Architekt.module.reserv('CustomWidget', function(options) {
 	CustomWidget.prototype.hide = function() {
 		var self = this;
 
-		this.dom.fadeOut();
-		this.container.removeClass('on');
+		this.dom.fadeOut(200, function() {
+			self.container.removeClass('on');
+		});
+		
 		return this;
 	};
 	CustomWidget.prototype.destroy = function() {
@@ -239,7 +242,6 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		return this;
 	};
 
-
 	return CustomWidget;
 });
 /****************************************************************************************************
@@ -263,9 +265,43 @@ Architekt.module.reserv('DataTable', function(options) {
 		var _header = [];
 		var _columns = [];
 		var dom = $('<div></div>').addClass('architekt-dataTable-container');
+		var paginator = {
+			container: $('<div></div>').addClass('architekt-dataTable-paginator').appendTo(dom),
+			left: false,
+			right: false,
+			//paginator.generate(): Generate new paginator
+			generate: function() {
+				paginator.left = $('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onprevious', e);
+				}).appendTo(this.container);
+
+				paginator.right = $('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
+					e.currentPage = _page;
+					self.event.fire('onnext', e);
+				}).appendTo(this.container);
+
+				return this;
+			},
+			//paginator.destroy(): Destroy paginator
+			destroy: function() {
+				if(this.left) this.left.remove();
+				if(this.right) this.right.remove();
+
+				return this;
+			}
+		};
 		var tableDom = $('<table></table>').addClass('architekt-dataTable').appendTo(dom);
 
+		var lockDom = $('<div></div>').hide().addClass('architekt-dataTable-locked').appendTo(dom);
+		var loadingDom = $('<div></div>').hide().appendTo(lockDom);
+
+
 		if(!readOnly) tableDom.addClass('architekt-dataTable-writable');
+
+		//create generator if has pagenate option
+		if(pagenate) paginator.generate();
+
 
 		//events
 		this.event = new Architekt.EventEmitter( ['onheaderclick', 'onitemclick', 'onclick', 'onprevious', 'onnext'] );	
@@ -279,6 +315,24 @@ Architekt.module.reserv('DataTable', function(options) {
 		});
 
 
+		//Architekt.module.DataTable.lock(object options): Lock the DataTable
+		this.lock = function(options) {
+			options = typeof options === 'object' ? options : {};
+			var loading = options.loading ? !!options.loading : false;
+
+			if(loading)
+				loadingDom.show();
+			else
+				loadingDom.hide();
+
+			lockDom.show();
+			return this;
+		};
+		//Architekt.module.DataTable.unlock(void): Unlock the DataTable
+		this.unlock = function(options) {
+			lockDom.hide();
+			return this;
+		};
 		//Architekt.module.DataTable.resetHeaderColumn(void): Reset header column
 		this.resetHeaderColumn = function() {
 			_header = [];
@@ -411,19 +465,9 @@ Architekt.module.reserv('DataTable', function(options) {
 				}	
 			}
 			
-
-			//draw cursor only it has pagenate feature
-			if(pagenate) {
-				$('<div></div>').addClass('pi-table-prev sprite-arrow-left').click(function(e) {
-					e.currentPage = _page;
-					self.event.fire('onprevious', e);
-				}).appendTo(dom);
-
-				$('<div></div>').addClass('pi-table-next sprite-arrow-right').click(function(e) {
-					e.currentPage = _page;
-					self.event.fire('onnext', e);
-				}).appendTo(dom);	
-			}
+			//create generator if has pagenate option
+			if(pagenate) paginator.destroy().generate();
+			
 
 			if(!animate) resizeContainer();
 
@@ -847,8 +891,13 @@ Architekt.module.reserv('Widget', function(options) {
 		this.cancelText = typeof options.cancelText !== 'undefined' ? options.cancelText : defaultText.cancel;
 
 		this.destruct = function() {
-			this.controlObject.remove();
-			this.controlObject = null;
+			var co = this.controlObject;
+
+			co.fadeOut(200, function() {
+				co.remove();
+				co = null;
+			});
+
 			return this;	
 		};
 	}

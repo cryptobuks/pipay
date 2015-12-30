@@ -5,7 +5,7 @@
             <table>
                 <tbody>
                     <tr>
-                        <td data-architekt-key="item_desc" class="pi-text-center" colspan="3">음식물 쓰레기 MK2</td>
+                        <td data-architekt-key="item_desc" class="pi-text-center" colspan="3"></td>
                     </tr>
                     <tr>
                         <td class="pi-text-center">
@@ -25,16 +25,16 @@
                         <td id="pi_product_info" colspan="3">
                             <div>
                                 <h1>고객 정보</h1>
-                                <p>이메일 주소: <span data-architekt-key="customer_email" data-architekt-format="printIfHasValue">shitmaker2@shit.com</span></p>
-                                <p>이름: <span data-architekt-key="customer_name" data-architekt-format="printIfHasValue">변조남</span></p>
-                                <p>상품번호: <span data-architekt-key="customer_custom" data-architekt-format="printIfHasValue">11-76072890</span></p>
+                                <p>이메일 주소: <span data-architekt-key="customer_email" data-architekt-format="printIfHasValue"></span></p>
+                                <p>이름: <span data-architekt-key="customer_name" data-architekt-format="printIfHasValue"></span></p>
+                                <p>상품번호: <span data-architekt-key="customer_custom" data-architekt-format="printIfHasValue"></span></p>
                             </div>
                             <div>
                                 <h1>결제 정보</h1>
-                                <p>상태: <span data-architekt-key="status">결제완료</span></p>
+                                <p>상태: <span data-architekt-key="status"></span></p>
                                 <p>결제통화: <span data-architekt-key="currency" data-architekt-format="printIfHasValue" data-architekt-format-args="pi"></span></p>
-                                <p>결제시각: <span data-architekt-key="created_at" data-architekt-format="printIfHasValue">2015-10-15 10:13</span></p>
-                                <p>결제완료: <span data-architekt-key="completed_at" data-architekt-format="printIfHasValue">2015-10-15 10:15</span></p>
+                                <p>결제시각: <span data-architekt-key="created_at" data-architekt-format="printIfHasValue"></span></p>
+                                <p>결제완료: <span data-architekt-key="completed_at" data-architekt-format="printIfHasValue"></span></p>
                             </div>
 
                             <a id="refund" href="#">환불하기 &gt;</a>

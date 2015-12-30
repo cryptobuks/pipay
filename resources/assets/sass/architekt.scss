@@ -27,10 +27,10 @@ $widget-control-fontColor: #5f6268;
 		margin-left: -250px;
 		padding: 16px 24px;
 		@include createBorderRadius(10px);
-		@include createTransitionDuration(0.3s);
 		@include createTransform(scale(0.5));
-
+		
 		&.on {
+			@include createTransitionDuration(0.3s);	
 			@include createTransform(scale(1.0));
 		}
 
@@ -87,13 +87,34 @@ $widget-control-fontColor: #5f6268;
 	position: relative;
 	cursor: pointer;
 
-	> .pi-table-prev {
-		@include createPosition(absolute, 50%, unset, unset, -64px);
-		margin-top: -16px;
+	> .architekt-dataTable-paginator {
+		> .pi-table-prev {
+			@include createPosition(absolute, 50%, unset, unset, -64px);
+			margin-top: -16px;
+		}
+		> .pi-table-next {
+			@include createPosition(absolute, 50%, -64px, unset, unset);
+			margin-top: -16px;
+		}
 	}
-	> .pi-table-next {
-		@include createPosition(absolute, 50%, -64px, unset, unset);
-		margin-top: -16px;
+	> .architekt-dataTable-locked {
+		@include createPosition(absolute, 0, 0, 0, 0);
+		background-color: rgba(0,0,0,0.5);
+		
+		> div {
+			@include createBorderRadius(96px);
+			@include createPosition(absolute, 50%, unset, unset, 50%);
+			width: 96px;
+			height: 96px;
+			margin-top: -48px;
+			margin-left: -48px;
+			border: 5px dashed #fff;
+			color: #fff;
+			font-size: 10px;
+			text-align: center;
+
+			@include applyAnimation(webkit moz ms o, spin, 2.5s);
+		}
 	}
 }
 
