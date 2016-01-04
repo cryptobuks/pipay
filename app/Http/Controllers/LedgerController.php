@@ -35,11 +35,13 @@ class LedgerController extends Controller
     public function index( Request $request )
     {
 
+        $pagePer = 10;
+
         $user = $this->sentry->getUser();
         $user_id  = $user->id;
 
         if ($request->ajax()) {
-            $transactions = Transaction::where('user_id', '=', $user_id)->orderBy( 'id' , 'desc' )->paginate(15);
+            $transactions = Transaction::where('user_id', '=', $user_id)->orderBy( 'id' , 'desc' )->paginate($pagePer);
             
             $jsonTable = [];
                 
@@ -58,20 +60,26 @@ class LedgerController extends Controller
             return $jsonTable;
         }
 
-        $AccountJson = [];
+        $amount = [];
 
         $accounts = Account::where('user_id', '=', $user_id)->get();
         
         foreach ( $accounts as $account) {
             if( 'PI' == $account->currency ){
-                $AccountJson[] = array( 'PI' => $account->balance - $account->locked );
+                $amount['pi'] = $account->balance - $account->locked;
             } 
             else if ( 'KRW' == $account->currency) {
-                $AccountJson[] = array( 'KRW' => $account->balance - $account->locked );
+                $amount['krw'] = $account->balance - $account->locked;
             }
         }        
 
-        return view('ledgers.index', compact('AccountJson'));
+        $AccountJson[] = array(
+            'KRW' => $amount['krw'],
+            'PI' => $amount['pi']
+         );
+        dd($AccountJson);
+
+        return view('ledgers.index', compact('AccountJson','pagePer'));
     }
 
 }
