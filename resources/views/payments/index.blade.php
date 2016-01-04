@@ -7,6 +7,7 @@
             var Notice = Architekt.module.Widget.Notice;
             var Http = Architekt.module.Http;
             var CustomWidget = Architekt.module.CustomWidget;
+            var Formatter = Architekt.module.Formatter;
 
             var requestUrl = '{{ Request::url() }}';
             var dataTable = new Architekt.module.DataTable({
@@ -66,12 +67,55 @@
                 var parsedArray = [];
 
                 for(var key in dataColumn) {
-                    if(key === 'pi_amount_received') {
-                        parsedArray.push(dataColumn['pi_amount_received'] + ' / ' + dataColumn['pi_amount']);
-                        break;
-                    }
+                    if(key === 'amount') {
+                        var _t = Formatter.currency(dataColumn['amount'], { drop: 1, symbol: '\\' });
 
-                    parsedArray.push(dataColumn[key]);
+                        parsedArray.push(_t);
+                    }
+                    else if(key === 'pi_amount_received') {
+                        var receivedAmount = Formatter.currency(dataColumn['pi_amount_received'], { drop: 1, symbol: false });
+                        var amount = Formatter.currency(dataColumn['pi_amount'], { drop: 1, symbol: false });
+
+                        parsedArray.push(receivedAmount + ' / ' + amount);
+                    }
+                    else if(key === 'status') {
+                        var status = dataColumn['status'];
+                        var result = '';
+
+                        switch(status) {
+                            case 'new':
+                                result = '<span class="pi-theme-waiting">대기</span>';
+                                break;
+                            case 'pending':
+                                result = '결제 확인 중';
+                                break;
+                            case 'confirmed':
+                                result = '<span class="pi-theme-complete">결제 완료</span>';
+                                break;
+                            case 'failed':
+                                result = '결제 실패';
+                                break;
+                            case 'expired':
+                                result = '결제 만료';
+                                break;
+                            case 'refunded':
+                                result = '전액 환불';
+                                break;
+                            case 'refunded_partial':
+                                result = '일부 환불';
+                                break;
+                            default:
+                                result = '';
+                                break;
+                        }
+
+                        parsedArray.push(result);
+                    }
+                    else {
+                        if(parsedArray.length >= 6) break;
+
+                        parsedArray.push(dataColumn[key]);
+                    }
                 }
 
                 return parsedArray;
@@ -140,17 +184,45 @@
                 formats: { 
                     //print to curreny format
                     currency: function(data, args) {
-                        if(isNaN(data)) return '';
-
-                        args = args || {};
-                        symbol = args.symbol || 'KRW';   //default KRW
-
-                        data = parseFloat(data).toFixed(1);
-                        return [data, ' ', symbol.toUpperCase()].join('');
+                        var symbol = args.symbol || 'KRW';
+                        return Formatter.currency(data, { symbol: symbol.toUpperCase(), drop: 1 });
                     },
                     //print only if has value
                     printIfHasValue: function(data) {
                         return (!data || data === "") ? "" : data;
+                    },
+                    statusText: function(data) {
+                        var status = data;
+                        var result = '';
+
+                        switch(data) {
+                            case 'new':
+                                result = '대기';
+                                break;
+                            case 'pending':
+                                result = '결제 확인 중';
+                                break;
+                            case 'confirmed':
+                                result = '결제 완료';
+                                break;
+                            case 'failed':
+                                result = '결제 실패';
+                                break;
+                            case 'expired':
+                                result = '결제 만료';
+                                break;
+                            case 'refunded':
+                                result = '전액 환불';
+                                break;
+                            case 'refunded_partial':
+                                result = '일부 환불';
+                                break;
+                            default:
+                                result = '';
+                                break;
+                        }
+
+                        return result;
                     }
                 },
                 refund: function(dataObject) {

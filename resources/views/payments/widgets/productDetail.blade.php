@@ -9,15 +9,15 @@
                     </tr>
                     <tr>
                         <td class="pi-text-center">
-                            <h1 data-architekt-key="amount" data-architekt-format="currency" data-architekt-format-args="currency:krw"></h1>
+                            <h1 data-architekt-key="amount" data-architekt-format="currency" data-architekt-format-args="symbol:krw"></h1>
                             <p>전체(KRW)</p>
                         </td>
                         <td class="pi-text-center">
-                            <h1 data-architekt-key="pi_amount" data-architekt-format="currency" data-architekt-format-args="currency:pi"></h1>
+                            <h1 data-architekt-key="pi_amount" data-architekt-format="currency" data-architekt-format-args="symbol:pi"></h1>
                             <p>전체(PI)</p>
                         </td>
                         <td class="pi-text-center">
-                            <h1 data-architekt-key="pi_amount_received" data-architekt-format="currency" data-architekt-format-args="currency:pi"></h1>
+                            <h1 data-architekt-key="pi_amount_received" data-architekt-format="currency" data-architekt-format-args="symbol:pi"></h1>
                             <p>결제완료(PI)</p>
                         </td>
                     </tr>
@@ -31,7 +31,7 @@
                             </div>
                             <div>
                                 <h1>결제 정보</h1>
-                                <p>상태: <span data-architekt-key="status"></span></p>
+                                <p>상태: <span data-architekt-key="status" data-architekt-format="statusText"></span></p>
                                 <p>결제통화: <span data-architekt-key="currency" data-architekt-format="printIfHasValue" data-architekt-format-args="pi"></span></p>
                                 <p>결제시각: <span data-architekt-key="created_at" data-architekt-format="printIfHasValue"></span></p>
                                 <p>결제완료: <span data-architekt-key="completed_at" data-architekt-format="printIfHasValue"></span></p>

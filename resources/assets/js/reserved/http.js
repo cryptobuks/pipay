@@ -30,14 +30,16 @@ Architekt.module.reserv('Http', function(options) {
 		var suc = typeof data.success === "function" ? data.success : function () { };
 		var err = typeof data.error === "function" ? data.error : function () { };
 		var comp = typeof data.complete === "function" ? data.complete : function () { };
+		var delayed = typeof data.delayed === 'function' ? data.delayed : function() { };
 		var after = typeof data.after === "function" ? data.after : function () { };
+		var timeout = typeof data.timeOut !== 'undefined' ? +data.timeOut : 10000;	//10sec
 		
 		log('Architekt.module.Http: send HTTP request...');
 		log(method.toUpperCase() + ' ' + url);
 		log('header: ' + JSON.stringify(headers) + ', data: ' + JSON.stringify(dataObject));
 
 		$.ajax({
-			timeout: 20000, //maximum 20seconds to timeout
+			timeout: timeout,
 			url: url,
 			data: dataObject,
 			headers: headers,
@@ -50,6 +52,12 @@ Architekt.module.reserv('Http', function(options) {
 				suc(result);
 			},
 			error: function (response, status, error) {
+				error('Architekt.module.Http: error detected');
+
+				response = response || {};
+				status = status || {};
+
+
 				var responseText = false;
 				if(typeof response.responseText !== 'undefined') {
 					responseText = JSON.parse(response.responseText);
@@ -60,15 +68,25 @@ Architekt.module.reserv('Http', function(options) {
 				
 				//Check timeout
 				if(status === 'timeout') responseText.error = 'timeout';
-				
-				error('Architekt.module.Http: server sent error');
+
+
 				log(method.toUpperCase() + ' ' + url);
 				log('Sent Header: ' + JSON.stringify(headers));
 				log('Sent Data:' + JSON.stringify(dataObject));
 				log('Response: ' + JSON.stringify(response));
-				log('Code: ' + response.status);
-				log('Message: ' + response.responseText);
-				log('Error: ' + error);
+
+				var statusCode = parseInt(error.status);
+
+				if(statusCode >= 400 && statusCode < 500) {
+					responseText.error = 'clientError';
+					response.status = statusCode;
+				}
+				else {
+					log('Code: ' + response.status);
+					log('Message: ' + response.responseText);
+					log('Error: ' + error);	
+				}
+				
 				err(responseText, response.status)
 			},
 			complete: function () {
@@ -83,6 +101,7 @@ Architekt.module.reserv('Http', function(options) {
 		setTimeout(function() {
 			if(_ajax_work) {
 				log('Architekt.module.Http: request taking too long ( >=5000ms )');
+				delayed();	//call delayed callback
 			}
 		}, 5000);
 	}
@@ -96,7 +115,6 @@ Architekt.module.reserv('Http', function(options) {
 		data.method = 'post';
 		request(data);
 	}
-
 
 
 	return {

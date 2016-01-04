@@ -6,6 +6,7 @@
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;
             var Http = Architekt.module.Http;
+            var Formatter = Architekt.module.Formatter;
 
             var requestUrl = '{{ Request::url() }}';
             var dataTable = new Architekt.module.DataTable({
@@ -34,14 +35,38 @@
             //filterFunc(object dataColumn): data filtering function for payment
             function filterFunc(dataColumn) {
                 var parsedArray = [];
+                var currency = dataColumn['currency'] || 'Pi';
 
                 for(var key in dataColumn) {
-                    if(key === 'pi_amount_received') {
-                        parsedArray.push(dataColumn['pi_amount_received'] + ' / ' + dataColumn['pi_amount']);
-                        break;
-                    }
+                    if(key === 'deposit') {
+                        var _t = parseFloat(dataColumn['deposit']);
 
-                    parsedArray.push(dataColumn[key]);
+                        if(!_t || _t === 0 || _t === '')
+                            _t = '';
+                        else
+                            _t = Formatter.currency(_t, { drop: 1, symbol: currency });
+
+                        parsedArray.push(_t);
+                    }
+                    else if(key === 'withdraw') {
+                        var _t = parseFloat(dataColumn['withdraw']);
+
+                        if(!_t || _t === 0 || _t === '')
+                            _t = '';
+                        else
+                            _t = Formatter.currency(_t, { drop: 1, symbol: currency });
+
+                        parsedArray.push(_t);   
+                    }
+                    else if(key === 'fee') {
+                        var _t = Formatter.currency(dataColumn['fee'], { drop: 1, symbol: currency });
+                        parsedArray.push(_t);
+                    }
+                    else {
+                        if(parsedArray.length >= 4) break;
+
+                        parsedArray.push(dataColumn[key]);
+                    }
                 }
 
                 return parsedArray;
