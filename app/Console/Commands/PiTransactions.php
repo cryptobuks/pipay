@@ -128,7 +128,7 @@ class PiTransactions extends Command
                     'state' => STATES_SUBMIT ,
                     'currency' => "PI" ,
                     'txout' => 0 ,  
-                    'received_at' => $tx->timereceived ,
+                    'received_at' => date( 'Y-m-d H:i:s' , $tx->timereceived ) ,
                 ];
 
                 $payment_tx = PiTransaction::create($pi_transaction);
@@ -166,7 +166,8 @@ class PiTransactions extends Command
                 $invoice->amount_received = $invoice->amount_received + ( $tx_pay->amount * $this->rate ) ;
                 $invoice->pi_amount_received = $invoice->pi_amount_received + $tx_pay->amount;                
                 $invoice->status = 'confirmed';  
-                $invoice->exception_status = 'false';                
+                $invoice->exception_status = 'false';  
+                $invoice->completed_at = Carbon::now();                                
                 $invoice->save();
 
                 // 트랜젝션 완료

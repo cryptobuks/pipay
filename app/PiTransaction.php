@@ -19,7 +19,7 @@ class PiTransaction extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'currency', 'txid', 'amount', 'confirmations', 'address', 'txout', 'state' , 'received_at'
+		'currency', 'txid', 'amount', 'confirmations', 'address', 'txout', 'state' , 'received_at' , 
 	];
 
 }
