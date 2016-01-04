@@ -8,8 +8,8 @@
             var Http = Architekt.module.Http;
             var CustomWidget = Architekt.module.CustomWidget;
 
-            var currentUrl = '{{ Request::url() }}';
-            var paymentTable = new Architekt.module.DataTable({
+            var requestUrl = '{{ Request::url() }}';
+            var dataTable = new Architekt.module.DataTable({
                 pagenate: true,
                 readOnly: false,
             });
@@ -21,34 +21,34 @@
             var isRefresh = false;                      //if refresh and no more page, no hasNext alert.
             
             //create DataTable component
-            paymentTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
-            paymentTable.appendTo($('#pi_list'));    //append to body
+            dataTable.setHeaderColumn(['주문번호', '결제시각', '상품명', '상품가격', '결제상태', 'Pi 결제금액']);
+            dataTable.appendTo($('#pi_list'));    //append to body
 
             //first draw
-            paymentTable.render({ animate: true });
+            dataTable.render({ animate: true });
 
 
             //filter
             var filterDom = $('#pi_payment_filter > div');
             filterDom.click(function() {
-                var _f = $(this).attr('data-filter');
+                var filterText = $(this).attr('data-filter');
 
-                if(_f === "all" && filter === "") return;
-                else if(_f === filter) return;
+                if(filterText === "all" && filter === "") return;
+                else if(filterText === filter) return;
 
-                switch(_f) {
+                switch(filterText) {
                     case "confirmed":
-                        _f = _f;
+                        filterText = filterText;
                         break;
                     default:
-                        _f = "";
+                        filterText = "";
                         break;
                 }
 
                 //reset page
-                paymentTable.setPage(1);
+                dataTable.setPage(1);
 
-                filter = _f;
+                filter = filterText;
                 filterDom.removeClass('on');
                 $(this).addClass('on');
 
@@ -56,129 +56,47 @@
             });
 
 
-            /**************************************************************************************
-             *
-             *
-             *                                  pure functions
-             *
-             *
-             **************************************************************************************/
+            //load pure functions for common actions
+            @include('dataTable/pure')
 
-            //HTTP get data
-            var _isFetching = false;
-            function getData(options) {
-                if(_isFetching) return;
 
-                options = typeof options === 'object' ? options : {};
-                var url = typeof options.url !== 'undefined' ? options.url : '';
-                var callback = typeof options.callback === 'function' ? options.callback : function() {};
-                var complete = typeof options.complete === 'function' ? options.complete : function() {};
-                var data = typeof options.data === 'object' ? options.data : {};
+            //load adapted functions for common actions
+            //filterFunc(object dataColumn): data filtering function for payment
+            function filterFunc(dataColumn) {
+                var parsedArray = [];
 
-                _isFetching = true;
-
-                Http.get({
-                    url: url,
-                    data: data,
-                    success: function(dataObject) {
-                        callback(dataObject);
-                    },
-                    error: function(text, status, error) {
-                        new Notice({
-                            text: JSON.stringify(error),
-                        });
-                    },
-                    complete: function() {
-                        _isFetching = false;
-                        complete();
+                for(var key in dataColumn) {
+                    if(key === 'pi_amount_received') {
+                        parsedArray.push(dataColumn['pi_amount_received'] + ' / ' + dataColumn['pi_amount']);
+                        break;
                     }
-                });    
-            }
 
-            //no more data?
-            function noMoreData() {
-                new Notice({
-                    text: '마지막 페이지입니다.'
-                });
-            }
-
-
-            /**************************************************************************************
-             *
-             *
-             *                              payment list functions
-             *
-             *
-             **************************************************************************************/
-
-            //get payment data list
-            function getPaymentData(callback) {
-                getData({
-                    url: currentUrl,
-                    data: {
-                        'page': paymentTable.getCurrentPage(),
-                        'pagePer': pagePer,
-                        'filter': filter,
-                    },
-                    callback: function(dataObject) {
-                        if(typeof callback === 'function') callback(dataObject);
-                    }
-                });
-            }
-
-            //update DataTable
-            function updatePaymentTable(dataObject) {
-                var len = dataObject.length;
-
-                //0 item? nah, no more page.
-                if(len === 0) {
-                    hasNext = false;
-                    paymentTable.setPage(paymentTable.getCurrentPage() - 1);    //decrease page numb
-
-                    if(!isRefresh) noMoreData();    //if the refresh, don't show up.
-                }
-                else {
-                    paymentTable.resetColumns();
-
-                    //if length of list items are shorter than number of paging per that means no more page.
-                    //but if len = pagePer, it can be has next page so be cautious!
-
-                    hasNext = (len >= pagePer);
-
-                    for(var i = 0; i < len; i++) {
-                        var data = dataObject[i];
-                        var parsedArray = [];
-
-                        for(var key in data) {
-                            if(key === 'pi_amount_received') {
-                                parsedArray.push(data['pi_amount_received'] + ' / ' + data['pi_amount']);
-                                break;
-                            }
-
-                            parsedArray.push(data[key]);
-                        }
-
-                        paymentTable.addColumn(parsedArray);
-                    }    
-
-                    //on update only has data
-                    paymentTable.render({ animate: true, updateHeader: false });
+                    parsedArray.push(dataColumn[key]);
                 }
 
-                isRefresh = false;
+                return parsedArray;
             }
 
-            //fetch payment list data from server and update
-            function getPaymentDataAndUpdate() {
-                paymentTable.lock({
-                    loading: true
-                });
+            @include('dataTable/adapted')
 
-                getPaymentData(function(dataObject) {
-                    paymentTable.unlock();
-                    updatePaymentTable(dataObject);
+
+            /* Event handlers */
+            //load common event handlers
+            @include('dataTable/events')
+
+            //item click -> show detail
+            dataTable.event.on('itemclick', function(e) {
+                var idx = e.clickedIndex;
+                var column = e.column;
+
+                getProduct(column[0], function(dataObject) {
+                    updateProduct(dataObject);
                 });
-            }
+            });
+
+
+            //get data and update!
+            $('#refresh').trigger('click');
 
 
             /**************************************************************************************
@@ -191,17 +109,17 @@
 
              //get specified product info
             function getProduct(id, callback) {
-                paymentTable.lock({
+                dataTable.lock({
                     loading: true
                 });
 
                 getData({
-                    url: [currentUrl, id].join("/"),
+                    url: [requestUrl, id].join("/"),
                     callback: function(dataObject) {
                         if(typeof callback === 'function') callback(dataObject);
                     },
                     complete: function() {
-                        paymentTable.unlock();
+                        dataTable.unlock();
                     }
                 });
             }
@@ -210,65 +128,6 @@
             function updateProduct(dataObject) {
                 productDetailWidget.setData(dataObject).render().show();
             }
-
-
-            /* Event handlers */
-            //item click -> show detai;
-            paymentTable.event.on('itemclick', function(e) {
-                var idx = e.clickedIndex;
-                var column = e.column;
-
-                getProduct(column[0], function(dataObject) {
-                    updateProduct(dataObject);
-                });
-            });
-
-            //prev
-            paymentTable.event.on('previous', function(e) {
-                var page = e.currentPage;
-
-                if(page === 1) {
-                    new Notice({
-                        text: '첫 번째 페이지입니다.'
-                    });
-                }
-                else {
-                    paymentTable.setPage(--page);
-                    getPaymentDataAndUpdate();
-                }
-            });
-
-            //next
-            paymentTable.event.on('next', function(e) {
-                var page = e.currentPage;
-
-                if(!hasNext) {
-                    noMoreData();
-                }
-                else {
-                    paymentTable.setPage(++page);
-                    getPaymentDataAndUpdate();                    
-                }
-            });
-
-            //refresh
-            $('#refresh').click(function() {
-                isRefresh = true;
-                getPaymentDataAndUpdate();
-                return false;
-            });
-
-            //export as excel
-            $('#exportExcel').click(function() {
-                new Notice({
-                    text: '준비 중입니다.'
-                });
-                return false;
-            });
-
-
-            //get data and update!
-            $('#refresh').trigger('click');
 
 
             /* Product detail widget */
@@ -297,6 +156,10 @@
                 refund: function(dataObject) {
                     var e = dataObject.originalEvent;
                     e.preventDefault();
+
+                    refundWidget.show({
+                        verticalCenter: false
+                    });
                 },
                 receipt: function(dataObject) {
                     var e = dataObject.originalEvent;
@@ -304,6 +167,25 @@
 
                     window.open('{{ url('/') }}/receipt/' + dataObject.token);
                 },
+            });
+
+
+            /* Refund widget */
+            var refundWidget = new CustomWidget({
+                dom: $('#pi_refund_widget'),
+                events: {
+                    'form submit': 'submit',
+                },
+                submit: function(dataObject) {
+                    var e = dataObject.originalEvent;
+                    e.preventDefault();
+
+                    new Notice({
+                        text: 'Submit!',
+                    });
+
+                    refundWidget.hide();
+                }
             });
         });
     </script>
@@ -331,5 +213,6 @@
     </div>
 
     @include('payments/widgets/productDetail')
+    @include('payments/widgets/refund')
 
 @endsection

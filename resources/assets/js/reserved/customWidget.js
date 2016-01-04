@@ -20,28 +20,35 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		this.dom.hide();
 
 		//close on click
-		if(typeof this.close.click !== 'undefined') this.close.click(function() {
-			self.hide();
-		});
+		if(this.close.length) {
+			this.close.click(function() {
+				self.hide();
+			});
+		}
 		
 		//custom events processing
 		for(var key in this.events) {
 			(function (key) {
+				//format: "cssSelector eventType": eventHandler (e.g. "#refresh click": "myFunction")
+				//_t[0] = css selector (e.g. #refresh)
+				//_t[1] = event type (e.g. click)
+				//method = event handler. (e.g. myFunction above)
 				var _t = key.split(" ");
 				var selector = _t[0];
 				var eventType = _t[1];
 				var method = self.events[key];
 
 				try {
+					//try attach custom event each selector
 					self.dom.find(selector).on(eventType, function(e) {
 						if(typeof options[method] === 'function') {
 							self.data.originalEvent = e;
-							options[method].call(null, self.data);
+							options[method].call(null, self.data);	//execute event handler with inner data(dataObject)
 						}
 					});
 				}
 				catch(message) {
-					Architekt.module.Printer.log('Architekt.module.CustomWidget: ' + message);
+					Architekt.module.Printer.error('Architekt.module.CustomWidget: ' + message);
 				}
 			})(key);
 		}
@@ -59,14 +66,21 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		if(this.visible) this.show();
 	}
-	CustomWidget.prototype.show = function() {
+	//Architekt.module.customWidget.show(object options): Show widget
+	//options.verticalCenter: Automatically calculate height and set to the dom element to center (half of height)
+	CustomWidget.prototype.show = function(options) {
 		var self = this;
+
+		options = typeof options === 'object' ? options : {};
+		var verticalCenter = typeof options.verticalCenter !== 'undefined' ? !!options.verticalCenter : true;
 
 		this.dom.show();
 
 		//move the widget to half of the screen
-		var height = this.container.height();
-		this.container.css('margin-top', '-' + parseInt(height / 2) + 'px');
+		if(verticalCenter) {
+			var height = this.container.height();
+			this.container.css('margin-top', '-' + parseInt(height / 2) + 'px');	
+		}
 
 		//Fancy scale up animation
 		setTimeout(function() {
@@ -75,6 +89,7 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		return this;
 	};
+	//Architekt.module.customWidget.hide(void): Hide widget
 	CustomWidget.prototype.hide = function() {
 		var self = this;
 
@@ -84,6 +99,7 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		
 		return this;
 	};
+	//Architekt.module.customWidget.destroy(void): Destroy widget. means no more Dom element.
 	CustomWidget.prototype.destroy = function() {
 		if(this.dom != null) {
 			this.dom.remove();
@@ -91,14 +107,17 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		}
 		return this;
 	}
+	//Architekt.module.customWidget.setData(object dataObject): Set inner data
 	CustomWidget.prototype.setData = function(dataObject) {
 		dataObject = dataObject || {};
 		this.data = dataObject;
 		return this;
 	};
+	//Architekt.module.customWidget.getDat(void): Get inner data
 	CustomWidget.prototype.getData = function(dataObject) {
 		return this.data;
 	};
+	//Architekt.module.customWidget.render(options): Render the widget
 	CustomWidget.prototype.render = function() {
 		var self = this;
 		var formats = this.formats;

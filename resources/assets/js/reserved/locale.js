@@ -2,12 +2,8 @@ Architekt.module.reserv('Locale', function(options) {
 	var namespace = this;
 	var currentLocale = 'ko';
 	var localeStrings = {
-		"ko": {
-
-		},
-		"en": {
-
-		},
+		"ko": { },
+		"en": { },
 	};
 
 	return {
