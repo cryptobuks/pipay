@@ -73,11 +73,10 @@ class LedgerController extends Controller
             }
         }        
 
-        $AccountJson[] = array(
+        $AccountJson[] = (object) array(
             'KRW' => $amount['krw'],
             'PI' => $amount['pi']
          );
-        dd($AccountJson);
 
         return view('ledgers.index', compact('AccountJson','pagePer'));
     }
