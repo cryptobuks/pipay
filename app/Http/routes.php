@@ -31,24 +31,6 @@ $router->get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@
 $router->post('user/profile/{id}', ['as' => 'user.profile.post', 'uses' => 'UserController@postProfile']);   // 유저 프로파일 처리
 $router->post('user/upload/logo' , ['as' => 'user.upload.logo' , 'uses' => 'UserController@postLogo' ]);   // 유저 사진 업로드 
 
-/*
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('user/upload', function () {
-       return view( 'users.upload' );
-    });
-});
-*/
-
-// product routes
-/*
-$router->get('product', ['as' => 'product.index', 'uses' => 'ProductController@index']);   // 목록
-$router->get('product/create', ['as' => 'product.create', 'uses' => 'ProductController@create']);  // 추가 
-$router->post('product', ['as' => 'product.store', 'uses' => 'ProductController@store']);  // 추가 저장 
-$router->get('product/{id}', ['as' => 'product.edit', 'uses' => 'ProductController@edit']);  // 수정 
-$router->post('product/{id}', ['as' => 'product.update', 'uses' => 'ProductController@update']);  // 수정 저장 
-*/
-
-
 
 // tool routes
 $router->get('tool', ['as' => 'tool.index', 'uses' => 'ToolController@index']);   // 결제도구 메인
@@ -71,7 +53,7 @@ $router->get('checkout/{token}', ['as' => 'checkout.index', 'uses' => 'CheckoutC
 
 // 결제 페이지 실행 
 $router->get('invoice/{token}', ['as' => 'invoice.index', 'uses' => 'InvoiceController@index']);
-$router->post('invoice/{token}/payment', ['as' => 'invoice.payment', 'uses' => 'InvoiceController@payment']);
+$router->post('invoice/payment', ['as' => 'invoice.payment', 'uses' => 'InvoiceController@payment']);
 
 // API
 Route::group(array('prefix' => 'api/v1'), function()

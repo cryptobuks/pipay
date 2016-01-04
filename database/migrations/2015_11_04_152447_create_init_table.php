@@ -44,6 +44,7 @@ class CreateInitTable extends Migration
             $table->string( 'status' , 20 )->default('new');
             $table->string( 'exception_status' , 24 )->nullable(); 
             $table->integer('user_id')->unsigned();
+            $table->integer('account_id')->unsigned();            
             $table->string( 'api_key' , 40 ); 
             $table->integer('product_id')->nullable();             
             $table->string( 'product_token' , 40 )->nullable();                         
@@ -52,6 +53,7 @@ class CreateInitTable extends Migration
             $table->decimal( 'pi_amount' , 24 , 8 )->default(0); 
             $table->decimal( 'pi_amount_received' , 24 , 8 )->default(0);
             $table->decimal( 'rate' , 24 , 8 )->default(0);            
+            $table->decimal( 'fee' , 24 , 8 )->default(0);                        
             $table->char( 'currency' , 5 ); 
             $table->string( 'inbound_address' )->nullable();
             $table->string( 'refund_address' )->nullable();     
@@ -82,7 +84,7 @@ class CreateInitTable extends Migration
             $table->increments('id');
             $table->string( 'token' , 40 ); 
             $table->integer('user_id')->unsigned();
-            $table->integer('account_id')->unsigned();                                    
+            $table->integer('account_id')->unsigned();            
             $table->string( 'api_key' , 40 );            
             $table->integer('buyer_id')->unsigned()->nullable();                        
             $table->integer('invoice_id')->unsigned();       // 변경      
@@ -90,7 +92,7 @@ class CreateInitTable extends Migration
             $table->decimal( 'amount_refunded' , 24 , 8 )->default(0); 
             $table->char( 'currency' , 5 );             
             $table->decimal( 'fee' , 24 , 8 )->default(0);       
-            $table->boolean('livemode')->default(1);
+            $table->string( 'txid' )->nullable();            
             $table->timestamps();
 
             $table->engine = 'InnoDB';
@@ -128,6 +130,7 @@ class CreateInitTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('invoice_id')->unsigned();     
             $table->string( 'address' )->nullable();     
+            $table->string( 'txid' )->nullable();            
             $table->decimal( 'amount' , 24 , 8 )->default(0);         
             $table->decimal( 'pi_amount' , 24 , 8 )->default(0);                             
             $table->char( 'currency' , 5 ); 

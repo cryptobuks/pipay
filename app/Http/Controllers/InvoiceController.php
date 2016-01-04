@@ -138,19 +138,38 @@ class InvoiceController extends Controller
     }
 
     /**
-     * [payment description]
+     * [payment 결제 처리 ]
      * @param  Request $request [description]
      * @param  [type]  $token   [description]
      * @return [type]           [description]
      */
-    public function payment( Request $request , $token )
+    public function payment( Request $request )
     {
 
+        //$input = $request->all();
+        $input = $request->only( 'token' );
+
+        $validator = Validator::make( $input  , [
+                'token' => 'required|alpha_dash|max:50' ,
+        ]);
+
+        if( $validator->fails() ) 
+        {
+            $messages = $validator->messages();
+            if( $messages->first('token') ) {
+                return Response::json ( api_error_handler(  'invalid_token' , 'The token is invalid.' ) , 400 );
+            } else {
+                return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
+            }
+        }
+
+        // 인증 확인 
         if( !Auth::check() ) {
             return response::json( [ 'status' => 'unauthorized' ] , 401 );            
         }
 
         //  결제 필요 데이터 호출 
+        $token = $input['token']; 
         $user = Auth::user();
         $buyer_account = Oaccount::whereUserId( $user->id )->whereCurrencyId( CURRENCY_COIN )->first();
         $invoice = Invoice::whereToken( $token )->where( 'status' , 'new' )->first();
@@ -172,7 +191,6 @@ class InvoiceController extends Controller
             return Response::json (   [ 'status' => $transfer['status'] ]  , 500 );
         }
 
-
         // 호출 성공후 인보이스 테이블 업데이트 , payment 테이블에 데이터 추가 , trasnaction , 원장  테이블에 데이터 추가
         DB::beginTransaction();
         try {
@@ -182,7 +200,7 @@ class InvoiceController extends Controller
             $invoice->amount_received = $invoice->amount;
             $invoice->pi_amount_received = $invoice->pi_amount;      
             $invoice->completed_at = Carbon::now();  
-            //$invoice->save();
+            $invoice->save();
 
             $amount2 = $invoice->pi_amount ;
             $fee = NUMBER_ZERO;
@@ -224,7 +242,7 @@ class InvoiceController extends Controller
                 'source_type' => get_class( $payment )  ,                                 
                 'status' => 'available'  ,                                 
                 'type' => 'payment'  , 
-                'url' => url( "invoice/{$token}/payment" ) ,
+                'url' => url( "invoice/payment" ) ,
                 'description' => NULL , 
             ];
 
@@ -237,7 +255,7 @@ class InvoiceController extends Controller
         }
 
         // 결제 처리 완료 후 값 리턴 
-        return [ 'status' => 'success' ,  'id' => $payment->id ,  'token' => $token  ];                    
+        return Response::json ( [ 'status' => 'success' ,  'id' => $payment->id ,  'token' => $token  ] );                    
 
     }
     

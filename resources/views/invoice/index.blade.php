@@ -67,7 +67,6 @@
 						$('#pi_top_menu').css('display' , 'none' );						
 						$('#pi_sms_auth').css('display' , '');
 					} else {
-						alert( data );
 						_error('이메일이나 비밀번호가 맞지 않습니다.', email);
 					}
 				},
@@ -116,7 +115,6 @@
 						$('#pi_top_menu').css('display' , '' );										
 						$('#pi_payment').css('display' , '');
 					} else {
-						alert(data.status);
 						_error('문자 인증번호가 맞지 않습니다.', authcode);
 					}
 				},
@@ -133,6 +131,39 @@
 			return false;
 		});
 
+		// Payment process
+
+		$('#PaymentForm').submit(function() {
+			var token = $('#token');
+
+			//Send POST request
+			Architekt.module.Http.post({
+				url: '/invoice/payment' ,
+				data: {
+					'token':  token.val(),
+				},
+
+				success: function(data) {
+					if( data.status == 'success') {
+						$('#pi_sms_auth').css('display' , 'none');	
+						$('#pi_payment').css('display' , 'none');
+						$('#pi_pay_end').css('display' , '');						
+					} else {
+						_error('결제가 제대로 진행되지 않았습니다. 다시 시도해 주세요. ' );
+					}
+				},
+				error: function(text, status) {
+					new Notice({
+						text: (text + status).join(", "),
+					});
+				},
+				complete: function() {
+
+				}
+			});
+
+			return false;
+		});
 
 
 	});
@@ -188,11 +219,12 @@
 		<div class="pi-container">
 			<h1>결제</h1>			
 			<span id="pi_email">{{ $user->email }}</span> | <a href="/oauth/logout"> 로그아웃 </a>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/{$token}/payment", 'id' => 'PaymentForm' , 'return' => 'true' )) !!}
+			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/payment", 'id' => 'PaymentForm' , 'return' => 'false' )) !!}
+			<input type="hidden" name="token" id="token" value="{{ $token}}">			
 			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
 			<span id="pi_username">{{ $user->username }}</span>님의 파이 잔고 : <span id="pi_balance">{{ amount_format( $account->balance ) }}</span> PI
 			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnSmsSubmit', 'id' => 'btnSmsSubmit')) !!}
+				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnPaymentSubmit', 'id' => 'btnPaymentSubmit')) !!}
 			</div>
 			{!! Form::close() !!}				
 		</div>
@@ -202,16 +234,30 @@
 		<div class="pi-container">
 			<h1>결제</h1>			
 			<span id="pi_email"></span> | <a href="/oauth/logout"> 로그아웃 </a>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/{$token}/payment", 'id' => 'PaymentForm' , 'return' => 'true' )) !!}
+			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/payment", 'id' => 'PaymentForm' , 'return' => 'false' )) !!}
+			<input type="hidden" name="token" id="token" value="{{ $token }}">
 			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
 			<span id="pi_username"></span>님의 파이 잔고 : <span id="pi_balance">0</span> PI
 			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnSmsSubmit', 'id' => 'btnSmsSubmit')) !!}
+				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnPaymentSubmit', 'id' => 'btnPaymentSubmit')) !!}
 			</div>
 			{!! Form::close() !!}				
 		</div>
 	</div>	
 	@endif
+
+	<div id="pi_pay_end" style="display:none">	
+		<div class="pi-container">
+			<h1>결제</h1>			
+			간편 결제가 완료되었습니다. <br />
+			결제를 해주셔서 감사합니다. <br />
+			<div class="pi-button-container pi-button-centralize">
+				{!! Form::button( '완료' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnEnd', 'id' => 'btnEnd')) !!}
+			</div>
+			<div class="pi-button-container pi-button-centralize"><a href="/receipt/{{ $token }}" target="_BLANK">영수증 보기</a> </div>
+		</div>
+	</div>	
+
 
 
 	<div id="pi_address" style="display:none">
