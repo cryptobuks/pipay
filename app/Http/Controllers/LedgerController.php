@@ -46,16 +46,23 @@ class LedgerController extends Controller
             $jsonTable = [];
                 
             foreach ( $transactions as $transaction){
-                $jsonTable[] = array(
-                    'id' => $transaction->id,
-                    'amount' => $transaction->amount,
-                    'fee' => $transaction->fee,
-                    'net' => $transaction->net,
-                    'status' => $transaction->status,
-                    'type' => $transaction->type,
-                    'created_at' => $transaction->created_at
-                );
+                if( 'payment' == $transaction->type ) {
+                    $jsonTable[] = array(
+                        'created_at' => $transaction->created_at->format('Y-m-d H:i:s'),
+                        'deposit' => $transaction->amount,
+                        'withdraw' => 0,
+                        'fee' => 0,
+                    );
+                } else if ( 'refund' == $transaction->type || 'transfer' == $transaction->type ) {
+                    $jsonTable[] = array(
+                        'created_at' => $transaction->created_at->format('Y-m-d H:i:s'),
+                        'deposit' => 0,
+                        'withdraw' => $transaction->amount,
+                        'fee' => $transaction->fee,
+                    );
+                }
             }
+        
 
             return $jsonTable;
         }
