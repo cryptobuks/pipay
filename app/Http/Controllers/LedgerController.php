@@ -52,6 +52,7 @@ class LedgerController extends Controller
                         'deposit' => $transaction->amount,
                         'withdraw' => 0,
                         'fee' => 0,
+                        'currency' => $transaction->currency
                     );
                 } else if ( 'refund' == $transaction->type || 'transfer' == $transaction->type ) {
                     $jsonTable[] = array(
@@ -59,6 +60,7 @@ class LedgerController extends Controller
                         'deposit' => 0,
                         'withdraw' => $transaction->amount,
                         'fee' => $transaction->fee,
+                        'currency' => $transaction->currency
                     );
                 }
             }
