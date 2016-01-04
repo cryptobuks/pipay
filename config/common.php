@@ -84,7 +84,8 @@ return [
 		'failed' => '결제실패' , 				
 		'expired' => '결제만료' , 						
 		'refunded' => '전액환불' , 
-		'refunded_partial' => '일부환불' , 		
+		'refunded_partial' => '일부환불' , 	
+		'settlement_complete' => '정산완료' , 			
 	] , 
 
 	'pay_user' => [

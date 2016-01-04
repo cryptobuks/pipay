@@ -20,7 +20,8 @@ return [
 		'failed' => 'Failed' , 				
 		'expired' => 'Expired' , 						
 		'refunded' => 'Refunded' , 
-		'refunded_partial' => 'Refunded partial' , 		
+		'refunded_partial' => 'Refunded partial' , 	
+		'settlement_complete' => 'Settlement completed' , 			
 	] , 
 
 
