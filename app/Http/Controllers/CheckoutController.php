@@ -51,11 +51,12 @@ class CheckoutController extends Controller
      */
     public function index( Request $request  , $token )
     {
-        $input = $request->only( 'lang' , 'livemode' );
+        $input = $request->only( 'lang' , 'livemode' , 'reference' );
 
         $validator = Validator::make( $input  , [
                 'lang' => 'alpha|max:2' , 
                 'livemode' => 'boolean',
+                'reference' => 'alpha_dash|max:255',                
         ]);
 
         if( $validator->fails() ) 
@@ -65,6 +66,9 @@ class CheckoutController extends Controller
                 return Response::json ( api_error_handler(  'invalid_lang' , 'The lang is invalid.' ) , 400 );
             } elseif ( $messages->first('livemode')  )  {
                 return Response::json ( api_error_handler(  'invalid_livemode' , 'The livemode is invalid.' ) , 400 );            
+            } elseif ( $messages->first('reference')  )  {
+                return Response::json ( api_error_handler(  'invalid_reference' , 'The reference is invalid.' ) , 400 );            
+
             } else {
                 return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
             }
@@ -88,6 +92,7 @@ class CheckoutController extends Controller
                 $rate = Config::get( 'coin.pi.rate' );
                 $pi_amount = ( $param['amount'] / $rate );
                 $expiration_at = date( 'Y-m-d H:i:s' , time() + 86400 );
+                $fee = NUMBER_ZERO;
 
                 $in_data = [
                     'user_id' => $user_id ,
@@ -108,12 +113,13 @@ class CheckoutController extends Controller
                     'livemode' => $request->has('livemode') ? $input['livemode'] : $livemode ,
                     'item_desc' => $param['item_desc'] ,
                     'order_id' => !empty( $param['order_id'] ) ? $param['order_id'] : '' ,
-                    'reference' => '' , 
+                    'reference' => $request->has('reference') ? $input['reference'] : ''  , 
                     'email' => !empty( $param['email'] ) ? $param['email'] : '' , 
                     'redirect' => !empty( $param['redirect'] ) ? $param['redirect'] : '' , 
                     'ipn' => !empty( $param['ipn'] ) ? $param['ipn'] : '' ,                                          
                     'expiration_at' => $expiration_at , 
                     'url' => '' , 
+                    'fee' => $fee ,                    
                     'payment_url' => "pi:{$inbound_address}?amount={$pi_amount}" ,
                     'lang' => $request->has('lang') ? $input['lang']  : 'ko', 
                  ];

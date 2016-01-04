@@ -255,7 +255,14 @@ class InvoiceController extends Controller
         }
 
         // 결제 처리 완료 후 값 리턴 
-        return Response::json ( [ 'status' => 'success' ,  'id' => $payment->id ,  'token' => $token  ] );                    
+        return Response::json ( [ 
+            'status' => 'success' ,  
+            'id' => $payment->id ,  
+            'token' => $token , 
+            'redirect' => $invoice->redirect , 
+            'reference' => $invoice->reference ,
+            'order_id' => $invoice->order_id ,            
+          ] );                    
 
     }
     

@@ -62,6 +62,9 @@ class CreateInitTable extends Migration
             $table->string('order_id')->nullable();             
             $table->string('reference')->nullable();    
             $table->string('email')->nullable();     
+            $table->string('redirect')->nullable(); 
+            $table->string('callback')->nullable();             
+            $table->string('ipn')->nullable(); 
             $table->char( 'lang' , 3 )->default('ko');            // 추가 
             $table->timestamp('expiration_at')->nullable();
             $table->timestamp('completed_at')->nullable(); 

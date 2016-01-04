@@ -109,6 +109,7 @@ class InvoiceController extends Controller
                 $rate = Config::get( 'coin.pi.rate' );
                 $pi_amount = ( $amount / $rate );
                 $expiration_at = date( 'Y-m-d H:i:s' , time() + 86400 );
+                $fee = NUMBER_ZERO;
 
                 $in_data = [
                     'user_id' => $user_id ,
@@ -134,6 +135,7 @@ class InvoiceController extends Controller
                     'redirect' => $redirect  , 
                     'ipn' => $ipn  ,                                         
                     'expiration_at' => $expiration_at , 
+                    'fee' => $fee ,
                     'url' => '' , 
                     'payment_url' => "pi:{$inbound_address}?amount={$pi_amount}" ,
                     'lang' => $lang , 

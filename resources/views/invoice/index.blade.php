@@ -147,7 +147,11 @@
 					if( data.status == 'success') {
 						$('#pi_sms_auth').css('display' , 'none');	
 						$('#pi_payment').css('display' , 'none');
-						$('#pi_pay_end').css('display' , '');						
+						$('#pi_pay_end').css('display' , '');
+
+						$('#redirect').val( data.redirect );
+						$('#reference').val( data.reference );						
+						$('#order_id').val( data.order_id );												
 					} else {
 						_error('결제가 제대로 진행되지 않았습니다. 다시 시도해 주세요. ' );
 					}
@@ -164,6 +168,18 @@
 
 			return false;
 		});
+
+		$('#btnEnd').click(function() {
+			var redirect = $('#redirect');
+			var reference = $('#reference');
+			var order_id = $('#order_id');			
+
+			if( redirect.val() ) {
+				document.location.href = redirect.val() + '?reference=' + reference.val() + '&order_id=' + order_id.val();
+			}
+
+		}
+
 
 
 	});
@@ -248,6 +264,9 @@
 
 	<div id="pi_pay_end" style="display:none">	
 		<div class="pi-container">
+			<input type="hidden" name="redirect" id="redirect" value="">			
+			<input type="hidden" name="reference" id="reference" value="">						
+			
 			<h1>결제</h1>			
 			간편 결제가 완료되었습니다. <br />
 			결제를 해주셔서 감사합니다. <br />
