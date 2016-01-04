@@ -178,7 +178,7 @@
 				document.location.href = redirect.val() + '?reference=' + reference.val() + '&order_id=' + order_id.val();
 			}
 
-		}
+		});
 
 
 

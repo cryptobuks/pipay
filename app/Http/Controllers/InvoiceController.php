@@ -200,6 +200,7 @@ class InvoiceController extends Controller
             $invoice->amount_received = $invoice->amount;
             $invoice->pi_amount_received = $invoice->pi_amount;      
             $invoice->completed_at = Carbon::now();  
+            $invoice->exception_status = 'false';
             $invoice->save();
 
             $amount2 = $invoice->pi_amount ;

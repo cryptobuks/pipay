@@ -135,10 +135,13 @@ class PiTransactions extends Command
 
                 $invoice = Invoice::whereRaw('inbound_address = ? ',array( $payment_tx->address ) )->first();
 
-                $invoice->status = 'pending';
-                $invoice->save();
-
-                $this->info("[" . Carbon::now() . "] add tx : " . $tx->txid    );           
+                if( isset( $invoice ) ) {
+                    $invoice->status = 'pending';
+                    $invoice->save();
+                    $this->info("[" . Carbon::now() . "] add tx : " . $tx->txid    );                               
+                } else {
+                    $this->info("[" . Carbon::now() . "] no transactions "   );                               
+                }
             }
         }
     }
@@ -163,6 +166,7 @@ class PiTransactions extends Command
                 $invoice->amount_received = $invoice->amount_received + ( $tx_pay->amount * $this->rate ) ;
                 $invoice->pi_amount_received = $invoice->pi_amount_received + $tx_pay->amount;                
                 $invoice->status = 'confirmed';  
+                $invoice->exception_status = 'false';                
                 $invoice->save();
 
                 // 트랜젝션 완료

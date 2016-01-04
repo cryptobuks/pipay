@@ -103,11 +103,18 @@ class InvoiceController extends Controller
         DB::beginTransaction();
         try {
 
-                $currency = $currency ? strtoupper( $currency ) : 'PI';
+                $currency = !empty( $currency ) ? strtoupper( $currency ) : 'KRW';
                 $livemode = UserKey::getLiveMode( $api_key );            
                 $inbound_address = Invoice::getNewAddress();
                 $rate = Config::get( 'coin.pi.rate' );
-                $pi_amount = ( $amount / $rate );
+                
+                if( $currency == 'KRW') {
+                    $pi_amount = ( $amount / $rate );
+                } else {
+                    $pi_amount = $amount ;                    
+                    $amount = $amount * $rate ; 
+                }
+
                 $expiration_at = date( 'Y-m-d H:i:s' , time() + 86400 );
                 $fee = NUMBER_ZERO;
 

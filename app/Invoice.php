@@ -27,7 +27,8 @@ class Invoice extends Model
 		 'amount' , 'amount_received' , 'pi_amount' , 'pi_amount_received' , 'rate' , 'currency' ,
 		 'inbound_address' , 'refund_address' , 'livemode' , 'item_desc' , 'order_id' , 'reference' , 
 		 'email' , 'expiration_at' , 'url' , 'payment_url' , 'customer_email' , 'customer_name' , 
-		 'customer_phone' , 'customer_address' , 'customer_custom' , 'lang' , 'redirect' , 'ipn' , 'fee' , 
+		 'customer_phone' , 'customer_address' , 'customer_custom' , 'lang' , 'redirect' , 'ipn' , 'fee' ,
+		 'account_id' ,
 	];
    
 	/**

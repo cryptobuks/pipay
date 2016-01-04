@@ -51,12 +51,13 @@ class CheckoutController extends Controller
      */
     public function index( Request $request  , $token )
     {
-        $input = $request->only( 'lang' , 'livemode' , 'reference' );
+        $input = $request->only( 'lang' , 'livemode' , 'reference' , 'order_id' );
 
         $validator = Validator::make( $input  , [
                 'lang' => 'alpha|max:2' , 
                 'livemode' => 'boolean',
                 'reference' => 'alpha_dash|max:255',                
+                'order_id' => 'alpha_dash|max:255',                                
         ]);
 
         if( $validator->fails() ) 
@@ -68,6 +69,8 @@ class CheckoutController extends Controller
                 return Response::json ( api_error_handler(  'invalid_livemode' , 'The livemode is invalid.' ) , 400 );            
             } elseif ( $messages->first('reference')  )  {
                 return Response::json ( api_error_handler(  'invalid_reference' , 'The reference is invalid.' ) , 400 );            
+            } elseif ( $messages->first('order_id')  )  {
+                return Response::json ( api_error_handler(  'invalid_order_id' , 'The order_id is invalid.' ) , 400 );            
 
             } else {
                 return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
@@ -86,18 +89,25 @@ class CheckoutController extends Controller
         DB::beginTransaction();
         try {
 
-                $currency = $param['currency'] ? strtoupper( $param['currency'] ) : 'PI';
+                $currency = !empty( $param['currency'] ) ? strtoupper( $param['currency'] ) : 'KRW';
                 $livemode = UserKey::getLiveMode( $param['api_key'] );            
                 $inbound_address = Invoice::getNewAddress();
                 $rate = Config::get( 'coin.pi.rate' );
-                $pi_amount = ( $param['amount'] / $rate );
+
+                if( $currency == 'KRW') {
+                    $pi_amount = ( $param['amount'] / $rate );
+                } else {
+                    $pi_amount = $param['amount'] ;                    
+                    $amount = $param['amount'] * $rate ; 
+                }
+
                 $expiration_at = date( 'Y-m-d H:i:s' , time() + 86400 );
                 $fee = NUMBER_ZERO;
 
                 $in_data = [
                     'user_id' => $user_id ,
                     'api_key' => $param['api_key']  ,
-                    'token' => '' ,
+                    'token' => $user_id . '_' . mt_rand( )  ,
                     'status' => 'new' ,
                     'exception_status' => NULL ,
                     'product_id' => NULL , 
@@ -112,7 +122,7 @@ class CheckoutController extends Controller
                     'refund_address' => NULL , 
                     'livemode' => $request->has('livemode') ? $input['livemode'] : $livemode ,
                     'item_desc' => $param['item_desc'] ,
-                    'order_id' => !empty( $param['order_id'] ) ? $param['order_id'] : '' ,
+                    'order_id' => $request->has('order_id') ? $input['order_id'] : ''  ,
                     'reference' => $request->has('reference') ? $input['reference'] : ''  , 
                     'email' => !empty( $param['email'] ) ? $param['email'] : '' , 
                     'redirect' => !empty( $param['redirect'] ) ? $param['redirect'] : '' , 
