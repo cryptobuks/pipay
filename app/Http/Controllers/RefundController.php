@@ -44,8 +44,8 @@ class RefundController extends Controller
     public function store( Request $request  )
     {
         $input = $request->all();
-        
         $user = $this->sentry->getUser();
+
         $input['user_id'] = $user->id;
         $input['pi_amount'] = $input['amount'];
         $input['amount'] = $input['pi_amount'] * 10000;
