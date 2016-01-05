@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use App\Invoice;
+use App\Oaccount;
 
 class PaymentController extends Controller
 {
@@ -74,8 +75,20 @@ class PaymentController extends Controller
      */
     public function show( $id )
     {
-        $invoice = Invoice::find( $id )->toJson();
+        $user = $this->sentry->getUser();
+        $user_id  = $user->id;
 
+        $invoice = Invoice::find( $id )->toJson();
+        $accounts = Oaccount::where('user_id', '=', $user_id)->get();
+
+        foreach ( $accounts as $account) {
+            if( 1 == $account->currency_id ){
+                $data = json_decode($invoice, true);
+                $data['balance'] = $account->balance - $account->locked;
+                $invoice = json_encode($data);
+            } 
+        }        
+        
         return $invoice;
     }
 

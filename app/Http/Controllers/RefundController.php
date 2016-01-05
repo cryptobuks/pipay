@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Refund;
 
 class RefundController extends Controller
 {
@@ -42,6 +43,16 @@ class RefundController extends Controller
      */
     public function store( Request $request  )
     {
+        $input = $request->all();
+        
+        $user = $this->sentry->getUser();
+        $input['user_id'] = $user->id;
+        $input['pi_amount'] = $input['amount'];
+        $input['amount'] = $input['pi_amount'] * 10000;
+        $input['currency'] = 'PI';
+
+        $refund = Refund::create($input);
+
         return redirect( 'payments' );
     }
 
