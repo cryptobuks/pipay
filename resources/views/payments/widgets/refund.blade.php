@@ -13,12 +13,12 @@
             <!-- address for refunding -->
             <div class="pi-form-control">
                 <label for="address">환불 받을 주소</label>
-                <input type="text" id="" class="pi-input" name="address" value="" >
+                <input data-architekt-key="address" type="text" id="" class="pi-input" name="address" value="" />
             </div>
             <!-- refunding amount -->
             <div class="pi-form-control">
                 <label for="amount">환불 금액</label>
-                <input data-architekt-key="amount" type="text" id="" class="pi-input" name="amount" value="" >
+                <input data-architekt-key="amount" type="text" id="amount" class="pi-input" name="amount" value="" readonly="readonly" />
 
                 <div class="pi-checkbox">
                     <input type="checkbox" id="partial" name="" />

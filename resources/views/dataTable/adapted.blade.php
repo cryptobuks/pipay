@@ -30,6 +30,8 @@
 
                 //0 item? nah, no more page.
                 if(len === 0) {
+                    dataTable.resetColumns().render({ updateHeader: false });
+
                     hasNext = false;
                     dataTable.setPage(dataTable.getCurrentPage() - 1);    //decrease page numb
 

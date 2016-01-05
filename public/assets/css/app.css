@@ -1229,6 +1229,16 @@ select.pi-input {
   margin-bottom: 12px;
 }
 
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_fields > .pi-form-control > #amount {
+  width: 40%;
+  margin-right: 12px;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_fields > .pi-form-control > #amount[readonly] {
+  border-color: transparent !important;
+  background-color: #fcfafa !important;
+}
+
 #pi_refund_widget > #pi_refund_widget_container > .pi-button-container > .architekt-widget-button {
   margin: 0 12px;
 }

@@ -7,7 +7,9 @@
             var Notice = Architekt.module.Widget.Notice;
             var Http = Architekt.module.Http;
             var CustomWidget = Architekt.module.CustomWidget;
+            var Validator = Architekt.module.Validator;
             var Formatter = Architekt.module.Formatter;
+            var Client = Architekt.module.Client;
 
             var requestUrl = '{{ Request::url() }}';
             var dataTable = new Architekt.module.DataTable({
@@ -229,9 +231,12 @@
                     var e = dataObject.originalEvent;
                     e.preventDefault();
 
+                    var amount = dataObject['pi_amount_received'] - dataObject['pi_amount_refunded'];
+
                     var refundData = {
                         balance: dataObject.balance,
-                        amount: (dataObject['pi_amount_received'] - dataObject['pi_amount_refunded']),
+                        amount: amount,     //this value is changable
+                        maxAmount: amount,  //this value is static
                         'invoice_id': dataObject.id,
                     };
 
@@ -267,43 +272,73 @@
                     var e = dataObject.originalEvent;
                     e.preventDefault();
 
-                    new Notice({
-                        text: refundWidget.get('amount')
-                    });
+                    //validations
+                    var invoiceId = dataObject['invoice_id'];
+                    var address = refundWidget.get('address');
+                    var amount = refundWidget.get('amount');
+                    var maxAmount = dataObject.maxAmount;
+                    var balance = dataObject.balance;
 
-                    new Notice({
-                        text: refundWidget.get('address')
-                    });
+                    function _error(text, focus) {
+                        new Notice({
+                            text: text,
+                            callback: function() {
+                                if(focus) focus.focus();
+                            }
+                        });
+                    }
 
-                    new Notice({
-                        text: refundWidget.get('amount')
-                    });
-
-                    return;
+                    if(!address) {
+                        _error('환불 받을 주소를 입력해주세요.', refundWidget.select('address'));
+                        return false;
+                    }
+                    else if(!amount) {
+                        _error('환불 금액을 입력해주세요.', refundWidget.select('amount'));
+                        return false;
+                    }
+                    else if(!Validator.check('number', amount)) {
+                        _error('환불 금액은 숫자로 입력해주세요.', refundWidget.select('amount'));
+                        return false;
+                    }
+                    else if(Validator.greater(amount, maxAmount)) {
+                        _error('환불 금액은 ' + maxAmount + 'PI 를 초과할 수 없습니다.');
+                        return false;
+                    }
+                    else if(Validator.greater(amount, balance)) {
+                        _error('잔고가 부족합니다. 파이를 충전해주세요.');
+                        return false;
+                    }
 
                     Http.post({
-                        url: '',
+                        url: Client.createUrl('refund'),
                         data: {
-                            'invoice_id': refundWidget.get('amount'),
-                            address: refundWidget.get('address'),
-                            amount: refundWidget.get('amount'),
-                        }
+                            'invoice_id': invoiceId,
+                            address: address,
+                            amount: amount,
+                        },
+                        success: function(data) {
+                            refundWidget.hide();
+                        },
+                        error: function(text, status) {
+                            new Notice({
+                                text: [text, status].join(",")
+                            });
+                        },
+                        complete: function() { }
                     })
                 },
                 partial: function(d) {
-                    var partialCheck = $('#partial');
-                    var checked = partialCheck.attr('checked');
+                    var partialCheck = refundWidget.querySelect('#partial');
+                    var amountDom = refundWidget.select('amount');
+                    var checked = partialCheck.is(':checked');
 
                     if(checked) {
-                        
+                        amountDom.removeProp('readonly');
+                        amountDom.focus();
                     }
                     else {
-                        
+                        amountDom.prop('readonly', true);
                     }
-
-                    new Notice({
-                        text: 'Partial refunding'
-                    });
                 },
                 partialOn: function(d) {
                     var orig = d.originalEvent;
@@ -313,6 +348,11 @@
 
                     $('#partial').trigger('click');
                 }
+            });
+            //on show widget, uncheck partial refunding checkbox and set amount to readonly
+            refundWidget.event.on('show', function() {
+                refundWidget.querySelect('#partial').removeProp('checked');
+                refundWidget.select('amount').prop('readonly', true);
             });
         });
     </script>

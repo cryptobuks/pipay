@@ -141,6 +141,16 @@ $border-color: #dcdcdc;
 		> #pi_refund_fields {
 			> .pi-form-control {
 				margin-bottom: 12px;
+
+				> #amount {
+					width: 40%;
+					margin-right: 12px;
+
+					&[readonly] {
+						border-color: transparent !important;
+						background-color: #fcfafa !important;	
+					}
+				}
 			}
 		}
 

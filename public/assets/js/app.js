@@ -16,7 +16,7 @@ Architekt.event.on('ready', function() {
 	var generated = false;
 	var token = '';
 
-	function generateCode(type, lan, token) {
+	function generateCode(type, lan, token, orderId) {
 		lan = lan.toLowerCase();
 
 		var method = function() {};;
@@ -34,9 +34,9 @@ Architekt.event.on('ready', function() {
 		}
 
 		//update dom
-		method.apply(null, [].slice.call(arguments, 1));
+		method.apply(null, [].slice.call(arguments, 1));	//slice first element
 	}
-	function updateButton(lan, token) {
+	function updateButton(lan, token, orderId) {
 		if(typeof token === 'undefined' || token === "") return;
 
 		var buttonText = null;
@@ -50,13 +50,11 @@ Architekt.event.on('ready', function() {
 				break;
 		}
 
-		$('#pi_generated').val('<a href="#" class="pi-payment-button" data-token="' + token + '" data-lang="' + lan + '" data-btn="0" data-livemode="1"><img src="/image/pi-payment-logo.png" /><span>' + buttonText + '</span></a>');
+		$('#pi_generated').val('<a href="#" class="pi-payment-button" data-token="' + token + '" data-lang="' + lan + '" data-btn="0" data-livemode="1" data-order-id="' + orderId + '"><img src="/image/pi-payment-logo.png" /><span>' + buttonText + '</span></a>');
 	}
-	function updateLink(lan, token) {
+	function updateLink(lan, token, orderId) {
 		if(typeof token === 'undefined' || token === "") return;
-
-		var currentUrl = location.protocol + "//" + location.host;
-		$('#pi_generated').val(currentUrl + '/checkout/' + token + '?lang=' + lan + '&livemode=1');
+		$('#pi_generated').val(Architekt.module.Client.url + '/checkout/' + token + '?lang=' + lan + '&livemode=1&order_id=' + orderId);
 	}
 
 	//submit generate product
@@ -80,8 +78,7 @@ Architekt.event.on('ready', function() {
 			new Notice({
 				text: text,
 				callback: function() {
-					focus.focus();
-
+					if(focus) focus.focus();
 					if(reset) reset.val('');
 				}
 			});
@@ -142,7 +139,7 @@ Architekt.event.on('ready', function() {
 				token = cipher;
 
 				generated = true;
-				generateCode(window.generateType, 'ko', token);
+				generateCode(window.generateType, 'ko', token, orderId.val());
 
 				//scroll to bottom!
 				$("html, body").animate({ scrollTop: $(document).height() }, "slow");

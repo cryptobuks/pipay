@@ -109,6 +109,9 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		this.container = this.dom.find('.architekt-widget-container');
 		this.close = this.dom.find('.architekt-widget-close');
 		this.visible = typeof options.visible !== 'undefined' ? !!options.visible : false;
+
+		//events
+		this.event = new Architekt.EventEmitter([ 'show', 'hide', 'destroy' ]);
 		
 		//hide first
 		this.dom.hide();
@@ -159,11 +162,10 @@ Architekt.module.reserv('CustomWidget', function(options) {
 		this.dom.find('[data-architekt-key]').each(function() {
 			var key = $(this).attr('data-architekt-key');
 			self.attributes[key] = $(this);
-		});;
+		});
 
 		//formats
 		this.formats = options.formats || {};
-
 
 		if(this.visible) this.show();
 	}
@@ -188,6 +190,7 @@ Architekt.module.reserv('CustomWidget', function(options) {
 			self.container.addClass('on');
 		}, 25);
 
+		this.event.fire('show');
 		return this;
 	};
 	//Architekt.module.customWidget.hide(void): Hide widget
@@ -198,6 +201,7 @@ Architekt.module.reserv('CustomWidget', function(options) {
 			self.container.removeClass('on');
 		});
 		
+		this.event.fire('hide');
 		return this;
 	};
 	//Architekt.module.customWidget.destroy(void): Destroy widget. means no more Dom element.
@@ -206,6 +210,8 @@ Architekt.module.reserv('CustomWidget', function(options) {
 			this.dom.remove();
 			this.dom = null;
 		}
+
+		this.event.fire('destroy');
 		return this;
 	}
 	//Architekt.module.customWidget.setData(object dataObject): Set inner data
@@ -275,17 +281,31 @@ Architekt.module.reserv('CustomWidget', function(options) {
 
 		return this;
 	};
-	//Architekt.module.customWidgetget(string key): Get the text or form value inside of dom element
-	CustomWidget.prototype.get = function(key) {
+	//Architekt.module.customWidget.select(string key): Find the specified descendant element
+	CustomWidget.prototype.select = function(key) {
 		var t = this.attributes[key];
 
 		if(typeof t === 'undefined')
 			return false;
 
-		if(t.is('input') || t.is('textarea'))
-			return t.val();
+		return t;
+	};
+	//Architekt.module.customWidget.querySelect(string cssSelector):
+	CustomWidget.prototype.querySelect = function(cssSelector) {
+		return this.dom.find(cssSelector);
+	};
+	//Architekt.module.customWidget.get(string key): Get the text or form value inside of dom element
+	CustomWidget.prototype.get = function(key) {
+		var t = this.select(key);
+		
+		if(t) {
+			if(t.is('input') || t.is('textarea'))
+				return t.val();
+			else
+				return t.text();	
+		}
 		else
-			return t.text();
+			return false;
 	};
 
 	return CustomWidget;
@@ -627,6 +647,31 @@ Architekt.module.reserv('Formatter', function(options) {
 			
 			return resultNumber;
 		},
+	};
+});
+/****************************************************************************************************
+ *
+ *      Architekt.module.Client: Client resource provider
+ *
+ ****************************************************************************************************/
+
+Architekt.module.reserv('Client', function(options) {
+	return {
+		domain: document.URL,
+		host: location.host,
+		hostName: location.hostname,
+		href: location.href,
+		origin: location.origin,
+		path: location.path,
+		protocol: location.protocol,
+		url: (location.protocol + "//" + location.host),
+		createUrl: function(sub) {
+			var temp = [];
+			temp.push(this.url);
+			temp.push(sub);
+
+			return temp.join("/");
+		}
 	};
 });
 /****************************************************************************************************
@@ -978,13 +1023,14 @@ Architekt.module.reserv('Validator', function(options) {
 	var formular = {
 		email: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
 		url: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
-		number: /^\d+$/,
+		integer: /^\d+$/,
+		real: /^[+-]?\d+(\.\d+)?$/,
 		alphabet: /^[a-zA-Z]*$/,
 		alphanumeric: /^[a-z0-9]+$/i,
 	};
 
 	//equations
-	formular.numeric = formular.number;
+	formular.numeric = formular.number = formular.real;
 
 	return {
 		//Architekt.module.Validator.check(string type, string string): Validate string
@@ -1019,13 +1065,62 @@ Architekt.module.reserv('Validator', function(options) {
 			if(typeof string === 'undefined' || string === '' || string === null) return true;
 			return false;
 		},
-		//Architekt.module.Vaditor.checkIfNotEmpty(string type, string string): Check the string is validate if it is not empty. If it is empty, returns true.
+		//Architekt.module.Valditor.checkIfNotEmpty(string type, string string): Check the string is validate if it is not empty. If it is empty, returns true.
 		checkIfNotEmpty: function(type, string) {
 			if(!this.empty(string)) {
 				return this.check(type, string);
 			}
 
 			return true;
+		},
+		//Architekt.module.Validator.formular(int leftSide, int rightSide, function filter): Create formular
+		formular: function(leftSide, rightSide, filter) {
+			return filter(parseFloat(leftSide), parseFloat(rightSide));
+		},
+		//Architekt.module.Validator.equal(int leftSide, int rightSide): Check both sides are same
+		equal: function(leftSide, rightSide) {
+			return this.formular(leftSide, rightSide, function(a, b) {
+				if(a === b)
+					return true;
+
+				return false;
+			});
+		},
+		//Architekt.module.Validator.less(int leftSide, int rightSide): Compare that left side is less than right
+		less: function(leftSide, rightSide) {
+			return this.formular(leftSide, rightSide, function(a, b) {
+				if(a < b)
+					return true;
+
+				return false;
+			});
+		},
+		//Architekt.module.Validator.lessEqual(int leftSide, int rightSide): Compare that left side is less  than right or equal
+		lessEqual: function(leftSide, rightSide) {
+			return this.formular(leftSide, rightSide, function(a, b) {
+				if(a <= b)
+					return true;
+
+				return false;
+			});
+		},
+		//Architekt.module.Validator.greater(int leftSide, int rightSide): Compare that left side is greater than right
+		greater: function(leftSide, rightSide) {
+			return this.formular(leftSide, rightSide, function(a, b) {
+				if(a > b)
+					return true;
+
+				return false;
+			});
+		},
+		//Architekt.module.Validator.greaterEqual(int leftSide, int rightSide): Compare that left side is greater than right or equal
+		greaterEqual: function(leftSide, rightSide) {
+			return this.formular(leftSide, rightSide, function(a, b) {
+				if(a >= b)
+					return true;
+
+				return false;
+			});
 		},
 	};
 });

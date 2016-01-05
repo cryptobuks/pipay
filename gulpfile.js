@@ -43,6 +43,7 @@ elixir(function(mix) {
         'reserved/customWidget.js',
         'reserved/dataTable.js',
         'reserved/formatter.js',
+        'reserved/client.js',
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
