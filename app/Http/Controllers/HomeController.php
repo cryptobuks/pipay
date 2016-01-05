@@ -25,6 +25,7 @@ class HomeController extends Controller
         $this->middleware( 'auth' , [ 'only' => [ 'dashboard'  ] ] );   
 
     }    
+   
     /**
      * Display a index of the resource.
      *
@@ -39,6 +40,17 @@ class HomeController extends Controller
             return view('home');
         }
     }
+
+    /**
+     * Display a index of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function support()
+    {
+       return 'support';
+    }
+
 
     /**
      * Display a dashboard of the resource.

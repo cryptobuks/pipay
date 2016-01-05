@@ -14,6 +14,7 @@
 Route::get('/', ['as' => 'home.index', 'uses' => 'HomeController@index'] );
 Route::get('dashboard', ['as' => 'home.dashboard', 'uses' => 'HomeController@dashboard'] );   // 대쉬보드 페이지
 Route::get('agreement', ['as' => 'home.agreement', 'uses' => 'HomeController@agreement'] );  // 약관 페이지 
+Route::get('support', ['as' => 'home.support', 'uses' => 'HomeController@support'] );  // 약관 페이지 
 
 // login routes
 $router->get('user/login', ['as' => 'user.login', 'uses' => 'UserController@getLogin']);   // 로그인 뷰 
