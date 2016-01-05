@@ -26,6 +26,13 @@ Architekt.module.reserv('CustomWidget', function(options) {
 			});
 		}
 		
+		//method registration
+		for(var key in options) {
+			var val = options[key];
+			
+			if(options.hasOwnProperty(key) && typeof val === 'function') this[key] = val;
+		}
+
 		//custom events processing
 		for(var key in this.events) {
 			(function (key) {
@@ -41,9 +48,9 @@ Architekt.module.reserv('CustomWidget', function(options) {
 				try {
 					//try attach custom event each selector
 					self.dom.find(selector).on(eventType, function(e) {
-						if(typeof options[method] === 'function') {
+						if(typeof self[method] === 'function') {
 							self.data.originalEvent = e;
-							options[method].call(null, self.data);	//execute event handler with inner data(dataObject)
+							self[method].call(null, self.data);	//execute event handler with inner data(dataObject)
 						}
 					});
 				}
@@ -163,11 +170,28 @@ Architekt.module.reserv('CustomWidget', function(options) {
 				}
 					
 				//update dom!
-				self.attributes[key].text(data);
+				var _sa = self.attributes[key];
+
+				if(_sa.is('input') || _sa.is('textarea'))
+					_sa.val(data);
+				else
+					_sa.text(data);
 			})(key);
 		}
 
 		return this;
+	};
+	//Architekt.module.customWidgetget(string key): Get the text or form value inside of dom element
+	CustomWidget.prototype.get = function(key) {
+		var t = this.attributes[key];
+
+		if(typeof t === 'undefined')
+			return false;
+
+		if(t.is('input') || t.is('textarea'))
+			return t.val();
+		else
+			return t.text();
 	};
 
 	return CustomWidget;

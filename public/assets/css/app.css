@@ -1194,6 +1194,45 @@ select.pi-input {
   top: 50% !important;
 }
 
+/* refund */
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_top {
+  text-align: center;
+  padding: 24px;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_top > * {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_top > h1 {
+  color: #4c5356;
+  margin-right: 12px;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_top > p {
+  color: #de6f6f;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_info {
+  color: #8c9396;
+  font-size: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > #pi_refund_fields > .pi-form-control {
+  margin-bottom: 12px;
+}
+
+#pi_refund_widget > #pi_refund_widget_container > .pi-button-container > .architekt-widget-button {
+  margin: 0 12px;
+}
+
 /* receipt */
 
 #receipt_bg {

@@ -2,7 +2,7 @@
     <form action="" method="post" id="pi_refund_widget_container" class="architekt-widget-container">
         <div id="pi_refund_top">
             <h1>사용가능한 잔고</h1>
-            <p>50,000 KRW</p>
+            <p data-architekt-key="balance" data-architekt-format="currency" data-architekt-format-args="symbol:pi"></p>
         </div>
 
         <div id="pi_refund_info">
@@ -12,24 +12,24 @@
         <div id="pi_refund_fields">
             <!-- address for refunding -->
             <div class="pi-form-control">
-                <label for="category">환불 받을 주소</label>
-                <input type="text" id="" class="pi-input" name="" value="" >
+                <label for="address">환불 받을 주소</label>
+                <input type="text" id="" class="pi-input" name="address" value="" >
             </div>
             <!-- refunding amount -->
             <div class="pi-form-control">
-                <label for="category">환불 금액</label>
-                <input type="text" id="" class="pi-input" name="" value="" >
+                <label for="amount">환불 금액</label>
+                <input data-architekt-key="amount" type="text" id="" class="pi-input" name="amount" value="" >
 
                 <div class="pi-checkbox">
-                    <input type="checkbox" name="" />
-                    <label for="">분할환불</label>
+                    <input type="checkbox" id="partial" name="" />
+                    <label for="partial">분할환불</label>
                 </div>
             </div>
         </div>
 
         <div class="pi-button-container pi-button-centralize">
-            <input class="pi-button architekt-widget-close" type="button" value="취소" />
-            <input class="pi-button pi-theme-confirm" type="submit" value="확인" />
+            <input class="architekt-widget-button architekt-widget-close" type="button" value="취소" />
+            <input class="architekt-widget-button architekt-theme-confirm" type="submit" value="확인" />
         </div>
     </div>
 </div>

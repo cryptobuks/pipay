@@ -105,6 +105,54 @@ $border-color: #dcdcdc;
 }
 
 
+/* refund */
+#pi_refund_widget {
+	> #pi_refund_widget_container {
+		//top
+		> #pi_refund_top {
+			text-align: center;
+			padding: 24px;
+
+			> * {
+				display: inline-block;
+				vertical-align: middle;
+				font-size: 20px;
+				font-weight: bold;
+			}
+			> h1 {
+				color: #4c5356;
+				margin-right: 12px;
+			}
+			> p {
+				color: #de6f6f;
+			}
+		}
+
+		//info
+		> #pi_refund_info {
+			color: #8c9396;
+			font-size: 12px;
+			padding-bottom: 16px;
+			margin-bottom: 16px;
+			border-bottom: 1px solid #dcdcdc;
+		}
+
+		//form field
+		> #pi_refund_fields {
+			> .pi-form-control {
+				margin-bottom: 12px;
+			}
+		}
+
+		//buttons
+		> .pi-button-container {
+			> .architekt-widget-button {
+				margin: 0 12px;
+			}
+		}
+	}
+}
+
 
 /* receipt */
 #receipt_bg {

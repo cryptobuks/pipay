@@ -54,7 +54,9 @@ Architekt.event.on('ready', function() {
 	}
 	function updateLink(lan, token) {
 		if(typeof token === 'undefined' || token === "") return;
-		$('#pi_generated').val('https://pay.pi-pay.net/checkout/' + token + '?lang=' + lan + '&livemode=0');
+
+		var currentUrl = location.protocol + "//" + location.host;
+		$('#pi_generated').val(currentUrl + '/checkout/' + token + '?lang=' + lan + '&livemode=1');
 	}
 
 	//submit generate product
@@ -131,7 +133,7 @@ Architekt.event.on('ready', function() {
 				'order_id': orderId.val(),
 				amount: amount.val(),
 				email: email.val(),
-				url: redirectUrl.val(),
+				redirect: redirectUrl.val(),
 				ipn: ipn.val(),
 			},
 			success: function(data) {

@@ -229,7 +229,13 @@
                     var e = dataObject.originalEvent;
                     e.preventDefault();
 
-                    refundWidget.show({
+                    var refundData = {
+                        balance: dataObject.balance,
+                        amount: (dataObject['pi_amount_received'] - dataObject['pi_amount_refunded']),
+                        'invoice_id': dataObject.id,
+                    };
+
+                    refundWidget.setData(refundData).render().show({
                         verticalCenter: false
                     });
                 },
@@ -247,16 +253,65 @@
                 dom: $('#pi_refund_widget'),
                 events: {
                     'form submit': 'submit',
+                    '#partial click': 'partial',
+                    'label[for="partial"] click': 'partialOn',
+                },
+                formats: {
+                    //print to curreny format
+                    currency: function(data, args) {
+                        var symbol = args.symbol || 'KRW';
+                        return Formatter.currency(data, { symbol: symbol.toUpperCase(), drop: 1 });
+                    },
                 },
                 submit: function(dataObject) {
                     var e = dataObject.originalEvent;
                     e.preventDefault();
 
                     new Notice({
-                        text: 'Submit!',
+                        text: refundWidget.get('amount')
                     });
 
-                    refundWidget.hide();
+                    new Notice({
+                        text: refundWidget.get('address')
+                    });
+
+                    new Notice({
+                        text: refundWidget.get('amount')
+                    });
+
+                    return;
+
+                    Http.post({
+                        url: '',
+                        data: {
+                            'invoice_id': refundWidget.get('amount'),
+                            address: refundWidget.get('address'),
+                            amount: refundWidget.get('amount'),
+                        }
+                    })
+                },
+                partial: function(d) {
+                    var partialCheck = $('#partial');
+                    var checked = partialCheck.attr('checked');
+
+                    if(checked) {
+                        
+                    }
+                    else {
+                        
+                    }
+
+                    new Notice({
+                        text: 'Partial refunding'
+                    });
+                },
+                partialOn: function(d) {
+                    var orig = d.originalEvent;
+                    orig.preventDefault();
+                    orig.stopPropagation();
+                    orig.stopImmediatePropagation();
+
+                    $('#partial').trigger('click');
                 }
             });
         });
