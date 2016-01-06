@@ -5,6 +5,7 @@
         //Payment list control
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;
+            var Printer = Architekt.module.Printer;
             var Http = Architekt.module.Http;
             var CustomWidget = Architekt.module.CustomWidget;
             var Validator = Architekt.module.Validator;
@@ -287,7 +288,7 @@
                             }
                         });
                     }
-
+                    
                     if(!address) {
                         _error('환불 받을 주소를 입력해주세요.', refundWidget.select('address'));
                         return false;
@@ -309,6 +310,7 @@
                         return false;
                     }
 
+
                     Http.post({
                         url: Client.createUrl('refund'),
                         data: {
@@ -319,13 +321,15 @@
                         success: function(data) {
                             refundWidget.hide();
                         },
-                        error: function(text, status) {
+                        error: function(error) {
                             new Notice({
-                                text: [text, status].join(",")
+                                text: '오류가 발생하였습니다. 관리자에게 문의해주세요.',
                             });
-                        },
-                        complete: function() { }
-                    })
+
+                            //log
+                            Printer.inspect(error);
+                        }
+                    });
                 },
                 partial: function(d) {
                     var partialCheck = refundWidget.querySelect('#partial');

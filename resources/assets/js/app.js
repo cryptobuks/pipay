@@ -11,6 +11,22 @@ Architekt.event.on('ready', function() {
 	});
 
 
+
+	/* Main */
+	var body = $('body');
+    var howThisWorkLayer = $('#howThisWorkLayer');
+
+    $('#howThisWork').click(function() {
+        body.addClass('pi-modal');          //hide scrollbar
+        $('#howThisWorkLayer').fadeIn();
+    });
+
+    $('#howThisWorkLayer').click(function() {
+        body.removeClass('pi-modal');
+        $('#howThisWorkLayer').fadeOut();
+    });
+
+
 	/* Create product */
 	var _isSubmittingCreateProduct = false;
 	var generated = false;
