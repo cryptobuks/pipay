@@ -47,17 +47,21 @@ class RefundController extends Controller
     {
         $input = $request->all();
         $user = $this->sentry->getUser();
-
-        $input['user_id'] = $user->id;
-        $input['pi_amount'] = $input['amount'];
-        $input['amount'] = $input['pi_amount'] * 10000;
-        $input['currency'] = 'PI';
+       
+        $refund_data = [
+                    'user_id' => $user->id,
+                    'invoice_id' => $input['invoice_id'], 
+                    'address' => $input['address'],
+                    'pi_amount' =>  $input['amount'], 
+                    'amount' =>  $input['amount'] * 10000 , 
+                    'currency' => 'PI' , 
+                ];
 
         DB::beginTransaction();
 
         try {
             
-            Refund::create($input);
+            Refund::create($refund_data);
             $result = 'success';
 
             DB::commit();

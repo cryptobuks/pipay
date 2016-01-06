@@ -20,7 +20,7 @@ class Refund extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'user_id' , 'payment_id' , 'amount' , 'pi_amount' , 'currency' , 'reason' ,
+		'user_id' , 'invoice_id', 'address', 'payment_id' , 'amount' , 'pi_amount' , 'currency' , 'reason' , 
 	];
    
     
