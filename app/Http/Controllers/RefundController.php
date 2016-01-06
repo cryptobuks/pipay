@@ -51,9 +51,23 @@ class RefundController extends Controller
         $input['amount'] = $input['pi_amount'] * 10000;
         $input['currency'] = 'PI';
 
-        $refund = Refund::create($input);
+        DB::beginTransaction();
 
-        return redirect( 'payments' );
+        try {
+            
+            Refund::create($input);
+            $result = 'success';
+
+            DB::commit();
+
+        }  catch (Exception $e) {
+
+            DB::rollback();
+            $result ='error';
+
+        }   
+
+        return Response::json( ['status' => $result ] , 200 );
     }
 
 }
