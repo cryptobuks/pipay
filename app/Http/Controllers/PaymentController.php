@@ -78,7 +78,7 @@ class PaymentController extends Controller
         $user = $this->sentry->getUser();
         $user_id  = $user->id;
 
-        $invoice = Invoice::select('id','amount','pi_amount','pi_amount_received','pi_amount_refunded','customer_email','customer_name','customer_custom','status','currency','created_at','completed_at')->find( $id )->toJson();
+        $invoice = Invoice::select('id', 'token' ,'amount','pi_amount','pi_amount_received','pi_amount_refunded','customer_email','customer_name','customer_custom','status','currency','created_at','completed_at')->find( $id )->toJson();
         $accounts = Oaccount::where('user_id', '=', $user_id)->get();
 
         foreach ( $accounts as $account) {
