@@ -74,7 +74,7 @@ class HomeController extends Controller
         $jsonTable_monthInvoice = $this->createJsonTable($month_totalInvoice);
 
         // 전날 총 매출
-        $day_totalInvoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
+        $day_Invoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
                                 DB::raw('SUM(IF(currency = "KRW", amount_received, 0)) as KRW_amount'), 
                                 DB::raw('SUM(IF(currency = "Pi", pi_amount_received,0)) as PI_amount'),
                                 DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
@@ -84,12 +84,18 @@ class HomeController extends Controller
                 ->groupBy('date')
                 ->having('date', '=' , DB::raw('CURDATE()  - INTERVAL 1 DAY'))->first();
 
-        if( is_null( $day_totalInvoice ) ) {
+        if( is_null( $day_Invoice ) ) {
             $day_totalInvoice = (object) array(
                 'KRW_amount' => '0',
                 'PI_amount' => '0',
                 'total' => '0'
             );
+        } else {
+             $day_totalInvoice = (object) array(
+                    'KRW_amount' => amount_format( $day_Invoice->KRW_amount ),
+                    'PI_amount' => amount_format( $day_Invoice->PI_amount ),
+                    'total' => amount_format( $day_Invoice->total ),
+                );
         }
 
         return view('dashboard', compact('jsonTable_monthInvoice','day_totalInvoice'));
