@@ -103,6 +103,7 @@ class Transfers extends Command
             DB::beginTransaction();
             try {
 
+                // 
                 Invoice::where( 'user_id' , $user->id )->where( 'status' , 'confirmed' )->update( [ 'status' => 'settlement_complete' ] );
 
                 // 전송 데이터 
