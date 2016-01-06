@@ -1,4 +1,47 @@
-#chart_div_monthInvoice {
+#pi_dashboard {
+	padding: 32px 0;
+}
+
+#pi-summary {
 	width: 100%;
-	margin: 64px 0;
+	background-color: #f4f5f5;
+	padding: 32px;
+	text-align: center;
+	overflow: hidden;
+	@include createBorderRadius(10px);
+
+	> div {
+		float: left;
+		width: 33.3%;
+		text-align: center;
+
+		> h1 {
+			color: #5c6466;
+			font-size: 24px;
+			font-weight: bold;
+
+			> span {
+				&.krw {
+					color: #dc6262;	
+				}
+				&.pi {
+					color: #0c69b8;
+				}
+				
+				font-size: 24px;
+				font-weight: bold;
+			}
+		}
+		> p {
+			color: #949da0;
+			font-size: 14px;
+			margin-top: 8px;
+		}
+	}
+}
+
+#chart_div_monthInvoice {
+	clear: both;
+	width: 100%;
+	margin-top: 32px;
 }

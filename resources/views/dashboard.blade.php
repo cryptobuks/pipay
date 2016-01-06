@@ -31,23 +31,19 @@
     <div id="pi_dashboard">
         <div class="pi-container">
             <div class="" id="pi-summary">
-                <?php
-                    $testObj = (object) ['hello' => 'world'];
-                ?>
-                <h1>{{ $testObj->hello }}</h1>
                 <!-- KRW -->
                 <div>
-                    <h1>{{ $day_totalInvoice->KRW_amount }} <span>KRW</span></h1>
+                    <h1>{{ $day_totalInvoice->KRW_amount }} <span class="krw">KRW</span></h1>
                     <p>KRW 매출</p>
                 </div>
                 <!-- PI -->
                 <div>
-                    <h1>{{ $day_totalInvoice->PI_amount }} <span>PI</span></h1>
+                    <h1>{{ $day_totalInvoice->PI_amount }} <span class="pi">PI</span></h1>
                     <p>PI 매출</p>
                 </div>
                 <!-- TOTAL -->
                 <div>
-                    <h1>{{ $day_totalInvoice->total }} <span>KRW</span></h1>
+                    <h1>{{ $day_totalInvoice->total }} <span class="krw">KRW</span></h1>
                     <p>총 매출(KRW)</p>
                 </div>
             </div>
