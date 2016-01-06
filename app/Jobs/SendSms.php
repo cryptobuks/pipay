@@ -2,7 +2,7 @@
 
 use App\Jobs\Job;
 use Illuminate\Support\Facades\Config;
-
+use Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -15,10 +15,9 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 	public $conf	= array('host' => 'daemon.smstong.co.kr', 'port' => '8888');
 	public $sock	= NULL;
 	public $packet	= NULL;
-	protected $from ;
+	public $from ;
 	public $to ;
-	protected $msg ;	
-
+	public $msg ;	
 
 	/**
 	 * Create a new command instance.
@@ -43,9 +42,12 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 	{
 		$result = $this->sendsms_smstong();
 		if( $result == 1){
-			echo ( "Sms send to {$this->to} for succefully \n");
+			Log::info("Sms send to {$this->to} for succefully ");
+
 			$this->delete();
 		} else {
+			Log::error("Sendsms error : {$result}");			
+
 			if($this->attempts() > 3) {
 				$this->delete();
 			} else {
@@ -67,7 +69,7 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 		$PACKETDATA['msg'	]	= $this->msg;
 		$PACKETDATA['to'	]   = str_replace('-', '', $this->to);//-기호없이 전화번호만 , 1명이상일때 ^ (예)01000001111^01012340004^01012111111
 		$PACKETDATA['from']	= str_replace('-', '', $this->from);//-기호없이 전화번호만 
-		$PACKETDATA['indexkey']	= ''; 
+		$PACKETDATA['indexkey']	= '1'; 
 		$PACKETDATA['send_type']	= '1'; //기본값1 SMS, 2일때 LMS NULL인정
 
 
@@ -78,10 +80,11 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 			$FILEPACKET['filetype'] = $_FILES['userfile']['type'];
 		}
 
-
 		# socket connect and sending packet data
 		if ($this->socketOpen())
 		{
+
+
 			if($PACKETDATA['send_type'] == "3") $this->getMultiPaket($PACKETDATA,$FILEPACKET);
 			else $this->getPaket($PACKETDATA);
 
@@ -95,6 +98,8 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 			//echo "</PRE>";
 
 	  		return $RESINFO['RESULT']; // 1: 성공, 2: 로그인오류, 3: 포인트부족
+		} else {
+			return 0;
 		}
 	}
 
