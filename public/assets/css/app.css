@@ -942,6 +942,11 @@ select.pi-input {
   font-size: 18px;
 }
 
+#chart_div_monthInvoice {
+  width: 100%;
+  margin: 64px 0;
+}
+
 #pi_product,
 #pi_product_create {
   padding: 32px 0;
@@ -1175,6 +1180,10 @@ select.pi-input {
 
 #pi_product_widget > #pi_product_widget_container > table > tbody > tr > #pi_product_info div > p {
   margin: 4px;
+}
+
+#pi_product_widget > #pi_product_widget_container > table > tbody > tr > #pi_product_info div > p > span {
+  font-size: 12px;
 }
 
 #pi_product_widget > #pi_product_widget_container > table > tbody > tr > #pi_product_info > a {

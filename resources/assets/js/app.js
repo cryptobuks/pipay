@@ -70,7 +70,7 @@ Architekt.event.on('ready', function() {
 	}
 	function updateLink(lan, token, orderId) {
 		if(typeof token === 'undefined' || token === "") return;
-		$('#pi_generated').val(Architekt.module.Client.url + '/checkout/' + token + '?lang=' + lan + '&livemode=1&order_id=' + orderId);
+		$('#pi_generated').val(Architekt.module.Client.createUrl('/checkout/' + token + '?lang=' + lan + '&livemode=1&order_id=' + orderId));
 	}
 
 	//submit generate product
