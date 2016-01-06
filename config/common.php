@@ -89,13 +89,12 @@ return [
 	] , 
 
 	'pay_user' => [
-		'base_uri' => 'http://dev.pi-pay.net' ,
-		'username' => '파이페이' ,	
-		'email' => 'pay@pi-works.net' ,		
-		'password' => '123456' ,	
-		'client_id' => '2' ,
-		'client_secret' => '5678' , 
+		'base_uri' => env('APP_URL', 'https://pay.pi-pay.net' ), 
+		'username' => env('PAY_USERNAME' , '파이페이' ) ,
+		'email' => env( 'PAY_EMAIL' , 'pay@pi-works.net' ) ,		
+		'password' => env( 'PAY_PASSWORD' , '123456' ) ,	
+		'client_id' => env( 'PAY_CLIENT_ID' , '2' ) ,
+		'client_secret' => env( 'PAY_CLIENT_SECRET' , '5678' ) , 
 	] , 
-
 
 ];
