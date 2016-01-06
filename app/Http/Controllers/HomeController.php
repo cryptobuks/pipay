@@ -85,9 +85,11 @@ class HomeController extends Controller
                 ->having('date', '=' , DB::raw('CURDATE()  - INTERVAL 1 DAY'))->first();
 
         if( is_null( $day_totalInvoice ) ) {
-            $day_totalInvoice['KRW_amount'] = '0';
-            $day_totalInvoice['PI_amount'] = '0';
-            $day_totalInvoice['total'] = '0';
+            $day_totalInvoice = (object) array(
+                    'KRW_amount' => '0',
+                    'PI_amount' => '0',
+                    'total' => '0'
+                );
         }
 
         return view('dashboard', compact('jsonTable_monthInvoice','day_totalInvoice'));
