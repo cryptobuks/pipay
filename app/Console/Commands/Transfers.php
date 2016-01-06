@@ -107,7 +107,7 @@ class Transfers extends Command
 
                 // 전송 데이터 
                 $transfer_data = [
-                    'token' => $user->id . '_' . mt_rand();
+                    'token' => $user->id . '_' . mt_rand(),
                     'user_id' => $user->id , 
                     'account_id' => $account->id , 
                     'status' => 'pending' , 
