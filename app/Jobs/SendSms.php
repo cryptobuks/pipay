@@ -94,7 +94,7 @@ class SendSms extends Job implements SelfHandling, ShouldQueue  {
 
 			##result receive
 			//echo "<PRE>";
-			//print_R($RESINFO);
+//			Log::info( $this->packet . "_" . json_encode( $RESINFO ) );
 			//echo "</PRE>";
 
 	  		return $RESINFO['RESULT']; // 1: 성공, 2: 로그인오류, 3: 포인트부족

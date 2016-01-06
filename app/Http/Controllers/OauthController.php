@@ -108,13 +108,13 @@ class OauthController extends Controller
         try {
             $id = Crypt::decrypt( $input['cipher_id'] );
         } catch ( DecryptException $e) {
-            return 'Server encryption error!';
+             Response::json( [ 'status' => 'server_decryption' ] ) ;
         }
 
         $user = Ouser::find( $id );
         $account = Oaccount::whereUserId( $user->id )->whereCurrencyId( CURRENCY_COIN )->first();
 
-        $result = 'fail' ;
+        $result = 'failed' ;
         DB::beginTransaction();
         try {
 
