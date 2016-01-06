@@ -14,6 +14,7 @@ use App\Ouser;
 use App\Account;
 use App\Payment;
 use App\Transaction;
+use App\ExchangeAPI;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
@@ -34,16 +35,18 @@ class InvoiceController extends Controller
 {
 
     protected $sentry;
+    protected $exchange_api;
     
     /**
      * Create a new checkout controller instance.
      *
      * @return void
      */
-    public function __construct( Sentry $sentry)
+    public function __construct( Sentry $sentry , ExchangeAPI $exchange_api )
     {
 
         $this->sentry = $sentry;
+        $this->exchange_api = $exchange_api;
         $this->middleware( 'guest'  );
 
     }
@@ -64,78 +67,21 @@ class InvoiceController extends Controller
         }
     }
 
-    /**
-     * [getAccessToken API 액세스 토큰을 받아온다.]
-     * @return [type] [description]
+   /**
+     * Display a index of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function getAccessToken( ) {
+    public function test( Request $request  , $token )
+    {
+        $invoice = Invoice::where( 'token' , $token )->where( 'status' , 'new' )->first();
 
-        $pay_user = Config::get('common.pay_user');   
-        $api_token = Redis::get('pay_api_token');
-
-        if( !empty( $api_token ) ) return  json_decode( $api_token ) ;
-
-        // 조건이 맞으면 거래소 출금 API 호출
-        try {
-            $client = new \GuzzleHttp\Client( [ 'base_uri' =>  $pay_user['base_uri']  ] );
-
-            $res = $client->request( 'POST' , '/oauth/access_token' , [
-                'form_params' => [
-                    'grant_type' => 'password' , 
-                    'client_id' => $pay_user['client_id'] , 
-                    'client_secret' => $pay_user['client_secret'] ,                                 
-                    'username' => $pay_user['email'] ,                 
-                    'password' => $pay_user['password']                               
-                ]
-             ]);
-
-         $api_token =  $res->getBody() ;
-
-         Redis::set( 'pay_api_token', $api_token );
-         Redis::expire( 'pay_api_token' , 10 );
-
-        } catch ( RequestException $e) {
-            return [ 'status' => 'api_unauthorized' ];            
-        } catch (ClientException $e) {
-            return  [ 'status' => 'http_client_error' ];
+        if( $invoice ) {
+            return view('invoice.test' , compact ( 'invoice' , 'token') );
+        } else {
+            return "Payment has already ended or Invalid token.";
         }
-
-        return json_decode( $api_token , true ) ;
-    }
-
-    private function transfer( $access_token , Invoice $invoice , Ouser $user ) {
-        
-        $pay_user = Config::get('common.pay_user');   
-
-        // 조건이 맞으면 거래소 출금 API 호출
-        try {
-
-            $client = new \GuzzleHttp\Client( [ 'base_uri' =>  $pay_user['base_uri']  ] );
-
-            $res = $client->request( 'POST' , '/api/v2/funds/coins/transfer' , [
-                'headers' => [
-                    'User-Agent' => 'PI-Payment/0.1' ,
-                    'Authorization' => 'Bearer ' . $access_token , 
-                ] ,
-                'form_params' => [
-                    'from_address' => $user->email , 
-                    'to_address' => $pay_user['email'] , 
-                    'amount' => $invoice->pi_amount ,                                 
-                    'currency' => 'PI' ,                 
-                ] ,
-             ]);
-
-            $result =  $res->getBody() ;
-
-        } catch ( RequestException $e) {
-            return [ 'status' => 'unauthorized' ]  ;            
-        } catch (ClientException $e) {
-            return  [ 'status' => 'http_client_error' ]  ;            
-        }
-
-        return json_decode( $result  , true ) ;
-
-    }
+    }    
 
     /**
      * [payment 결제 처리 ]
@@ -182,10 +128,10 @@ class InvoiceController extends Controller
         }
 
         // API 접속 토큰 생성 
-        $api_token = $this->getAccessToken();
+        $api_token = $this->exchange_api->getAccessToken();
 
         // 결제 송금  API 호출 
-        $transfer = $this->transfer( $api_token['access_token'] , $invoice , $user );
+        $transfer = $this->exchange_api->pay_transfer( $api_token['access_token'] , [ 'user_email' => $user->email , 'pi_amount' => $invoice->pi_amount ]  );
 
         if( $transfer['status'] != 'success' ) {
             return Response::json (   [ 'status' => $transfer['status'] ]  , 500 );

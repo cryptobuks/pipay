@@ -51,13 +51,14 @@ class CheckoutController extends Controller
      */
     public function index( Request $request  , $token )
     {
-        $input = $request->only( 'lang' , 'livemode' , 'reference' , 'order_id' );
+        $input = $request->only( 'lang' , 'livemode' , 'reference' , 'order_id' , 'test' );
 
         $validator = Validator::make( $input  , [
                 'lang' => 'alpha|max:2' , 
                 'livemode' => 'boolean',
                 'reference' => 'alpha_dash|max:255',                
                 'order_id' => 'alpha_dash|max:255',                                
+                'test' => 'boolean',                
         ]);
 
         if( $validator->fails() ) 
@@ -149,7 +150,11 @@ class CheckoutController extends Controller
                 return Response::json ( api_error_handler(  'save_failure' , '' ) , 501 );
         }
 
-        return redirect( $invoice->url  ); 
+        if( $input['test'] == '1') {
+            return redirect( url( 'invoice/test/' . $invoice_token )  );                         
+        }else{
+            return redirect( $invoice->url  ); 
+        }
 
     }
 

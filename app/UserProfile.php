@@ -20,7 +20,7 @@ class UserProfile extends Model
 	 * @var array
 	 */
 	protected $fillable = [ 
-		'id' , 'email', 'username' , 'cellphone' , 'level' , 'category', 'shop_type', 'company', 'website' , 'phone' , 'logo' , 'agreement' ,
+		'id' , 'email', 'username' , 'cellphone' , 'level' , 'category', 'shop_type', 'company', 'website' , 'phone' , 'logo' , 'agreement' , 'settlement_currency' ,
 	];
 
 }

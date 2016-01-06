@@ -16,6 +16,12 @@ return array(
 	    'exchange' => 'https://pay.pi-pay.net/api/v1/',
 	    'instant_name' => 'pipayment_instant',	
 	    'rate'  => 10000 ,
+	    'feerate' => 0 , 	    
 	),
+
+	'krw' => [
+	    'rate'  => 0.0001 ,	
+	    'feerate' => 0.01 , 
+	],
 
 );

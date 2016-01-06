@@ -54,6 +54,7 @@ $router->get('checkout/{token}', ['as' => 'checkout.index', 'uses' => 'CheckoutC
 
 // 결제 페이지 실행 
 $router->get('invoice/{token}', ['as' => 'invoice.index', 'uses' => 'InvoiceController@index']);
+$router->get('invoice/test/{token}', ['as' => 'invoice.index', 'uses' => 'InvoiceController@test']);
 $router->post('invoice/payment', ['as' => 'invoice.payment', 'uses' => 'InvoiceController@payment']);
 
 // API
