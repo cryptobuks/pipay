@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Redis;
-
+use Log;
 
 class ExchangeAPI extends Model
 {
@@ -48,6 +48,7 @@ class ExchangeAPI extends Model
          Redis::expire( 'pay_api_token' , 10 );
 
         } catch ( RequestException $e) {
+            Log::info( json_encode( $e->getMessage() )) ;
             return [ 'status' => 'api_unauthorized' ];            
         } catch (ClientException $e) {
             return  [ 'status' => 'http_client_error' ];

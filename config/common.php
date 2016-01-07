@@ -89,7 +89,7 @@ return [
 	] , 
 
 	'pay_user' => [
-		'base_uri' => env('APP_URL', 'https://pay.pi-pay.net' ), 
+		'base_uri' => env('PI_EXCHANGE_URL', 'https://pay.pi-pay.net' ), 
 		'username' => env('PAY_USERNAME' , '파이페이' ) ,
 		'email' => env( 'PAY_EMAIL' , 'pay@pi-works.net' ) ,		
 		'password' => env( 'PAY_PASSWORD' , '123456' ) ,	
