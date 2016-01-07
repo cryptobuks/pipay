@@ -66,7 +66,7 @@ class HomeController extends Controller
         $month_totalInvoice = Invoice::select(DB::raw('left(created_at, 10) AS date'), 
                                 DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
                                 )
-                ->where('status', '=' ,'confirmed')
+                ->wherein('status',['confirmed','settlement_complete'])
                 ->where('user_id', '=', $user_id)
                 ->groupBy('date')
                 ->having('date', '>=' , DB::raw('left(NOW() - INTERVAL 1 MONTH ,10)'))
@@ -79,7 +79,7 @@ class HomeController extends Controller
                                 DB::raw('SUM(IF(currency = "Pi", pi_amount_received,0)) as PI_amount'),
                                 DB::raw('SUM(IF(currency = "KRW",amount_received,0) + IF(currency = "Pi",pi_amount_received * rate, 0)) as total')
                                 )
-                ->where('status', '=' ,'confirmed')
+                ->wherein('status',['confirmed','settlement_complete'])
                 ->where('user_id', '=', $user_id)
                 ->groupBy('date')
                 ->having('date', '=' , DB::raw('CURDATE()  - INTERVAL 1 DAY'))->first();
