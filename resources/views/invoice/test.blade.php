@@ -182,17 +182,22 @@
 
 		});
 
+		// 소켓 생성
 		var payment_sock = io('{{ "http://devpay.pi-pay.net" }}:8800' );
+
+		// 파이주소에  실제 파이가  들어옴 (이 단계에서 결제 완료 화면으로 이동=실사용 )
 		payment_sock.on('invoice-channel.{{ $invoice->id }}:invoice.payment-start', function(message){
+		   console.log( JSON.stringify( message ) );			
+
 		   if( message.id ) {
 			   $('#pi_address').css('display' , 'none');
 			   $('#pi_address_end').css('display' , '');
 		   }
-//		    alert( JSON.stringify( message ) );
 		});
 
+		// 받은 파이가 3컨펌을 이상 지나서 결제가 완료됨  (실제 결제 완료 표시가 뜸=이페이지에서는 사용않함 )
 		payment_sock.on('invoice-channel.{{ $invoice->id }}:invoice.payment-finish', function(message){
-//		    alert( JSON.stringify( message ) );
+		    console.log( JSON.stringify( message ) );
 		});
 
 
