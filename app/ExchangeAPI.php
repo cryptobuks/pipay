@@ -26,7 +26,7 @@ class ExchangeAPI extends Model
         $pay_user = Config::get('common.pay_user');   
         $api_token = Redis::get('pay_api_token');
 
-        if( !empty( $api_token ) ) return  json_decode( $api_token ) ;
+        if( !empty( $api_token ) ) return  json_decode( $api_token  , true ) ;
 
         // 조건이 맞으면 거래소 출금 API 호출
         try {
@@ -107,11 +107,7 @@ class ExchangeAPI extends Model
         
         $pay_user = Config::get('common.pay_user');   
 
-        if( $data['currency'] == 'PI' ) {
-        	$url_path = '/api/v2/funds/coins/transfer';
-        } else {
-        	$url_path = '/api/v2/funds/fiats/transfer';
-        }
+        $url_path = '/api/v2/funds/deposit';
 
         try {
 
@@ -123,8 +119,7 @@ class ExchangeAPI extends Model
                     'Authorization' => 'Bearer ' . $access_token , 
                 ] ,
                 'form_params' => [
-                    'from_address' => $data['from_email'] , 
-                    'to_address' => $data['to_email'] , 
+                    'address' => $data['to_email'] , 
                     'amount' => $data['amount']  ,                                 
                     'currency' => $data['currency'] ,                 
                 ] ,

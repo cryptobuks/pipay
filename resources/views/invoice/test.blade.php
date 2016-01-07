@@ -17,6 +17,7 @@
 			@endif 
 			$('#pi_sms_auth').css('display' , 'none');
 			$('#pi_address').css('display' , 'none');
+			$('#pi_address_end').css('display' , 'none');									
 		});
 
 		// 메뉴 주소 버튼 
@@ -25,6 +26,7 @@
 			$('#pi_sms_auth').css('display' , 'none');									
 			$('#pi_payment').css('display' , 'none');
 			$('#pi_address').css('display' , '');			
+			$('#pi_address_end').css('display' , 'none');						
 		});
 
 
@@ -180,9 +182,23 @@
 
 		});
 
+		var payment_sock = io('{{ "http://devpay.pi-pay.net" }}:8800' );
+		payment_sock.on('invoice-channel.{{ $invoice->id }}:invoice.payment-start', function(message){
+		   if( message.id ) {
+			   $('#pi_address').css('display' , 'none');
+			   $('#pi_address_end').css('display' , '');
+		   }
+//		    alert( JSON.stringify( message ) );
+		});
+
+		payment_sock.on('invoice-channel.{{ $invoice->id }}:invoice.payment-finish', function(message){
+//		    alert( JSON.stringify( message ) );
+		});
 
 
 	});
+
+
     </script>
 
     <div id="pi_top_space"></div>
@@ -288,6 +304,18 @@
 			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
 		</div>
 	</div>
+
+	<div id="pi_address_end" style="display:none">
+		<div class="pi-container">
+			<h1>파이 주소</h1>
+			성공적으로 파이를 받았습니다.<br />
+			결제를 해주셔서 감사합니다.<br />
+			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
+
+			<div class="pi-button-container pi-button-centralize"><a href="/receipt/{{ $token }}" target="_BLANK">영수증 보기</a> </div>			
+		</div>
+	</div>
+
 	<br />
 	<div class="pi-container">	
 		Support | Powered By PiPay

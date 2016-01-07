@@ -12,6 +12,7 @@ use App\Payment;
 use App\Transfer;
 use App\Fee;
 use App\ExchangeAPI;
+use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +29,7 @@ class Transfers extends Command
      *
      * @var string
      */
-    protected $signature = 'payment:Transfers';
+    protected $signature = 'payment:transfers';
 
     /**
      * The console command description.
@@ -51,35 +52,35 @@ class Transfers extends Command
     }
 
     /**
-     * Execute the console command.
+     * 결제 완료된 내역을 일정 주기마다 정산 처리를 하고 송금해 주는 프로그램
      *
      * @return mixed
      */
     public function handle()
     {
 
+        // 기본 설정 가져옴 
         $coin_config = Config::get('coin');   
+        $pay_user = Config::get('common.pay_user');   
 
-        // 이전날의 결제 완료된 결제 요구 테이블을 통계를 내서 구한다
+        // 현재까지 결제 완료된 상태의 데이터를 통계를 내서 정산 가능한 판매자를 구한다
         $invoice_users = DB::table('invoices')
             ->select('user_id' , DB::raw(' SUM(amount_received) as total_revenue' ) 
                 , DB::raw(' SUM(pi_amount_received) as pi_total_revenue' ) , DB::raw(' count(amount_received) as total_count' ) )
-            ->where('status' , 'confirmed' )->groupBy('user_id' )->get();
+            ->where( 'status' , 'confirmed' )->groupBy('user_id' )->get();
 
-        $pay_user = Config::get('common.pay_user');   
 
+         // 아이디마다 계산을 해서 정산 처리
         foreach( $invoice_users as $invoice_user ) {
-            
-            // 루프를 돌면서 아이디마다 정산 처리
-            $user = User::find( $invoice_user->user_id );
-            $user_profile = UserProfile::find( $invoice_user->user_id );
-            $account = Account::whereUserId( $user->id )->whereCurrency( $user_profile->settlement_currency )->first();
 
-//            print_r( $invoice_user );
-//            exit();
+            // 각 사용자 데이터 불러오기             
+            $user = User::find( $invoice_user->user_id );   // 기본 유저 데이터 
+            $user_profile = UserProfile::find( $invoice_user->user_id );   // 유저 회사 프로필 
+            $account = Account::whereUserId( $user->id )->whereCurrency( $user_profile->settlement_currency )->first();  // 결제 계정 정보
 
+            // 정산 통화마다 설정 바꿈 
             if( $user_profile->settlement_currency == 'PI') {
-                $fee = NUMBER_ZERO;
+                $fee = $invoice_user->pi_total_revenue * $coin_config['pi']['feerate'];
                 $amount2 = $invoice_user->pi_total_revenue;
                 $net = $amount2 - $fee;
             } else {
@@ -88,30 +89,16 @@ class Transfers extends Command
                 $net = $amount2 - $fee;
             }
 
-            // 결제 송금  API 호출 
-            $api_token =  $this->exchange_api->getAccessToken();
-            $transfer = $this->exchange_api->transfer( $api_token['access_token'] , 
-                [ 'from_email' => $pay_user['email'] , 'to_email' => $user->email , 'amount' =>  $net  , 'currency' => $user_profile->settlement_currency ]  );
-
-
-            if( $transfer['status'] != 'success' ) {
-                $this->info( "[" . Carbon::now() . "] Error :  " . $transfer['status']  . " "   );                                    
-                return ;
-            }
-
-            // DB 입력 
+            // 송금 시작 
             DB::beginTransaction();
             try {
 
-                // 
-                Invoice::where( 'user_id' , $user->id )->where( 'status' , 'confirmed' )->update( [ 'status' => 'settlement_complete' ] );
-
-                // 전송 데이터 
+                // 송금 데이터 생성 
                 $transfer_data = [
                     'token' => $user->id . '_' . mt_rand(),
                     'user_id' => $user->id , 
                     'account_id' => $account->id , 
-                    'status' => 'pending' , 
+                    'status' => 'pending' ,     // 대기 상태 
                     'type' => 'pipay_account' ,                     
                     'amount' => $net ,                     
                     'amount_reversed' => NUMBER_ZERO ,                     
@@ -123,13 +110,45 @@ class Transfers extends Command
                 ];
 
                 $transfer = Transfer::create ( $transfer_data );
-                $transfer_token = generateToken( 'trn' , $invoice->id  );
+                $transfer_token = generateToken( 'trn' , $transfer->id  );
 
                 $transfer->token = $transfer_token;
                 $transfer->save();
 
+               // 계정에 있는 송금할 전송액 잠금 
+               $account->lock_funds( $amount2  ,  ACCOUNT_TRANSFER_LOCK ,   $transfer );
 
-                // Transaction 테이블 데이터 추가
+               DB::commit();
+
+               $transfer_id = $transfer->id;
+
+            } catch ( Exception $e) {
+               DB::rollback();
+               $this->info( "[" . Carbon::now() . "] Error : " . $e->getMessage()   );  
+
+               continue ;
+            }
+
+            // 송금 시작 
+            DB::beginTransaction();
+            try {
+
+                // 접속 토큰 생성
+                $api_token =  $this->exchange_api->getAccessToken();
+
+                // 결제 송금  API 호출 
+                $transfer_row = $this->exchange_api->transfer( $api_token['access_token'] , 
+                    [  'to_email' => $user->email , 'amount' =>  $net  , 'currency' => $user_profile->settlement_currency ]  );
+
+                // 성공시 결제 계정에서 송금 금액을 빼줌.
+                if( $transfer_row['status'] == 'success' ) {
+                   $account->unlock_and_sub_funds( $amount2  ,  $amount2 , $fee , ACCOUNT_TRANSFER ,   $transfer );
+               } else {
+                    $this->info( "[" . Carbon::now() . "] Error :  " . $transfer_row['status']  . " "   );
+                    throw new  Exception( 'transfer failed' );
+                }
+
+                // 전송시   로그  기록 
                 $transaction_data = [
                     'user_id' => $user->id  , 
                     'account_id' => $account->id , 
@@ -142,22 +161,41 @@ class Transfers extends Command
                     'source_type' => get_class( $transfer )  ,                                 
                     'status' => 'available'  ,                                 
                     'type' => 'transfer'  , 
-                    'url' => url( "tranfer" ) ,
+                    'url' => url( "transfer" ) ,
                     'description' => NULL , 
                 ];
 
-                Transaction::create ( $transaction_data ) ;
+               Transaction::create ( $transaction_data ) ;
 
+                // 결제 요청  송금 완료  업데이트 
+               Invoice::where( 'user_id' , $user->id )->where( 'status' , 'confirmed' )->update( [ 'status' => 'settlement_complete' ] );
 
-                DB::commit();
+               // 전송 완료 
+               $transfer->status = 'paid';
+               $transfer->save();
+
+               DB::commit();
 
             } catch ( Exception $e) {
                     DB::rollback();
-                    $this->info( "[" . Carbon::now() . "] Error : {$e} "   );                    
-                    return ;
+                    $this->info( "[" . Carbon::now() . "] Error : " . $e->getMessage()   );  
+
+                    // 실패 업데이트 
+                    $transfer->status = 'failed';
+                    $transfer->save();
+
+                   // 계정에 있는 송금할 전송액 잠금  품 
+                   $account->unlock_funds( $amount2  ,  ACCOUNT_TRANSFER_UNLOCK ,   $transfer );
+            }               
+
+            if( $transfer->status == 'paid') {
+                $this->info( "[" . Carbon::now() . "]  paid to " . $user->email . " at id of " . $transfer_id . " in transfer "   ); 
+            } else {
+                $this->info( "[" . Carbon::now() . "]  failed to " . $user->email . " at id of " . $transfer_id . " in transfer "   );                 
             }
 
-        }
+
+        }   // 유저별 정산 처리 
 
         
     }

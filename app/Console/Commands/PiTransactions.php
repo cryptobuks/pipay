@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Events\PaymentFinishEvent;
+use App\Events\InvoiceFinishEvent;
 
 
 class PiTransactions extends Command
@@ -138,6 +140,9 @@ class PiTransactions extends Command
                 if( isset( $invoice ) ) {
                     $invoice->status = 'pending';
                     $invoice->save();
+
+                    \Event::fire( new InvoiceFinishEvent( $invoice ) );
+
                     $this->info("[" . Carbon::now() . "] add tx : " . $tx->txid    );                               
                 } else {
                     $this->info("[" . Carbon::now() . "] no transactions "   );                               
@@ -220,6 +225,9 @@ class PiTransactions extends Command
                 ];
 
                 Transaction::create ( $transaction_data ) ;
+
+                // 입금 완료가 되었음을 알린다.
+                \Event::fire( new PaymentFinishEvent( $payment ) );
 
                 $this->info( $payment->id . ' : Finished payment.'); 
                 $this->info( "[" . Carbon::now() . "] update tx : " . $tx->txid . "\n" );                   

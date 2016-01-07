@@ -7,7 +7,7 @@ var Redis   = require('ioredis');
 var redis   = new Redis();
 
 //configuration
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 8800;
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
