@@ -108,7 +108,7 @@ Architekt.module.reserv('Printer', function(options) {
 				var ignoreList = [];
 				for(var i = 0, len = ignoreRegex.length; i < len; i++) ignoreList.push(new RegExp(ignoreRegex[i]));
 
-				//function for get between space of the depth
+				//function for get space between of the depth
 				function _getSpaceBetween(depth) {
 					var spaceStr = '';
 					//Depth * 4 blank spaces
@@ -118,6 +118,7 @@ Architekt.module.reserv('Printer', function(options) {
 				}
 
 				//function that check the key is in the ignore list
+				//this use for filtering ignoring properties
 				function _checkInIgnoreList(text) {
 					for(var i = 0, len = ignoreList.length; i < len; i++)
 						if(ignoreList[i].test(text)) return true;
@@ -125,12 +126,13 @@ Architekt.module.reserv('Printer', function(options) {
 					return false;
 				}
 
-				//function for actual inspect object. it is recursive until property exists.
+				//function for actual inspect object. it recursive until no more sub property.
 				function _inspectObject(targetObj, depth) {
 					//Make space by depth of the object tree (space = depth * 4)
 					var bracketSpace = _getSpaceBetween(depth - 1);
 					var propertySpace = _getSpaceBetween(depth);
 
+					//first bracket space
 					console.log(bracketSpace + "{");
 
 					for(var key in targetObj) {
@@ -140,10 +142,12 @@ Architekt.module.reserv('Printer', function(options) {
 							if(typeof targetObj[key] === 'object') {
 								console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
 
+								//check that depth level reached to specified depth
 								if(maxDepth === false || (maxDepth && depth < maxDepth))
-									_inspectObject(targetObj[key], (depth+1));	//Recursive with inside of the object
+									_inspectObject(targetObj[key], (depth + 1));	//Recursive with inside of the object
 							}
 							else {
+								//if property is function and display function code flag is unset, just say it is function without code
 								if(typeof targetObj[key] === 'function' && !displayFunctionCode) {
 									console.log(propertySpace + '[' + (typeof targetObj[key]) + '] ' + key);
 								}
@@ -154,9 +158,11 @@ Architekt.module.reserv('Printer', function(options) {
 						}
 					}
 
+					//last bracket space
 					console.log(bracketSpace + "}");
 				}
 
+				//start inspect!
 				_inspectObject(obj, 0);
 			}
 		}

@@ -5,6 +5,12 @@
 	-o-border-radius: $radius;
 	-ms-border-radius: $radius;
 }
+@mixin createBorderRadiusEach($topLeft, $topRight, $bottomLeft, $bottomRight) {
+	border-top-left-radius: $topLeft;
+	border-top-right-radius: $topRight;
+	border-bottom-left-radius: $bottomLeft;
+	border-bottom-right-radius: $bottomRight;
+}
 @mixin createBoxShadow($box-shadow) {
 	box-shadow: $box-shadow;
 	-webkit-box-shadow: $box-shadow;

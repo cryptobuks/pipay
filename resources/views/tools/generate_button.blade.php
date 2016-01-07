@@ -27,7 +27,7 @@
 				<div id="selectType" class="pi-form-control">
 					<div class="pi-radio">
 						<input type="radio" class="controlLan" name="button_lan" value="ko" checked="checked" />
-						<div class="pi-payment-button">
+						<div class="pi-payment-exButton">
 							<img src="{{ asset('image/pi-payment-logo.png') }}" />
 							<span>파이결제</span>
 						</div>
@@ -35,7 +35,7 @@
 
 					<div class="pi-radio">
 						<input type="radio" class="controlLan" name="button_lan" value="en" />
-						<div class="pi-payment-button">
+						<div class="pi-payment-exButton">
 							<img src="{{ asset('image/pi-payment-logo.png') }}" />
 							<span>Pay with PI</span>
 						</div>

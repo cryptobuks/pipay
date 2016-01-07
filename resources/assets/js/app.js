@@ -27,7 +27,7 @@ Architekt.event.on('ready', function() {
     });
 
 
-	/* Create product */
+    /* Tool */
 	var _isSubmittingCreateProduct = false;
 	var generated = false;
 	var token = '';

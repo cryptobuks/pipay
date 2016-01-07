@@ -1,295 +1,91 @@
-@extends('checkout')
-@section('content')
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     
-    <script>
+    <meta property="og:url" content="https://www.pi-pay.net/" />
+    <meta property="og:title" content="{{ Lang::get('pages.title1') }}" />
+    <meta property="og:image" content="https://www.pi-pay.net/images/logo1.png" />
+    <meta property="og:description" content="{{ Lang::get('pages.sub1') }}" />
 
-	Architekt.event.on('ready', function() {
+    <title>{{ Lang::get('pages.title1') }}</title>
 
+    <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" type="image/x-icon" />
+    <link rel="stylesheet" href="{{ asset('assets/css/pi_payment.css') }}" />
+    <script src="{{ asset('assets/js/architekt.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
+</head>
+<body>
+    <div id="payment_beginning_ball"></div>
 
-		// 메뉴 간단 버튼 
-		$('#pi_easy_btn').click(function() {
-			@if( !Auth::check() )			
-			$('#pi_oauth').css('display' , '');	
-			$('#pi_payment').css('display' , 'none');			
-			@else 
-			$('#pi_oauth').css('display' , 'none');	
-			$('#pi_payment').css('display' , '');			
-			@endif 
-			$('#pi_sms_auth').css('display' , 'none');
-			$('#pi_address').css('display' , 'none');
-		});
+    <div id="payment_module_background" class="colored">
+        <div id="payment_module">
+            <!-- top -->
+            <div id="payment_module_top">
+                <div id="payment_module_exit">×</div>
+                <img src="http://placehold.it/200x200" />
+                <h1>파이애플소프트</h1>
+                <p>코리언박스게임기 (KRW 20,000)</p>
+            </div>
+            <!-- content -->
+            <div id="payment_module_content">
+                <!-- nav -->
+                <div class="payment-nav">
+                    <div class="payment-nav-item on">간편결제</div>
+                    <div class="payment-nav-item">파이주소</div>
+                </div>
 
-		// 메뉴 주소 버튼 
-		$('#pi_address_btn').click(function() {
-			$('#pi_oauth').css('display' , 'none');						
-			$('#pi_sms_auth').css('display' , 'none');									
-			$('#pi_payment').css('display' , 'none');
-			$('#pi_address').css('display' , '');			
-		});
+                <!-- tabs -->
+                <!-- easy tab -->
+                <div class="payment-tab" id="tab_easy">
+                    <h1>결제를 위해 로그인해주세요.</h1>
 
+                    <!-- email -->
+                    <div class="pi-payment-text">
+                        <img src="{{ asset('image/gfx_letter.png') }}" />
+                        <input type="email" placeholder="이메일" id="email" />
+                    </div>
+                    <!-- pw -->
+                    <div class="pi-payment-text">
+                        <img src="{{ asset('image/gfx_locked.png') }}" />
+                        <input type="password" placeholder="비밀번호" id="password" />
+                    </div>
 
-		function _error(text, focus, reset) {
-			new Architekt.module.Widget.Notice({
-				text: text,
-				callback: function() {
-					if(focus) focus.focus();
-					if(reset) reset.val('');
-				}
-			});
-		}
+                    <button class="pi-payment-button">로그인</button>    
+                </div>
+                <!-- pi tab -->
+                <div class="payment-tab" id="tab_pi">
+                    <div id="qr_wrap">
+                        <div id="qrcode">
+                            <img src="http://placehold.it/200x200" />
+                        </div>
+                        <div id="tab_pi_text">
+                            <p>결제를 완료하려면 아래의 주소로 파이를 보내주시기 바랍니다.</p>
+                            <p>입금주소:<br />doN45me:OdQOsldnEOflGcljmmB7</p>
+                        </div>
+                    </div>
+                    
+                    <div id="tab_pi_price">
+                        <img src="{{ asset('image/gfx_pi.png') }}" />
+                        <p>1.5750 Pi (KRW 15,750)</p>
+                    </div>
+                </div>
 
-		// 로그인 프로세스 
-		$('#LoginForm').submit(function() {
-			var email = $('#email');
-			var password = $('#password');
-
-			if(!email.val()) {
-				_error('이메일을 입력해주세요.', email);
-				return false;
-			}
-			else if(!password.val()) {
-				_error('비밀번호를 입력해주세요.', password);
-				return false;
-			}
-
-			//Send POST request
-			Architekt.module.Http.post({
-				url: '/oauth/loginOnce' ,
-				data: {
-					'email':  email.val(),	// 로그인 ID
-					'password': password.val() ,	// 패스워드 
-				},
-				success: function(data) {
-					if( data.status == 'success') {
-						var id = data.id;
-						$('#cipher_id').val( id );
-						$('#pi_oauth').css('display' , 'none');	
-						$('#pi_top_menu').css('display' , 'none' );						
-						$('#pi_sms_auth').css('display' , '');
-					} else {
-						_error('이메일이나 비밀번호가 맞지 않습니다.', email);
-					}
-				},
-				error: function(text, status) {
-					new Notice({
-						text: (text + status).join(", "),
-					});
-				},
-				complete: function() {
-
-				}
-			});
-
-			return false;
-		});
-
-		// 문자인증 데이터 보내기 
-		$('#SmsForm').submit(function() {
-			var authcode = $('#authcode');
-			var cipher_id = $('#cipher_id');
-
-			if(!authcode.val()) {
-				_error('문자인증 번호를 입력해주세요.', authcode);
-				return false;
-			}
-
-			if(!cipher_id.val()) {
-				_error('잘못된 숫자값이 입력되었습니다.', authcode);
-				return false;
-			}
+                <!-- footer -->
+                <div class="payment-tab-footer">Powered by Pi-Pay</div>
+            </div>
+        </div>
+    </div>
 
 
-			//Send POST request
-			Architekt.module.Http.post({
-				url: '/oauth/smsAuth' ,
-				data: {
-					'authcode':  authcode.val(),	// 문자인증 코드
-					'cipher_id': cipher_id.val() ,	// 암호화된 유저 아이디
-				},
-				success: function(data) {
-					if( data.status == 'success') {
-						$('#pi_balance').html( data.balance );	// 계좌 파이 값
-						$('#pi_username').html( data.username );	// 유저 이름
-						$('#pi_email').html( data.email );	// 유저 이메일 						
-						$('#pi_sms_auth').css('display' , 'none');	
-						$('#pi_top_menu').css('display' , '' );										
-						$('#pi_payment').css('display' , '');
-					} else {
-						_error('문자 인증번호가 맞지 않습니다.', authcode);
-					}
-				},
-				error: function(text, status) {
-					new Notice({
-						text: (text + status).join(", "),
-					});
-				},
-				complete: function() {
+    <!-- load depencies -->
+    <script src="{{ asset('assets/js/depend.js') }}"></script>
+    <!-- load modules -->
+    <script src="{{ asset('assets/js/architekt_modules_pay.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
+    <!-- app -->
+    <script src="{{ asset('assets/js/pi_payment.js') }}"></script>
 
-				}
-			});
-
-			return false;
-		});
-
-		// 결제 데이터 보내주기 
-		$('#PaymentForm').submit(function() {
-			var token = $('#token');
-
-			//Send POST request
-			Architekt.module.Http.post({
-				url: '/invoice/payment' ,
-				data: {
-					'token':  token.val(),	// 결제 요청 토큰
-				},
-
-				success: function(data) {
-					if( data.status == 'success') {
-						$('#pi_sms_auth').css('display' , 'none');	
-						$('#pi_payment').css('display' , 'none');
-						$('#pi_pay_end').css('display' , '');
-
-						$('#redirect').val( data.redirect );   // 홈페이지 이동 주소
-						$('#reference').val( data.reference );  // 참조						
-						$('#order_id').val( data.order_id );    // 주문번호 												
-					} else {
-						_error('결제가 제대로 진행되지 않았습니다. 다시 시도해 주세요. ' );
-					}
-				},
-				error: function(text, status) {
-					new Notice({
-						text: (text + status).join(", "),
-					});
-				},
-				complete: function() {
-
-				}
-			});
-
-			return false;
-		});
-
-		// 결제완료시 처리 할 함수 
-		$('#btnEnd').click(function() {
-			var redirect = $('#redirect');	// 홈페이지 이동 주소  
-			var reference = $('#reference');	// 참조
-			var order_id = $('#order_id');	// 주문번호 		
-
-			if( redirect.val() ) {
-				document.location.href = redirect.val() + '?reference=' + reference.val() + '&order_id=' + order_id.val();
-			}
-
-		});
-
-
-
-	});
-    </script>
-
-    <div id="pi_top_space"></div>
-	<div id="pi_top_menu" style="text-align:center">    	
-	          	<a href="#" id="pi_easy_btn" ><h1>간편 결제</h1></a>
-	          	<a href="#" id="pi_address_btn"><h1>파이주소</h1></a>          	
-	</div>
-
-	@if( !Auth::check() )
-	<div id="pi_oauth">
-	@else
-	<div id="pi_oauth" style="display:none">	
-	@endif
-		<div class="pi-container">
-
-			<h1>간편 결제</h1>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => '/oauth/loginOnce', 'id' => 'LoginForm' , 'return' => 'false' )) !!}
-			<input type="email" class="pi-input{{ !empty($errors->get('email')) ? ' pi-error' : '' }}" id="email" maxlength="100" name="email" value="{{ old('email') }}" placeholder="{{ !empty($errors->get('email')) ? $errors->get('email')[0] : Lang::get('users.email') }}" />
-			<input type="password" class="pi-input{{ !empty($errors->get('password')) ? ' pi-error' : '' }}" id="password" maxlength="100" name="password" placeholder="{{ !empty($errors->get('password')) ? $errors->get('password')[0] :Lang::get('users.password') }}" />
-			
-			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '파이페이 로그인' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnLoginSubmit', 'id' => 'btnLoginSubmit')) !!}
-			</div>
-			{!! Form::close() !!}				
-		</div>
-	</div>
-	
-
-	<div id="pi_sms_auth" style="display:none">
-		<div class="pi-container">
-
-			<h1>문자인증</h1>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => '/oauth/smsAuth', 'id' => 'SmsForm' , 'return' => 'false' )) !!}
-			<input type="hidden" name="cipher_id" id="cipher_id" value="">
-			<input type="text" class="pi-input{{ !empty($errors->get('authcode')) ? ' pi-error' : '' }}" id="authcode" maxlength="20" name="authcode" value="{{ old('authcode') }}" placeholder="{{ !empty($errors->get('authcode')) ? $errors->get('authcode')[0] : Lang::get('users.authcode') }}" />
-			
-			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '확인' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnSmsSubmit', 'id' => 'btnSmsSubmit')) !!}
-			</div>
-			{!! Form::close() !!}				
-		</div>
-	</div>
-
-	@if( Auth::check() )
-	<?php
-		$user = Auth::user();
-		$account = Oaccount::whereUserId($user->id)->first();
-	?>
-	<div id="pi_payment" >
-		<div class="pi-container">
-			<h1>결제</h1>			
-			<span id="pi_email">{{ $user->email }}</span> | <a href="/oauth/logout"> 로그아웃 </a>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/payment", 'id' => 'PaymentForm' , 'return' => 'false' )) !!}
-			<input type="hidden" name="token" id="token" value="{{ $token}}">			
-			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
-			<span id="pi_username">{{ $user->username }}</span>님의 파이 잔고 : <span id="pi_balance">{{ amount_format( $account->balance ) }}</span> PI
-			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnPaymentSubmit', 'id' => 'btnPaymentSubmit')) !!}
-			</div>
-			{!! Form::close() !!}				
-		</div>
-	</div>
-	@else
-	<div id="pi_payment" style="display:none">	
-		<div class="pi-container">
-			<h1>결제</h1>			
-			<span id="pi_email"></span> | <a href="/oauth/logout"> 로그아웃 </a>
-			{!! Form::open(array('class' => 'pi-form', 'method' => 'post', 'url' => "/invoice/payment", 'id' => 'PaymentForm' , 'return' => 'false' )) !!}
-			<input type="hidden" name="token" id="token" value="{{ $token }}">
-			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
-			<span id="pi_username"></span>님의 파이 잔고 : <span id="pi_balance">0</span> PI
-			<div class="pi-button-container pi-button-centralize">
-				{!! Form::submit( '결제하기' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnPaymentSubmit', 'id' => 'btnPaymentSubmit')) !!}
-			</div>
-			{!! Form::close() !!}				
-		</div>
-	</div>	
-	@endif
-
-	<div id="pi_pay_end" style="display:none">	
-		<div class="pi-container">
-			<input type="hidden" name="redirect" id="redirect" value="">			
-			<input type="hidden" name="reference" id="reference" value="">	
-			<input type="hidden" name="order_id" id="order_id" value="">				
-			
-			<h1>결제</h1>			
-			간편 결제가 완료되었습니다. <br />
-			결제를 해주셔서 감사합니다. <br />
-			<div class="pi-button-container pi-button-centralize">
-				{!! Form::button( '완료' ,  array('class' => 'pi-button pi-theme-success', 'name' => 'btnEnd', 'id' => 'btnEnd')) !!}
-			</div>
-			<div class="pi-button-container pi-button-centralize"><a href="/receipt/{{ $token }}" target="_BLANK">영수증 보기</a> </div>
-		</div>
-	</div>	
-
-
-
-	<div id="pi_address" style="display:none">
-		<div class="pi-container">
-			<h1>파이 주소</h1>
-			결제를 완료하려면, 아래의 주소로 파이를 보내주시기 바랍니다. <br />
-			입금주소 : {{ $invoice->inbound_address }} <br />
-			결제금액 :  {{ amount_format( $invoice->pi_amount ) }} PI  ( {{ amount_format( $invoice->amount )}} KRW ) <br />
-		</div>
-	</div>
-	<br />
-	<div class="pi-container">	
-		Support | Powered By PiPay
-	</div>
-@endsection
+    @include('synchronizer/sync_locale')
+</body>
+</html>

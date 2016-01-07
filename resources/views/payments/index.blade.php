@@ -85,31 +85,13 @@
                         var status = dataColumn['status'];
                         var result = '';
 
-                        switch(status) {
-                            case 'new':
-                                result = '<span class="pi-theme-waiting">대기</span>';
-                                break;
-                            case 'pending':
-                                result = '결제 확인 중';
-                                break;
-                            case 'confirmed':
-                                result = '<span class="pi-theme-complete">결제 완료</span>';
-                                break;
-                            case 'failed':
-                                result = '결제 실패';
-                                break;
-                            case 'expired':
-                                result = '결제 만료';
-                                break;
-                            case 'refunded':
-                                result = '전액 환불';
-                                break;
-                            case 'refunded_partial':
-                                result = '일부 환불';
-                                break;
-                            default:
-                                result = '';
-                                break;
+                        result = getStatusText(status);
+
+                        if(result === 'new') {
+                            result = ['<span class="pi-theme-waiting">', result, '</span>'].join('');
+                        }
+                        else if(result === 'confirmed') {
+                            result = ['<span class="pi-theme-complete">', result, '</span>'].join('');
                         }
 
                         parsedArray.push(result);
@@ -122,6 +104,43 @@
                 }
 
                 return parsedArray;
+            }
+
+            //function for get status text
+            function getStatusText(status) {
+                var result = '';
+
+                switch(status) {
+                    case 'new':
+                        result = '대기';
+                        break;
+                    case 'pending':
+                        result = '결제 확인 중';
+                        break;
+                    case 'confirmed':
+                        result = '결제 완료';
+                        break;
+                    case 'failed':
+                        result = '결제 실패';
+                        break;
+                    case 'expired':
+                        result = '결제 만료';
+                        break;
+                    case 'refunded':
+                        result = '전액 환불';
+                        break;
+                    case 'refunded_partial':
+                        result = '일부 환불';
+                        break;
+                    case 'settlement_complete':
+                        result = '정산 완료';
+                        break;
+                    default:
+                        result = '';
+                        break;
+                }
+
+                return result;
             }
 
             @include('dataTable/adapted')
@@ -195,37 +214,7 @@
                         return (!data || data === "") ? "" : data;
                     },
                     statusText: function(data) {
-                        var status = data;
-                        var result = '';
-
-                        switch(data) {
-                            case 'new':
-                                result = '대기';
-                                break;
-                            case 'pending':
-                                result = '결제 확인 중';
-                                break;
-                            case 'confirmed':
-                                result = '결제 완료';
-                                break;
-                            case 'failed':
-                                result = '결제 실패';
-                                break;
-                            case 'expired':
-                                result = '결제 만료';
-                                break;
-                            case 'refunded':
-                                result = '전액 환불';
-                                break;
-                            case 'refunded_partial':
-                                result = '일부 환불';
-                                break;
-                            default:
-                                result = '';
-                                break;
-                        }
-
-                        return result;
+                        return getStatusText(data);
                     }
                 },
                 refund: function(dataObject) {

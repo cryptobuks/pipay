@@ -24,13 +24,8 @@
                     <tr>
                         <td id="pi_product_info" colspan="3">
                             <div>
-                                <h1>고객 정보</h1>
-                                <p>이메일 주소: <span data-architekt-key="customer_email" data-architekt-format="printIfHasValue"></span></p>
-                                <p>이름: <span data-architekt-key="customer_name" data-architekt-format="printIfHasValue"></span></p>
-                                <p>상품번호: <span data-architekt-key="customer_custom" data-architekt-format="printIfHasValue"></span></p>
-                            </div>
-                            <div>
                                 <h1>결제 정보</h1>
+                                <p>상품번호: <span data-architekt-key="order_id" data-architekt-format="printIfHasValue"></span></p>
                                 <p>상태: <span data-architekt-key="status" data-architekt-format="statusText"></span></p>
                                 <p>결제통화: <span data-architekt-key="currency" data-architekt-format="printIfHasValue" data-architekt-format-args="pi"></span></p>
                                 <p>결제시각: <span data-architekt-key="created_at" data-architekt-format="printIfHasValue"></span></p>

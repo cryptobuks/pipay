@@ -12,15 +12,20 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    //Sass
+    /* sass */
+    //main
     mix.sass([
         'app.scss',
     ], 'public/assets/css');
 
+    //Payment
     mix.sass([
         'pi_payment.scss'
     ], 'public/assets/css/pi_payment.css');
 
+
+
+    /* js */
     //Merge dependencies
     //translate to CDN service later.
     mix.scripts([
@@ -57,4 +62,19 @@ elixir(function(mix) {
         'app.js',
     ], 'public/assets/js/app.js');
 
+    mix.scripts([
+        'pi_payment.js',
+    ], 'public/assets/js/pi_payment.js');
+
+    //modules for payment
+    mix.scripts([
+        'reserved/formatter.js',
+        'reserved/client.js',
+        'reserved/http.js',
+        'reserved/locale.js',
+        'reserved/printer.js',
+        'reserved/validator.js',
+        'reserved/widget.js',
+        //Application source
+    ], 'public/assets/js/architekt_modules_pay.js');
 });

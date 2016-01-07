@@ -1,6 +1,199 @@
+@import "init.scss";
 @import "utility.scss";
 
-.pi-payment-button {
+$moduleHeight: 500px;
+$moduleWidth: 380px;
+$moduleBorderRadius: 5px;
+#payment_module_background {
+	@include createPosition(fixed, 0, 0, 0, 0);
+	z-index: 300;
+
+	&.colored {
+		background-color: rgba(56, 61, 79, 0.6);
+	}
+
+	> #payment_module {
+		display: none;
+
+		@include createPosition(absolute, 50%, unset, unset, 50%);
+		width: $moduleWidth;
+		height: $moduleHeight;
+		margin-top: -($moduleHeight / 2);
+		margin-left: -($moduleWidth / 2);
+		cursor: default;
+
+		> #payment_module_top {
+			height: 180px;
+			background-color: #2c6da6;
+			color: #fff;
+			padding: 24px;
+			border: 1px solid #757e82;
+			border-bottom: none;
+			@include createBorderRadiusEach($moduleBorderRadius, $moduleBorderRadius, unset, unset);
+
+			> #payment_module_exit {
+				@include createPosition(absolute, 10px, 10px, unset, unset);
+				font-size: 18px;
+				line-height: 34px;
+				width: 32px;
+				height: 32px;
+				text-align: center;
+				border: 1px solid #fff;
+				@include createBorderRadius(32px);
+				cursor: pointer;
+
+				&:hover {
+					background-color: rgba(238, 238, 238, 0.5);
+				}
+			}
+
+			> img {
+				display: block;
+				width: 64px;
+				height: 64px;
+				margin: 0 auto;
+				@include createBorderRadius(64px);
+			}
+			> h1 {
+				text-align: center;
+				font-size: 20px;
+				margin: 16px 0 8px 0;
+			}
+			> p {
+				text-align: center;
+				font-size: 12px;
+			}
+		}
+		> #payment_module_content {
+			height: $moduleHeight - 180px;
+			background-color: #fff;
+			padding: 20px;
+			border: 1px solid #757e82;
+			border-top: none;
+			@include createBorderRadiusEach(unset, unset, $moduleBorderRadius, $moduleBorderRadius);
+
+			> .payment-nav {
+				width: 100%;
+				overflow: hidden;
+
+				> .payment-nav-item {
+					float: left;
+					width: 50%;
+					padding: 8px;
+					background-color: #e5f1fb;
+					color: #a4b0bb;
+					text-align: center;
+					cursor: pointer;
+					@include createTransitionDuration(0.3s);
+
+					&:hover {
+						background-color: darken(#e5f1fb, 5%);
+					}
+					&.on {
+						background-color: #63a9ee;
+						color: #fff;
+						cursor: default;
+					}
+				}
+			}
+
+			> .payment-tab {
+				display: none;
+			}
+			> .payment-tab-footer {
+				@include createPosition(absolute, unset, 0, 0, 0);
+				color: #4c5356;
+				padding: 16px;
+				text-align: center;
+			}
+
+			#tab_easy {
+				display: block;
+
+				> h1 {
+					font-size: 14px;
+					color: #7f898e;
+					text-align: center;
+					padding: 20px 12px 12px 12px;
+				}
+
+				> .pi-payment-text {
+					display: block;
+					width: 100%;
+					margin: 8px 0;
+
+					> input {
+						width: 250px;
+					}
+				}
+
+				> .pi-payment-button {
+					display: block;
+					width: 100%;
+					margin: 24px 0 8px 0;
+				}
+			}
+			
+
+			#tab_pi {
+				> #qr_wrap {
+					overflow: hidden;
+					margin-top: 16px;
+
+					> #qrcode {
+						float: left;
+						width: 50%;
+
+						> img {
+							width: 80%;
+						}
+					}
+					> #tab_pi_text {
+						float: right;
+						width: 50%;
+
+						> p {
+							margin-bottom: 12px;
+							color: #4c5356;
+							font-size: 12px;
+							word-wrap: break-word;
+						}
+					}
+				}
+
+				> #tab_pi_price {
+					clear: both;
+					background-color: #e4f0fb;
+					text-align: center;
+					padding: 12px;
+					margin-top: 16px;
+
+					&:hover {
+						background-color: darken(#e4f0fb, 10%);
+					}
+
+					> * {
+						display: inline-block;
+						vertical-align: middle;
+					}
+					> img {
+						height: 20px;
+					}
+					> p {
+						color: #205d92;
+						font-size: 14px;
+					}
+				}
+			}
+
+
+		}
+	}
+}
+
+
+
+.pi-payment-exButton {
 	display: inline-block;
 	cursor: pointer;
 	border: 1px solid #4c97e3;
@@ -26,5 +219,51 @@
 	}
 	> span {
 		font-size: 18px;
+	}
+}
+
+.pi-payment-text {
+	display: inline-block;
+	padding: 8px;
+	border: 1px solid #a0a0a0;
+	@include createBorderRadius(5px);
+
+	&.on {
+		border-color: #63a9ee;
+		background-color: #E1F0FF;
+
+		> input {
+			background-color: #E1F0FF;
+		}
+	}
+
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	> img {
+		margin: 0 8px;
+		width: 20px;
+		height: 20px;
+	}
+	> input {
+		border: none;
+	}
+}
+
+.pi-payment-button {
+	display: inline-block;
+	padding: 12px 36px;
+	color: #fff;
+	border: none;
+	background-color: #63a9ee;
+	cursor: pointer;
+
+	&:hover {
+		background-color: darken(#63a9ee, 10%);
+	}
+	&:active {
+		background-color: darken(#63a9ee, 20%);
 	}
 }
