@@ -76,14 +76,12 @@ class RefundController extends Controller
                     $result['success'] = true;
                 } else {
 
-                    // error 재정의 필요
                     $result['message'] = 'not_activated_email';
                     $result['success'] = false;
                     return Response::json ( $result , 400 );    
                 } 
             } else {
 
-                // error 재정의 필요
                 $result['message'] = 'invalid_email' ;
                 $result['success'] = false;
                 return Response::json ( $result , 400 );    
@@ -91,38 +89,30 @@ class RefundController extends Controller
             
         }        
 
-        // 파이 코인 주소일때  출금 정보 확인 (내부/외부 회원)
+        // 파이 코인 주소 정보 확인 (내부/외부 회원)
         if( !$result['success'] ) {
 
-            $isAddress = invoice::getValidateAddress($refund_data->address) ;
-            dd($isAddress);
-            // $isAddress = $userAddress->getValidateAddress( $address);
-            $receiver_address = OuserAddress::where( 'address' , $address )->first(); 
+            $isAddress = invoice::getValidateAddress($address) ;
 
-                if( $isAddress === null || $isAddress->isvalid === false){
-                    $result['message'] = 'invalid_address' ;
+            if( $isAddress === null || $isAddress->isvalid === false){
+                $result['message'] = 'invalid_address' ;
+                $result['success'] = false;
+                return Response::json ( $result , 400 );    
+            } else if( $userAddress->address == $address && $isAddress->ismine === true ) {
+              
+                if( $user->activated == true ) {
+
+                    $result['success'] = true;
+
+                } else {
+                    $result['message'] = 'not_activated_address' ;
                     $result['success'] = false;
                     return Response::json ( $result , 400 );    
-                } else if( !isset( $receiver_address ) ) {
-                    $result['message'] = 'not_internal_address' ;
-                    $result['success'] = false;
-                    return Response::json ( $result , 400 );    
-                } else if( $userAddress->address == $address && $isAddress->ismine === true ) {
-                    
-                    if( $user->activated == true ) {
-
-                        $result['success'] = true;
-
-                    } else {
-                        $result['message'] = 'not_activated_address' ;
-                        $result['success'] = false;
-                        return Response::json ( $result , 400 );    
-                    }
                 }
             }
+        }
 
-
-        // 검증 성공 후 출금 생성 
+        // 검증 성공 후 환불하기 입력 
         if( $result['success'] == true ) {
 
             $refund_data = [
