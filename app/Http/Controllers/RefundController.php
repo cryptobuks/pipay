@@ -9,6 +9,11 @@ use Cartalyst\Sentry\Sentry;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Refund;
+use App\Invoice;
+use App\Ouser;
+use App\OuserAddress;
+use Validator;
+
 
 class RefundController extends Controller
 {
@@ -46,34 +51,116 @@ class RefundController extends Controller
     public function store( Request $request  )
     {
         $input = $request->all();
-        $user = $this->sentry->getUser();
-       
-        $refund_data = [
-                    'user_id' => $user->id,
-                    'invoice_id' => $input['invoice_id'], 
-                    'address' => $input['address'],
-                    'pi_amount' =>  $input['amount'], 
-                    'amount' =>  $input['amount'] * 10000 , 
-                    'currency' => 'PI' , 
-                ];
+        
+        $this->validate( $request , [
+            'address'  => 'required|max:80',   
+            'amount'  => 'required|numeric|min:0.01|max:1000000',
+        ]);
 
-        DB::beginTransaction();
+        $user = Ouser::find( $this->sentry->getUser()->id );
+        $userAddress = OuserAddress::where('user_id' , $user->id )->first();
 
-        try {
+        $address = $input['address'];
+        $result['success'] = false;
+
+        // 이메일 확인  (내부 회원)
+        $validator = Validator::make( $input, [  'address'  => 'required|email',  ]);
+        if( !$validator->fails() )   {
+
+            if( $user->email == $address  ) {
+
+                $receiver_user = Ouser::where( 'activated' , 1 )->where( 'email' , $address )->first();
+
+                if( isset( $receiver_user ) ) {
+
+                    $result['success'] = true;
+                } else {
+
+                    // error 재정의 필요
+                    $result['message'] = 'not_activated_email';
+                    $result['success'] = false;
+                    return Response::json ( $result , 400 );    
+                } 
+            } else {
+
+                // error 재정의 필요
+                $result['message'] = 'invalid_email' ;
+                $result['success'] = false;
+                return Response::json ( $result , 400 );    
+            }
             
-            Refund::create($refund_data);
-            $result = 'success';
+        }        
 
-            DB::commit();
+        // 파이 코인 주소일때  출금 정보 확인 (내부/외부 회원)
+        if( !$result['success'] ) {
 
-        }  catch (Exception $e) {
+            $isAddress = invoice::getValidateAddress($refund_data->address) ;
+            dd($isAddress);
+            // $isAddress = $userAddress->getValidateAddress( $address);
+            $receiver_address = OuserAddress::where( 'address' , $address )->first(); 
 
-            DB::rollback();
-            $result ='error';
-            
-        }   
+                if( $isAddress === null || $isAddress->isvalid === false){
+                    $result['message'] = 'invalid_address' ;
+                    $result['success'] = false;
+                    return Response::json ( $result , 400 );    
+                } else if( !isset( $receiver_address ) ) {
+                    $result['message'] = 'not_internal_address' ;
+                    $result['success'] = false;
+                    return Response::json ( $result , 400 );    
+                } else if( $userAddress->address == $address && $isAddress->ismine === true ) {
+                    
+                    if( $user->activated == true ) {
 
-        return Response::json( ['status' => $result ] , 200 );
+                        $result['success'] = true;
+
+                    } else {
+                        $result['message'] = 'not_activated_address' ;
+                        $result['success'] = false;
+                        return Response::json ( $result , 400 );    
+                    }
+                }
+            }
+
+
+        // 검증 성공 후 출금 생성 
+        if( $result['success'] == true ) {
+
+            $refund_data = [
+                        'user_id' => $user->id,
+                        'invoice_id' => $input['invoice_id'], 
+                        'address' => $input['address'],
+                        'pi_amount' =>  $input['amount'], 
+                        'amount' =>  $input['amount'] * 10000 , 
+                        'currency' => 'PI' , 
+                    ];
+
+            DB::beginTransaction();
+            try {
+
+                Refund::create($refund_data);
+                $result['success'] = true;
+
+                DB::commit();
+
+            }  catch (Exception $e) {
+
+                DB::rollback();
+                $result['message'] = 'save_failure' ;
+                $result['success'] = false;
+                return Response::json ( $result , 400 );   
+                
+            }  
+        }
+
+        if( $result['success'] == true ){
+            $status = 200;
+        } else {
+            $result['message'] = 'save_failure' ;
+            $result['success'] = false;
+            $status = 400;
+        }
+
+        return Response::json( $result , $status );
     }
 
 }
