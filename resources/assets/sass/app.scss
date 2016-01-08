@@ -1,10 +1,8 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 //Variable
-$pi-control-focus: #63a9ee;
-$architekt-theme-confirm: #63a9ee;
-
 @import "init.scss";
 @import "font.scss";
+@import "variables.scss";
 @import "utility.scss";
 @import "component.scss";
 @import "sprites.scss";

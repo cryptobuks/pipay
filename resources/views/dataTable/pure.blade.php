@@ -14,6 +14,7 @@
                 options = typeof options === 'object' ? options : {};
                 var url = typeof options.url !== 'undefined' ? options.url : '';
                 var callback = typeof options.callback === 'function' ? options.callback : function() {};
+                var failed = typeof options.failed === 'function' ? options.failed : function() {};
                 var complete = typeof options.complete === 'function' ? options.complete : function() {};
                 var data = typeof options.data === 'object' ? options.data : {};
 
@@ -26,9 +27,7 @@
                         callback(dataObject);
                     },
                     error: function(text, status, error) {
-                        new Notice({
-                            text: JSON.stringify(error),
-                        });
+                        failed();
                     },
                     complete: function() {
                         _isFetching = false;

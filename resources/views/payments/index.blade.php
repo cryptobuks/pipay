@@ -184,6 +184,11 @@
                     callback: function(dataObject) {
                         if(typeof callback === 'function') callback(dataObject);
                     },
+                    failed: function() {
+                        new Notice({
+                            text: '제품 정보를 가져오는데 실패하였습니다.',
+                        });
+                    },
                     complete: function() {
                         dataTable.unlock();
                     }

@@ -32,6 +32,7 @@ elixir(function(mix) {
         'jquery-1.11.3.min.js',
         'json2.min.js',
         'socket.io-1.3.5.js',
+        'qrcode.min.js',
     ], 'public/assets/js/depend.js');
 
 

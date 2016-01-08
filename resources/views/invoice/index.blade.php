@@ -17,7 +17,15 @@
     <script src="{{ asset('assets/js/architekt.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>
 </head>
 <body>
-    <div id="payment_beginning_ball"></div>
+    <script>
+        //data might be required from client form server should here:
+        Architekt.event.on('preparing', function() {
+            Architekt.userInfi = Architekt.userInfo || {};
+            Architekt.productInfo = Architekt.productInfo || {};
+            Architekt.productInfo.address = '{{ $invoice->inbound_address }}';
+            Architekt.productInfo.id = '{{ $invoice->id }}';
+        });
+    </script>
 
     <div id="payment_module_background" class="colored">
         <div id="payment_module">
@@ -25,8 +33,8 @@
             <div id="payment_module_top">
                 <div id="payment_module_exit">×</div>
                 <img src="http://placehold.it/200x200" />
-                <h1>파이애플소프트</h1>
-                <p>코리언박스게임기 (KRW 20,000)</p>
+                <h1>{{ $user_profile->company }}</h1>
+                <p>{{ $invoice->item_desc }}</p>
             </div>
             <!-- content -->
             <div id="payment_module_content">
@@ -38,37 +46,74 @@
 
                 <!-- tabs -->
                 <!-- easy tab -->
-                <div class="payment-tab" id="tab_easy">
+                <form class="payment-tab" id="tab_easy" method="post">
                     <h1>결제를 위해 로그인해주세요.</h1>
 
                     <!-- email -->
                     <div class="pi-payment-text">
                         <img src="{{ asset('image/gfx_letter.png') }}" />
-                        <input type="email" placeholder="이메일" id="email" />
+                        <input type="email" placeholder="이메일" id="email" name="email" maxlength="100" />
                     </div>
                     <!-- pw -->
                     <div class="pi-payment-text">
                         <img src="{{ asset('image/gfx_locked.png') }}" />
-                        <input type="password" placeholder="비밀번호" id="password" />
+                        <input type="password" placeholder="비밀번호" id="password" name="password" maxlength="100" />
                     </div>
 
-                    <button class="pi-payment-button">로그인</button>    
+                    <input type="submit" class="pi-payment-button" value="로그인" />
+                </form>
+                <div class="payment-tab" id="tab_sms">
+                    <p>결제를 위한 문자 인증을 해주세요.</p>
+
+                    <form method="post" id="smsForm">
+                        <input type="hidden" id="cipher_id" name="cipher_id" />
+                        <input class="pi-payment-text" id="authcode" name="authcode" placeholder="인증 코드" />
+                        <input type="submit" class="pi-payment-button" id="smsSubmit" value="확인" />
+                    </form>
+
+                    <div id="sms_sending">
+                        <div id="load_circle"></div>
+                        <p>코드를 보내는 중입니다.</p>
+                    </div>
+                </div>
+                <!-- payment tab -->
+                <div class="payment-tab" id="tab_payment">
+                    <div id="payment_info">
+                        <div id="payment_price">
+                            <img src="http://ricopay.pi-pay.net/image/gfx_pi.png" />
+                            <p>2 Pi (KRW 20,000)</p>
+                        </div>
+                        <div id="payment_balance">
+                            <h1>홍길동님의 잔고</h1>
+                            <p>930.15 PI</p>
+                        </div>
+                    </div>
+                    
+                    <div id="payment_complete">
+                        <p>결제가 완료되었습니다.</p>
+                        <p>이용해주셔서 감사합니다.</p>
+                    </div>
+                    <!-- issue that using button tag, absolute width not applied as expected -->
+                    <div class="pi-payment-button" id="pay">결제하기</div>
+                    <a id="receipt" href="#">영수증</a>
                 </div>
                 <!-- pi tab -->
                 <div class="payment-tab" id="tab_pi">
                     <div id="qr_wrap">
-                        <div id="qrcode">
-                            <img src="http://placehold.it/200x200" />
-                        </div>
+                        <div id="qrcode"></div>
                         <div id="tab_pi_text">
                             <p>결제를 완료하려면 아래의 주소로 파이를 보내주시기 바랍니다.</p>
-                            <p>입금주소:<br />doN45me:OdQOsldnEOflGcljmmB7</p>
+                            <p>입금주소:<br />{{ $invoice->inbound_address }}</p>
                         </div>
+                    </div>
+                    <div id="complete">
+                        <p>파이 결제가 확인되었습니다.</p>
+                        <p>이용해주셔서 감사합니다.</p>
                     </div>
                     
                     <div id="tab_pi_price">
                         <img src="{{ asset('image/gfx_pi.png') }}" />
-                        <p>1.5750 Pi (KRW 15,750)</p>
+                        <p>{{ number_format($invoice->pi_amount, 1) }} Pi (KRW {{ number_format($invoice->amount, 1) }})</p>
                     </div>
                 </div>
 

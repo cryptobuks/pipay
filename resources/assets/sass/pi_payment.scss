@@ -1,12 +1,15 @@
 @import "init.scss";
+@import "variables.scss";
 @import "utility.scss";
+@import "animation.scss";
+@import "architekt.scss";
 
 $moduleHeight: 500px;
 $moduleWidth: 380px;
 $moduleBorderRadius: 5px;
 #payment_module_background {
 	@include createPosition(fixed, 0, 0, 0, 0);
-	z-index: 300;
+	z-index: 100;
 
 	&.colored {
 		background-color: rgba(56, 61, 79, 0.6);
@@ -134,7 +137,6 @@ $moduleBorderRadius: 5px;
 				}
 			}
 			
-
 			#tab_pi {
 				> #qr_wrap {
 					overflow: hidden;
@@ -160,13 +162,31 @@ $moduleBorderRadius: 5px;
 						}
 					}
 				}
+				> #complete {
+					display: none;
+					height: 0;
+					overflow: hidden;
+					text-align: center;
+					padding: 0;
+					opacity: 0.0;
+				}
 
 				> #tab_pi_price {
+					@include createPosition(absolute, unset, 20px, 50px, 20px);
 					clear: both;
 					background-color: #e4f0fb;
 					text-align: center;
 					padding: 12px;
 					margin-top: 16px;
+					@include createTransitionDuration(0.3s);
+
+					&.done {
+						background-color: #89c997 !important;
+						
+						> p {
+							color: #fff;
+						}
+					}
 
 					&:hover {
 						background-color: darken(#e4f0fb, 10%);
@@ -186,7 +206,125 @@ $moduleBorderRadius: 5px;
 				}
 			}
 
+			#tab_sms {
+				> p {
+					padding: 32px;
+					color: #4c5356;
+					text-align: center;
+				}
 
+				> #smsForm {
+					position: relative;
+
+					> #authcode {
+						width: 75%;
+					}
+					> #smsSubmit {
+						@include createPosition(absolute, 0, 0, unset, unset);
+						@include createBorderRadius(10px);
+						padding: 10px 24px;
+					}
+				}
+
+				> #sms_sending {
+					@include createPosition(absolute, unset, 20px, 72px, 20px);
+					@include createBorderRadius(10px);
+					background-color: #e9ecf2;
+					padding: 20px;
+					text-align: center;
+
+					> p {
+						color: #4c5356;
+					}
+					> #load_circle {
+						$circle-size: 32px;
+
+						@include createBorderRadius($circle-size);
+						@include createPosition(absolute, 50%, unset, unset, 50px);
+						width: $circle-size;
+						height: $circle-size;
+						margin-top: -($circle-size / 2);
+						border: 2px dashed #4c5356;
+						color: #fff;
+						font-size: 10px;
+						text-align: center;
+
+						@include applyAnimation(webkit moz ms o, spin, 2.5s);
+					}
+				}
+			}
+
+			#tab_payment {
+				> #payment_info {
+					overflow: hidden;
+					padding-top: 32px;
+
+					> #payment_price {
+						padding: 24px;
+						text-align: center;
+
+						> * {
+							display: inline-block;
+							vertical-align: middle;
+						}
+
+						> img {
+							height: 20px;
+						}
+						> p {
+							color: #205d92;
+							font-size: 14px;
+						}
+					}
+					> #payment_balance {
+						text-align: center;
+
+						> h1 {
+							color: #4c5356;
+							font-size: 14px;
+						}
+						> p {
+							color: #4c5356;
+							font-size: 14px;
+						}
+					}	
+				}
+				
+				> #payment_complete {
+					display: none;
+					text-align: center;
+					overflow: hidden;
+					opacity: 0.0;
+					height: 0;
+
+					> p {
+						color: #4c5356;
+						font-size: 14px;
+					}
+				}
+				> #pay {
+					display: block;
+					text-align: center;
+					@include createPosition(absolute, unset, 20px, 50px, 20px);
+					@include createBorderRadius(5px);
+					@include createTransitionDuration(0.3s);
+
+					&.done {
+						background-color: #89c997 !important;
+						cursor: default;
+					}
+				}
+
+				> a#receipt {
+					@include createPosition(absolute, unset, 0, 130px, 0);
+					display: none;
+					text-decoration: underline;
+					text-align: center;
+					color: #0c69b8;
+					font-size: 12px;
+					cursor: pointer;
+				}
+			}
 		}
 	}
 }
@@ -235,6 +373,11 @@ $moduleBorderRadius: 5px;
 		> input {
 			background-color: #E1F0FF;
 		}
+	}
+
+	&:focus {
+		border-color: #63a9ee;
+		background-color: #E1F0FF;
 	}
 
 	> * {
