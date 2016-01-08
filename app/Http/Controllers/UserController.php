@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\RedirectResponse;
@@ -416,13 +417,14 @@ class UserController extends Controller
     }
 
     /**
-     * Update user data!
+     * Update user profile data!
      * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function postProfile( Request $request , $id ) 
     {
+
         $input = $request->all();
 
         $this->validate( $request , [
@@ -430,11 +432,27 @@ class UserController extends Controller
             'shop_type' => 'required|numeric' ,                       
             'settlement_currency' => 'required|alpha|max:5' ,                       
             'company' => 'required|max:255' ,                                   
-            'website' => 'url' , 
+            'website' => 'max:255' , 
             'phone' => 'phone:KR' ,      
             'logo' => 'mimes:png,jpg,jpeg',                   
         ]);
 
+        // 웹사이트 URL 에서 HTTP가 없을시 붙여주는 기능
+        if( $request->has('website') ) {
+            if( strpos( $input['website'] , 'http://' ) === FALSE && strpos( $input['website'] , 'https://' ) === FALSE ) {
+                $input['website'] = 'http://' .  $input['website']  ;                
+            }
+        }
+
+        $validator = Validator::make( $input, [  'website'  => 'url',  ]); 
+
+        if( $validator->fails()  ) {   
+            return redirect('user/profile')
+                   ->withErrors($validator)
+                   ->withInput(  );            
+        }
+
+        // 유저 프로필 업데이트 
         try{
             
             $user_profile = UserProfile::find( $id );
