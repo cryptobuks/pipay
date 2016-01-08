@@ -62,40 +62,42 @@ class InvoiceController extends Controller
         $invoice = Invoice::where( 'token' , $token )->where( 'status' , 'new' )->first();
 
         if( $invoice ) {
-            return view('invoice.index' , compact ( 'invoice' , 'token') );
+            $user_profile = UserProfile::find( $invoice->user_id );
+            return view('invoice.index' , compact ( 'invoice' , 'token' , 'user_profile' ) );
         } else {
             return "Payment has already ended or Invalid token.";
         }
     }
 
    /**
-     * Display a index of the resource.
+     * Display a test of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function test( Request $request  , $token )
     {
         $invoice = Invoice::where( 'token' , $token )->where( 'status' , 'new' )->first();
 
         if( $invoice ) {
-            return view('invoice.test' , compact ( 'invoice' , 'token') );
+            $user_profile = UserProfile::find( $invoice->user_id );            
+            return view('invoice.test' , compact ( 'invoice' , 'token' , 'user_profile' ) );
         } else {
             return "Payment has already ended or Invalid token.";
         }
     }    
 
     /**
-     * [payment 결제 처리 ]
-     * @param  Request $request [description]
-     * @param  [type]  $token   [description]
-     * @return [type]           [description]
+     * [payment 간편 결제를 처리 하는 루틴  ]
+     * @param  Request $request [ token 값 포함 ]
+     * @return  \Illuminate\Http\Response::json 
      */
     public function payment( Request $request )
     {
 
-        //$input = $request->all();
+        // 입력 값 받기 
         $input = $request->only( 'token' );
 
+        // 필드 검증 
         $validator = Validator::make( $input  , [
                 'token' => 'required|alpha_dash|max:50' ,
         ]);
@@ -110,7 +112,7 @@ class InvoiceController extends Controller
             }
         }
 
-        // 인증 확인 
+        // 로그인 인증  확인 
         if( !Auth::check() ) {
             return response::json( [ 'status' => 'unauthorized' ] , 401 );            
         }
@@ -202,7 +204,7 @@ class InvoiceController extends Controller
             return Response::json ( [ 'status' => 'save_failure'  ]  , 500 );
         }
 
-        // 결제 처리 완료 후 값 리턴 
+        // 결제 처리 완료 후 JSON 값 리턴 
         return Response::json ( [ 
             'status' => 'success' ,  
             'id' => $payment->id ,  
