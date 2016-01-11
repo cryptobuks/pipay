@@ -44,7 +44,7 @@ class OuserAddress extends Model {
 
 	public function ouser()
 	{
-		return $this->belongsTo('App\Ouser');
+		return $this->belongsTo('App\Ouser' , 'user_id' );
 	}
 
 	/**
