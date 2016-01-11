@@ -131,7 +131,7 @@ class OauthController extends Controller
         try {
             $id = Crypt::decrypt( $input['cipher_id'] );
         } catch ( DecryptException $e) {
-             Response::json( [ 'status' => 'server_decryption' ] ) ;
+             Response::json( [ 'status' => 'server_decryption' ]  , 400 ) ;
         }
 
         $user = Ouser::find( $id );
