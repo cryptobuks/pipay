@@ -67,24 +67,19 @@ class RefundController extends Controller
         $validator = Validator::make( $input, [  'address'  => 'required|email',  ]);
         if( !$validator->fails() )   {
 
-            if( $user->email == $address  ) {
-
-                $receiver_user = Ouser::where( 'activated' , 1 )->where( 'email' , $address )->first();
-
-                if( isset( $receiver_user ) ) {
-
-                    $result['success'] = true;
-                } else {
-
-                    $result['message'] = 'not_activated_email';
-                    $result['success'] = false;
-                    return Response::json ( $result , 400 );    
-                } 
-            } else {
-
-                $result['message'] = 'invalid_email' ;
+            if( $user->email == $address ) {
+                $result['message'] = 'mine_account' ;
                 $result['success'] = false;
-                return Response::json ( $result , 400 );    
+                return Response::json ( $result , 400 );
+            }
+
+            $receiver_user = Ouser::where( 'activated' , 1 )->where( 'email' , $address )->first();
+            if( isset( $receiver_user ) ) {
+                $result['success'] = true;
+            } else {
+                $result['message'] = 'not_internal_email' ;
+                $result['success'] = false;
+                return Response::json ( $result , 400 );
             }
             
         }        
@@ -92,24 +87,25 @@ class RefundController extends Controller
         // 파이 코인 주소 정보 확인 (내부/외부 회원)
         if( !$result['success'] ) {
 
-            $isAddress = invoice::getValidateAddress($address) ;
+            // 파이 주소 체크 
+            $isAddress = invoice::getValidateAddress($address);
+            $receiver_address = OuserAddress::where( 'address' , $address )->first(); 
 
-            if( $isAddress === null || $isAddress->isvalid === false){
+            if( $isAddress === null || $isAddress->isvalid === false ){
                 $result['message'] = 'invalid_address' ;
                 $result['success'] = false;
-                return Response::json ( $result , 400 );    
-            } else if( $userAddress->address == $address && $isAddress->ismine === true ) {
-              
-                if( $user->activated == true ) {
+                return Response::json ( $result , 400 );
+            } elseif( $userAddress->address == $address  ) {
+                $result['message'] = 'mine_address' ;
+                $result['success'] = false;
+                return Response::json ( $result , 400 );
+            } elseif( $isAddress->ismine === true && isset( $receiver_address ) ) {
 
+                $receiver_address->load( 'user' );
+                if( $receiver_address->user->activated == true ) {
                     $result['success'] = true;
-
-                } else {
-                    $result['message'] = 'not_activated_address' ;
-                    $result['success'] = false;
-                    return Response::json ( $result , 400 );    
                 }
-            }
+            } 
         }
 
         // 검증 성공 후 환불하기 입력 
