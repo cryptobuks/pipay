@@ -73,9 +73,7 @@
 					}
 				},
 				error: function(text, status) {
-					new Notice({
-						text: (text + status).join(", "),
-					});
+					alert( text );					
 				},
 				complete: function() {
 

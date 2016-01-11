@@ -14,6 +14,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Exception;
 use Crypt;
+use Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Session;
@@ -54,13 +55,25 @@ class OauthController extends Controller
      */
    public function loginOnce(Request $request )
     {
-        $input = $request->all();
+        $input = $request->only('email','password');
         $result = [];
 
-        $this->validate( $request , [
+        $validator = Validator::make( $input  , [
             'email' => 'required|email|max:128',
             'password' => 'required|min:6',         
         ]);
+
+        if( $validator->fails() ) 
+        {
+            $messages = $validator->messages();
+            if( $messages->first('email') ) {
+                return Response::json ( api_error_handler(  'invalid_email' , 'The email is invalid.' ) , 400 );
+            } elseif ( $messages->first('password')  )  {
+                return Response::json ( api_error_handler(  'invalid_password' , 'The password is invalid.' ) , 400 );            
+            } else {
+                return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
+            }
+        }
 
         $credentials = $request->only('email','password');
 
@@ -86,9 +99,9 @@ class OauthController extends Controller
                 return Response::json (  [ 'status' => 'save_failure' ] , 401 );
             }
 
-            return Response::json( [ 'status' => 'success' ,  'id' => Crypt::encrypt( $user->id ) ] );
+            return Response::json( [ 'status' => 'success' ,  'id' => Crypt::encrypt( $user->id ) ] , 200 );
         } else {
-            return Response::json( [ 'status' => 'failed' ]);
+            return Response::json( [ 'status' => 'failed' ] , 401 );
         }
 
     }
@@ -96,14 +109,24 @@ class OauthController extends Controller
 
     public function smsAuth( Request $request )
     {
-        $input = $request->all();
+        $input = $request->only('authcode','cipher_id');
 
-        $this->validate( $request , [
+        $validator = Validator::make( $input  , [
             'authcode' => 'required|digits:5',
             'cipher_id' => 'required|min:6',         
         ]);
 
-        $input = $request->only('authcode','cipher_id');
+        if( $validator->fails() ) 
+        {
+            $messages = $validator->messages();
+            if( $messages->first('authcode') ) {
+                return Response::json ( api_error_handler(  'invalid_authcode' , 'The authcode is invalid.' ) , 400 );
+            } elseif ( $messages->first('cipher_id')  )  {
+                return Response::json ( api_error_handler(  'invalid_cipher_id' , 'The cipher_id is invalid.' ) , 400 );            
+            } else {
+                return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
+            }
+        }
 
         try {
             $id = Crypt::decrypt( $input['cipher_id'] );
@@ -131,10 +154,10 @@ class OauthController extends Controller
 
         }  catch (Exception $e) {
             DB::rollback();
-            return Response::json( [ 'status' => 'save_failure' ] );            
+            return Response::json( [ 'status' => 'save_failure' ] , 400  );            
         }
 
-        return Response::json( [ 'status' => $result  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] );
+        return Response::json( [ 'status' => $result  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] , 200  );
 
     }
 
