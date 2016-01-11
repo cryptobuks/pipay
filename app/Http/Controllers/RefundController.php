@@ -101,8 +101,8 @@ class RefundController extends Controller
                 return Response::json ( $result , 400 );
             } elseif( $isAddress->ismine === true && isset( $receiver_address ) ) {
 
-                $receiver_address->load( 'user' );
-                if( $receiver_address->user->activated == true ) {
+                $receiver_address->load( 'ouser' );
+                if( $receiver_address->ouser->activated == true ) {
                     $result['success'] = true;
                 }
             } 
