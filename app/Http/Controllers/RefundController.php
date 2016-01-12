@@ -52,10 +52,22 @@ class RefundController extends Controller
     {
         $input = $request->all();
         
-        $this->validate( $request , [
+        $validator = Validator::make( $input  , [
             'address'  => 'required|max:80',   
             'amount'  => 'required|numeric|min:0.01|max:1000000',
         ]);
+
+        if( $validator->fails() ) 
+        {
+            $messages = $validator->messages();
+            if( $messages->first('address') ) {
+                return Response::json ( api_error_handler(  'invalid_address' , 'The address is invalid.' ) , 400 );
+            } elseif ( $messages->first('amount')  )  {
+                return Response::json ( api_error_handler(  'invalid_amount' , 'The amount is invalid.' ) , 400 );            
+            } else {
+                return Response::json ( api_error_handler(  'invalid_request' , 'The Input format is invalid.' ) , 400 );
+            }
+        }
 
         $user = Ouser::find( $this->sentry->getUser()->id );
         $userAddress = OuserAddress::where('user_id' , $user->id )->first();
@@ -110,6 +122,8 @@ class RefundController extends Controller
 
         // 검증 성공 후 환불하기 입력 
         if( $result['success'] == true ) {
+            
+            $invoice = Invoice::find( $input['invoice_id'] );
 
             $refund_data = [
                         'user_id' => $user->id,
@@ -123,7 +137,13 @@ class RefundController extends Controller
             DB::beginTransaction();
             try {
 
+                // 환불 데이터 추가 
                 Refund::create($refund_data);
+
+                // 환불 주소 
+                $invoice->refund_address = $input['address'];
+                $invoice->save();
+
                 $result['success'] = true;
 
                 DB::commit();

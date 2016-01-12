@@ -43,7 +43,7 @@ class Oaccount extends Model  {
 
 	public function user()
 	{
-		return $this->belongsTo('App\Ouser');
+		return $this->belongsTo('App\Ouser' , 'user_id');
 	}
 
 	public function currency()

@@ -41,7 +41,7 @@ class Transfers extends Command
 
     protected $exchange_api ;
     /**
-     * Create a new command instance.
+     * Create a transfers command instance.
      *
      * @return void
      */

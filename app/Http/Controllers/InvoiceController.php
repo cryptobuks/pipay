@@ -134,10 +134,14 @@ class InvoiceController extends Controller
         $api_token = $this->exchange_api->getAccessToken();
 
         // 결제 송금  API 호출 
-        $transfer = $this->exchange_api->pay_transfer( $api_token['access_token'] , [ 'user_email' => $user->email , 'pi_amount' => $invoice->pi_amount ]  );
+        if( $api_token['access_token'] ) {
+            $transfer = $this->exchange_api->pay_transfer( $api_token['access_token'] , [ 'user_email' => $user->email , 'pi_amount' => $invoice->pi_amount ]  );
 
-        if( $transfer['status'] != 'success' ) {
-            return Response::json (   [ 'status' => $transfer['status'] ]  , 500 );
+            if( $transfer['status'] != 'success' ) {
+                return Response::json (   [ 'status' => $transfer['status'] ]  , 500 );
+            }
+        } else {
+                return Response::json (   [ 'status' => $api_token['status'] ]  , 500 );            
         }
 
         // 호출 성공후 인보이스 테이블 업데이트 , payment 테이블에 데이터 추가 , trasnaction , 원장  테이블에 데이터 추가

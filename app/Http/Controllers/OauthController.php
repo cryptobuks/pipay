@@ -157,7 +157,11 @@ class OauthController extends Controller
             return Response::json( [ 'status' => 'save_failure' ] , 400  );            
         }
 
-        return Response::json( [ 'status' => $result  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] , 200  );
+        if( $result['success'] == true ) {
+            return Response::json( [ 'status' => 'success'  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] , 200  );
+        } else {
+            return Response::json( [ 'status' => 'failed'  ] , 400  );            
+        }
 
     }
 
@@ -181,7 +185,7 @@ class OauthController extends Controller
      public function logout( )
      {
         Auth::logout(); 
-        return back();                     
+        return Response::json( [ 'status' => 'success' ] );
      }
 
  

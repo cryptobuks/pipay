@@ -137,4 +137,45 @@ class ExchangeAPI extends Model
 
     }    
     
+
+    /**
+     * [move  계좌 이동 ]
+     * @param  [type] $access_token [description]
+     * @param  [type] $data         [description]
+     * @return [type]               [description]
+     */
+    public function move( $access_token , $data ) {
+        
+        $pay_user = Config::get('common.pay_user');   
+        $url_path = '/api/v2/funds/coins/transfer';
+
+        try {
+
+            $client = new \GuzzleHttp\Client( [ 'base_uri' =>  $pay_user['base_uri']  ] );
+
+            $res = $client->request( 'POST' , $url_path  , [
+                'headers' => [
+                    'User-Agent' => 'PI-Payment/0.1' ,
+                    'Authorization' => 'Bearer ' . $access_token , 
+                ] ,
+                'form_params' => [
+                    'from_address' => $data['from_address'] , 
+                    'to_address' => $data['to_address'] , 
+                    'amount' => $data['amount']  ,                                 
+                    'currency' => $data['currency']  ,                 
+                ] ,
+             ]);
+
+
+            $result =  $res->getBody() ;
+
+        } catch ( RequestException $e) {
+            return [ 'status' => 'unauthorized' ]  ;            
+        } catch (ClientException $e) {
+            return  [ 'status' => 'http_client_error' ]  ;            
+        }
+
+        return json_decode( $result  , true ) ;
+
+    }        
 }

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\PiTransactions::class,
         \App\Console\Commands\Transfers::class,        
+        \App\Console\Commands\Refunds::class,                
     ];
 
     /**
