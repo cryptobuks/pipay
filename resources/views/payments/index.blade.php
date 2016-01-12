@@ -305,7 +305,7 @@
                         _error('환불 금액을 입력해주세요.', refundWidget.select('amount'));
                         return false;
                     }
-                    else if(!Validator.is(amount, number)) {
+                    else if(!Validator.is(amount, 'numeric')) {
                         _error('환불 금액은 숫자로 입력해주세요.', refundWidget.select('amount'));
                         return false;
                     }
@@ -329,13 +329,27 @@
                         success: function(data) {
                             refundWidget.hide();
                         },
-                        error: function(error) {
+                        error: function(err) {
+                            var errText = '서버에 오류가 발생하였습니다. 관리자에게 문의해주세요.';
+                            var errorMessage = err.response.message;
+
+                            if(errorMessage === 'mine_account' || errorMessage === 'mine_address') {
+                                errText = '본인 계정으로는 환불할 수 없습니다.';
+                            }
+                            else if(errorMessage === 'not_internal_email') {
+                                errText = '비활성 계정이거나 없는 계정입니다.';
+                            }
+                            else if(errorMessage === 'invalid_address') {
+                                errText = '주소 형식이 올바르지 않습니다. 다시 한번 확인해주세요.';
+                            }
+
+                            
                             new Notice({
-                                text: '오류가 발생하였습니다. 관리자에게 문의해주세요.',
+                                text: errText,
                             });
 
                             //log
-                            Printer.inspect(error);
+                            Printer.inspect(err);
                         }
                     });
                 },

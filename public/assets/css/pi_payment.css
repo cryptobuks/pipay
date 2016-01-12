@@ -310,6 +310,11 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   right: unset;
   bottom: unset;
   left: 50%;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
   width: 380px;
   height: 500px;
   margin-top: -250px;
@@ -364,6 +369,8 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   -moz-border-radius: 64px;
   -o-border-radius: 64px;
   -ms-border-radius: 64px;
+  border: 3px solid #CAE6FF;
+  background-color: #fff;
 }
 
 #payment_module_background > #payment_module > #payment_module_top > h1 {
@@ -447,6 +454,7 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
 }
 
 #payment_module_background > #payment_module > #payment_module_content > .payment-tab {
+  position: relative;
   display: none;
 }
 
@@ -478,7 +486,7 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   width: 250px;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_easy > .pi-payment-button {
+#payment_module_background > #payment_module > #payment_module_content #tab_easy > .submitContainer > .pi-payment-button {
   display: block;
   width: 100%;
   margin: 24px 0 8px 0;
@@ -563,6 +571,10 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   font-size: 14px;
 }
 
+#payment_module_background > #payment_module > #payment_module_content #tab_sms {
+  position: initial;
+}
+
 #payment_module_background > #payment_module > #payment_module_content #tab_sms > p {
   padding: 32px;
   color: #4c5356;
@@ -577,12 +589,15 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   width: 75%;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_sms > #smsForm > #smsSubmit {
+#payment_module_background > #payment_module > #payment_module_content #tab_sms > #smsForm > .submitContainer {
   position: absolute;
   top: 0;
   right: 0;
   bottom: unset;
   left: unset;
+}
+
+#payment_module_background > #payment_module > #payment_module_content #tab_sms > #smsForm > .submitContainer > #submitSms {
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -605,6 +620,10 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
 #payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_info > p {
   font-size: 10px;
   color: #4c5356;
+}
+
+#payment_module_background > #payment_module > #payment_module_content #tab_payment {
+  position: initial;
 }
 
 #payment_module_background > #payment_module > #payment_module_content #tab_payment > #payment_info {
@@ -658,14 +677,19 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   font-size: 14px;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_payment > #pay {
-  display: block;
-  text-align: center;
+#payment_module_background > #payment_module > #payment_module_content #tab_payment > .submitContainer {
   position: absolute;
   top: unset;
   right: 20px;
   bottom: 50px;
   left: 20px;
+}
+
+#payment_module_background > #payment_module > #payment_module_content #tab_payment > .submitContainer > #pay {
+  display: block;
+  text-align: center;
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -678,7 +702,7 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   -ms-transition-duration: 0.3s;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_payment > #pay.done {
+#payment_module_background > #payment_module > #payment_module_content #tab_payment > .submitContainer > #pay.done {
   background-color: #89c997 !important;
   cursor: default;
 }
@@ -790,4 +814,36 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
 
 .pi-payment-button:active {
   background-color: #1776d4;
+}
+
+.pi-payment-button.locked {
+  cursor: not-allowed !important;
+  background-color: ligten(#63a9ee, 30%) !important;
+}
+
+.submitContainer {
+  position: relative;
+}
+
+.submitContainer > .loading-image {
+  display: none;
+  top: 50%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+.submitContainer.loading > .loading-image {
+  display: block;
+}
+
+.submitContainer.loading > .pi-payment-button {
+  color: transparent;
+}
+
+.loading-image {
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 20px;
 }

@@ -6,6 +6,7 @@ Architekt.event.on('ready', function() {
 	var Notice = Architekt.module.Widget.Notice;
 	var Confirm = Architekt.module.Widget.Confirm;
 
+
 	var paymentComplete = false;	//this variable check for complete payment animation if already completed.
 	var dom = {
 		moduleBackground: $('#payment_module_background'),
@@ -31,8 +32,14 @@ Architekt.event.on('ready', function() {
 					padding: 0,
 				}).animate({
 					height: '32px',
-					padding: '8px'
+					padding: '8px',
 				}, 300, 'swing');
+
+				//resize whole module
+				dom.module.css({
+					height: '532px',
+					'margin-top': '-266px',
+				});
 
 				return this;
 			},
@@ -47,6 +54,12 @@ Architekt.event.on('ready', function() {
 					padding: 0
 				}, 300, 'swing');
 
+				//resize whole module
+				dom.module.css({
+					height: '500px',
+					'margin-top': '-250px',
+				});
+
 				return this;
 			},
 		},
@@ -56,6 +69,7 @@ Architekt.event.on('ready', function() {
 		easy: {
 			email: $('#email'),
 			password: $('#password'),
+			submit: $('#submitLogin'),
 			reset: function() {
 				$('#email').val('');
 				$('#password').val('');
@@ -65,21 +79,24 @@ Architekt.event.on('ready', function() {
 			form: $('#smsForm'),
 			code: $('#authcode'),
 			cipher: $('#cipher_id'),
-			submit: $('#smsSubmit'),
+			submit: $('#submitSms'),
 			reset: function() {
 				$('#authcode').val('');
 				$('#cipher_id').val('');
 			},
 		},
 		pay: {
-			pay: $('#pay'),
+			submit: $('#pay'),
 		}
 	};
 	var currentTab = null;
-	var previousTab = null;
+	var previousTab = null;	//remember the preivous tab on switch the tab
+
 	//socket for check pi-address payment(pi sending)
 	var paymentSocket = io('http://devpay.pi-pay.net:8800');
 
+
+	//common error handler for validations
 	function _error(text, focus, reset) {
 		new Notice({
 			text:text,
@@ -91,7 +108,7 @@ Architekt.event.on('ready', function() {
 	}
 
 	function appInit() {
-		//module settings
+		//module settings here:
 		Printer.setLevel(0);
 
 		
@@ -104,6 +121,9 @@ Architekt.event.on('ready', function() {
 			currentTab = dom.tabs.payment;
 			dom.ucp.email.text(Architekt.userInfo.email);
 			dom.ucp.show();
+
+			$('#payment_balance > h1').text(Architekt.userInfo.name + '님의 잔고');
+			$('#payment_balance > p').text(parseFloat(Architekt.userInfo.balance).toFixed(1) + ' Pi');
 		}
 		else {
 			currentTab = dom.tabs.easy;
@@ -115,6 +135,90 @@ Architekt.event.on('ready', function() {
 
 		currentTab.fadeIn(200);
 	}
+
+	/*****************************************************************************************
+	 *
+	 *
+	 * 								Animation functions
+	 *
+	 *
+	 *****************************************************************************************/
+
+	var animation = {
+		submitLogin: {
+			isPlaying: false,
+			play: function() {
+				if(this.isPlaying) return;
+				this.isPlaying = true;
+
+				component.easy.submit.addClass('locked');
+				component.easy.email.attr('readonly', true);
+				component.easy.password.attr('readonly', true);
+
+				component.easy.submit.parent().addClass('loading');
+			},
+			stop: function() {
+				if(!this.isPlaying) return;
+				this.isPlaying = false;
+
+				component.easy.submit.removeClass('locked');
+				component.easy.email.removeAttr('readonly', true);
+				component.easy.password.removeAttr('readonly', true);
+
+				component.easy.submit.parent().removeClass('loading');
+			},
+		},
+		submitSms: {
+			isPlaying: false,
+			play: function() {
+				if(this.isPlaying) return;
+				this.isPlaying = true;
+
+				component.sms.submit.addClass('locked');
+				component.sms.code.attr('readonly', true);
+
+				component.sms.submit.parent().addClass('loading');
+			},
+			stop: function() {
+				if(!this.isPlaying) return;
+				this.isPlaying = false;
+
+				component.sms.submit.removeClass('locked');
+				component.sms.code.removeAttr('readonly', true);
+
+				component.sms.submit.parent().removeClass('loading');
+			},
+		},
+		pay: {
+			isPlaying: false,
+			play: function() {
+				if(this.isPlaying) return;
+				this.isPlaying = true;
+
+				component.pay.submit.addClass('locked');
+
+				component.pay.submit.parent().addClass('loading');
+			},
+			stop: function() {
+				if(!this.isPlaying) return;
+				this.isPlaying = false;
+
+				component.pay.submit.removeClass('locked');
+
+				component.pay.submit.parent().removeClass('loading');
+			},
+		},
+	};
+
+
+
+	 /*****************************************************************************************
+	 *
+	 *
+	 * 							Application manipulate functions
+	 *
+	 *
+	 *****************************************************************************************/
 
 	function attachEvents() {
 		var _isSubmit = false;	//check for form submit, prevent event duplication
@@ -186,6 +290,7 @@ Architekt.event.on('ready', function() {
 
 
 			_isSubmit = true;
+			animation.submitLogin.play();
 
 			Http.post({
 				url: '/oauth/loginOnce',
@@ -205,7 +310,7 @@ Architekt.event.on('ready', function() {
 						currentTab = dom.tabs.sms;
 
 						dom.tabs.sms.fadeIn(300, function() {
-							component.sms.cipher.focus();
+							component.sms.code.focus();
 						});
 					});
 				},
@@ -234,6 +339,7 @@ Architekt.event.on('ready', function() {
 				},
 				complete: function() {
 					_isSubmit = false;
+					animation.submitLogin.stop();
 				}
 			});			
 
@@ -265,6 +371,7 @@ Architekt.event.on('ready', function() {
 
 
 			_isSubmit = true;
+			animation.submitSms.play();
 
 			Http.post({
 				url: '/oauth/smsAuth',
@@ -312,18 +419,20 @@ Architekt.event.on('ready', function() {
 				},
 				complete: function() {
 					_isSubmit = false;
+					animation.submitSms.stop();
 				}
 			});
 
 			return false;
 		});
 
-		//easy payment - pay
-		component.pay.pay.click(function() {
+		//easy payment - pay: remember that pay tab is not a form
+		component.pay.submit.click(function() {
 			if(_isSubmit) return;
 
 
 			_isSubmit = true;
+			animation.pay.play();
 
 			Http.post({
 				url: '/invoice/payment',
@@ -341,7 +450,7 @@ Architekt.event.on('ready', function() {
 						opacity: '0.0'
 					}, 300, 'swing', function() {
 						$(this).remove();
-						component.pay.pay.addClass('done').text('결제 완료').off('click');
+						component.pay.submit.addClass('done').text('결제완료').off('click');
 
 						$('#payment_complete').delay(100).show().animate({
 							height: '80px',
@@ -367,6 +476,7 @@ Architekt.event.on('ready', function() {
 				},
 				complete: function() {
 					_isSubmit = false;
+					animation.pay.stop();
 				}
 			});
 		});

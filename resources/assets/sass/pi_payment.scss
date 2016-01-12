@@ -19,6 +19,7 @@ $moduleBorderRadius: 5px;
 		display: none;
 
 		@include createPosition(absolute, 50%, unset, unset, 50%);
+		@include createTransitionDuration(0.3s);
 		width: $moduleWidth;
 		height: $moduleHeight;
 		margin-top: -($moduleHeight / 2);
@@ -56,6 +57,8 @@ $moduleBorderRadius: 5px;
 				height: 64px;
 				margin: 0 auto;
 				@include createBorderRadius(64px);
+				border: 3px solid #CAE6FF;
+    			background-color: #fff;
 			}
 			> h1 {
 				text-align: center;
@@ -127,6 +130,7 @@ $moduleBorderRadius: 5px;
 			}
 
 			> .payment-tab {
+				position: relative;
 				display: none;
 			}
 			> .payment-tab-footer {
@@ -154,10 +158,12 @@ $moduleBorderRadius: 5px;
 					}
 				}
 
-				> .pi-payment-button {
-					display: block;
-					width: 100%;
-					margin: 24px 0 8px 0;
+				> .submitContainer {
+					> .pi-payment-button {
+						display: block;
+						width: 100%;
+						margin: 24px 0 8px 0;
+					}
 				}
 			}
 			
@@ -231,6 +237,8 @@ $moduleBorderRadius: 5px;
 			}
 
 			#tab_sms {
+				position: initial;
+
 				> p {
 					padding: 32px;
 					color: #4c5356;
@@ -243,10 +251,14 @@ $moduleBorderRadius: 5px;
 					> #authcode {
 						width: 75%;
 					}
-					> #smsSubmit {
+
+					> .submitContainer {
 						@include createPosition(absolute, 0, 0, unset, unset);
-						@include createBorderRadius(10px);
-						padding: 10px 24px;
+
+						> #submitSms {
+							@include createBorderRadius(10px);
+							padding: 10px 24px;
+						}
 					}
 				}
 
@@ -264,6 +276,8 @@ $moduleBorderRadius: 5px;
 			}
 
 			#tab_payment {
+				position: initial;
+
 				> #payment_info {
 					overflow: hidden;
 					padding-top: 32px;
@@ -311,16 +325,22 @@ $moduleBorderRadius: 5px;
 						font-size: 14px;
 					}
 				}
-				> #pay {
-					display: block;
-					text-align: center;
-					@include createPosition(absolute, unset, 20px, 50px, 20px);
-					@include createBorderRadius(5px);
-					@include createTransitionDuration(0.3s);
 
-					&.done {
-						background-color: #89c997 !important;
-						cursor: default;
+				> .submitContainer {
+					@include createPosition(absolute, unset, 20px, 50px, 20px);
+
+					> #pay {
+						display: block;
+						text-align: center;
+						width: 100%;
+						height: 100%;
+						@include createBorderRadius(5px);
+						@include createTransitionDuration(0.3s);
+
+						&.done {
+							background-color: #89c997 !important;
+							cursor: default;
+						}
 					}
 				}
 
@@ -418,4 +438,36 @@ $moduleBorderRadius: 5px;
 	&:active {
 		background-color: darken(#63a9ee, 20%);
 	}
+
+	&.locked {
+		cursor: not-allowed !important;
+		background-color: ligten(#63a9ee, 30%) !important;
+	}
+}
+
+.submitContainer {
+	position: relative;
+
+	> .loading-image {
+		display: none;
+		top: 50%;
+		left: 50%;
+		margin-top: -10px;
+		margin-left: -10px;
+	}
+
+	&.loading {
+		> .loading-image {
+			display: block;
+		}
+		> .pi-payment-button {
+			color: transparent;
+		}
+	}
+}
+.loading-image {
+	position: absolute;
+	display: block;
+	width: 20px;
+	height: 20px;
 }

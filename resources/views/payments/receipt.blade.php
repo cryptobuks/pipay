@@ -27,7 +27,41 @@
 					<tr id="receipt_hasBorder">
 						<td id="receipt_title" colspan="2">영수증</td>
 					</tr>
-					
+<?php
+
+	$status = $invoice->status;
+
+	switch($status) {
+        case 'new':
+            $status = '대기';
+            break;
+        case 'pending':
+            $status = '결제 확인 중';
+            break;
+        case 'confirmed':
+            $status = '결제 완료';
+            break;
+        case 'failed':
+            $status = '결제 실패';
+            break;
+        case 'expired':
+            $status = '결제 만료';
+            break;
+        case 'refunded':
+            $status = '전액 환불';
+            break;
+        case 'refunded_partial':
+            $status = '일부 환불';
+            break;
+        case 'settlement_complete':
+            $status = '정산 완료';
+            break;
+        default:
+            $status = '';
+            break;
+    }
+
+?>
 					<!-- product details -->
 					<tr>
 						<td>상품명</td>
@@ -35,7 +69,7 @@
 					</tr>
 					<tr>
 						<td>결제액</td>
-						<td>{{ $invoice->pi_amount }}</td>
+						<td>{{ number_format( $invoice->pi_amount, 1 ) }} Pi</td>
 					</tr>
 					<tr>
 						<td>결제일</td>
@@ -47,7 +81,7 @@
 					</tr>
 					<tr>
 						<td>결제상태</td>
-						<td>{{ $invoice->status }}</td>
+						<td>{{ $status }}</td>
 					</tr>
 
 					<!-- widget info -->

@@ -18,7 +18,7 @@
 </head>
 <body>
     <script>
-        //data might be required from client form server should here:
+        //data for external payment from server should be here:
         Architekt.event.on('preparing', function() {
             //put pre-data about user
             Architekt.userInfo = Architekt.userInfo || {};
@@ -28,9 +28,12 @@
     if( $loggedIn = Auth::check() ) {
 
         $user = Auth::user();
+        $account = Oaccount::whereUserId($user->id)->first();
 
 ?>
             Architekt.userInfo.email = '{{ $user->email }}';
+            Architekt.userInfo.name = '{{ $user->username }}';
+            Architekt.userInfo.balance = '{{ $account->balance }}';
 <?php
     
     }
@@ -83,7 +86,10 @@
                         <input type="password" placeholder="비밀번호" id="password" name="password" maxlength="100" />
                     </div>
 
-                    <input type="submit" class="pi-payment-button" value="로그인" />
+                    <div class="submitContainer">
+                        <input id="submitLogin" type="submit" class="pi-payment-button" value="로그인" />
+                        <img class="loading-image" src="{{ asset('image/payment_loading.gif') }}" />
+                    </div>
                 </form>
                 <div class="payment-tab" id="tab_sms">
                     <p>결제를 위한 문자 인증을 해주세요.</p>
@@ -91,7 +97,12 @@
                     <form method="post" id="smsForm">
                         <input type="hidden" id="cipher_id" name="cipher_id" />
                         <input class="pi-payment-text" id="authcode" name="authcode" placeholder="인증 코드" maxlength="5" />
-                        <input type="submit" class="pi-payment-button" id="smsSubmit" value="확인" />
+
+                        <div class="submitContainer">
+                            <input type="submit" class="pi-payment-button" id="submitSms" value="확인" />
+                            <img class="loading-image" src="{{ asset('image/payment_loading.gif') }}" />
+                        </div>
+                        
                     </form>
 
                     <div id="sms_info">
@@ -106,8 +117,8 @@
                             <p>{{ number_format($invoice->pi_amount, 1) }} Pi (KRW {{ number_format($invoice->amount, 1) }})</p>
                         </div>
                         <div id="payment_balance">
-                            <h1>홍길동님의 잔고</h1>
-                            <p>930.15 PI</p>
+                            <h1></h1>
+                            <p></p>
                         </div>
                     </div>
                     
@@ -115,8 +126,14 @@
                         <p>결제가 완료되었습니다.</p>
                         <p>이용해주셔서 감사합니다.</p>
                     </div>
+
                     <!-- issue that using button tag, absolute width not applied as expected -->
-                    <div class="pi-payment-button" id="pay">결제하기</div>
+                    
+                    <div class="submitContainer">
+                        <div class="pi-payment-button" id="pay">결제하기</div>
+                        <img class="loading-image" src="{{ asset('image/payment_loading.gif') }}" />
+                    </div>
+
                     <a id="receipt" href="{{ url('/receipt/' . $invoice->token) }}" target="_blank">영수증</a>
                 </div>
                 <!-- pi tab -->
