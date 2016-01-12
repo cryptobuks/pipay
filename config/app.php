@@ -155,6 +155,7 @@ return [
         Vinkla\Hashids\HashidsServiceProvider::class , 
         Cartalyst\Sentry\SentryServiceProvider::class,     
         Intervention\Image\ImageServiceProvider::class ,  
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
@@ -214,7 +215,8 @@ return [
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class , 
         'Sentry' => Cartalyst\Sentry\Facades\Laravel\Sentry::class,      
         'Image' => Intervention\Image\Facades\Image::class ,   
-        'Oaccount' => App\Oaccount::class ,           
+        'Oaccount' => App\Oaccount::class ,  
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class ,         
     ],
 
 ];

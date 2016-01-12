@@ -20,7 +20,8 @@
         "lucadegasperi/oauth2-server-laravel": "~5.0",
         "propaganistas/laravel-phone": "~2.0" , 
         "vinkla/hashids": "~2.1",
-        "intervention/image": "^2.3" 
+        "intervention/image": "^2.3" ,
+        "maatwebsite/excel": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
