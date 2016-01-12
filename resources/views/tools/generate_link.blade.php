@@ -6,8 +6,7 @@
     	window.generateType = 'link';
 
     	Architekt.event.on('ready', function() {
-    		//load payment module styles
-    		Architekt.loadCSS("{{ asset('assets/css/pi_payment.css') }} ");
+    		
     	});
     </script>
     

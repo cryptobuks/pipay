@@ -115,26 +115,27 @@ Architekt.event.on('ready', function() {
 			_error('상품명은 2글자 이상으로 입력해주세요.', itemDesc);
 			return false;
 		}
-		else if(!Validator.checkIfNotEmpty('alphanumeric', orderId.val())) {
+		else if(!Validator.checkIfNotEmpty(orderId.val(), 'alphanumeric')) {
 			_error('상품번호는 영문자와 숫자의 조합만 사용가능합니다.', orderId);
 			return false;
 		}
-		else if(!Validator.check('numeric', amount.val())) {
+		else if(!Validator.is(amount.val(), 'numeric')) {
 			_error('상품가격은 숫자로 입력해주세요.', amount);
 			return false;
 		}
-		else if(!Validator.checkIfNotEmpty('email', email.val())) {
+		else if(!Validator.checkIfNotEmpty(email.val(), 'email')) {
 			_error('이메일은 이메일 형식으로 입력해주세요!', email);
 			return false;
 		}
-		else if(!Validator.checkIfNotEmpty('url', redirectUrl.val())) {
+		else if(!Validator.checkIfNotEmpty(redirectUrl.val(), 'url')) {
 			_error('결제 후 연결할 URL주소는 URL 형식으로 입력해주세요!', redirectUrl);
 			return false;
 		}
-		else if(!Validator.checkIfNotEmpty('url', ipn.val())) {
+		else if(!Validator.checkIfNotEmpty(ipn.val(), 'url')) {
 			_error('IPN은 URL 형식으로 입력해주세요!', ipn);
 			return false;
 		}
+
 
 		_isSubmittingCreateProduct = true;
 

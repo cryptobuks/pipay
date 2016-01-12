@@ -22,8 +22,6 @@ Architekt.module.reserv('Clipboard', function(options) {
 			targetDom.select();
 			success = document.execCommand('copy');
 			
-			if(!success) throw new Error('UnknownErrorException');
-
 			//if dom had disabled attribute, restore it.
 			if(hasDisabled) {
 				targetDom.attr('disabled', 'disabled');

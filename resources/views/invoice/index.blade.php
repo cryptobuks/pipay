@@ -20,10 +20,27 @@
     <script>
         //data might be required from client form server should here:
         Architekt.event.on('preparing', function() {
-            Architekt.userInfi = Architekt.userInfo || {};
+            //put pre-data about user
+            Architekt.userInfo = Architekt.userInfo || {};
+<?php
+
+    //if user already logged in
+    if( $loggedIn = Auth::check() ) {
+
+        $user = Auth::user();
+
+?>
+            Architekt.userInfo.email = '{{ $user->email }}';
+<?php
+    
+    }
+?>
+
+            //put pre-data about product
             Architekt.productInfo = Architekt.productInfo || {};
             Architekt.productInfo.address = '{{ $invoice->inbound_address }}';
             Architekt.productInfo.id = '{{ $invoice->id }}';
+            Architekt.productInfo.token = '{{ $invoice->token }}';
         });
     </script>
 
@@ -32,9 +49,15 @@
             <!-- top -->
             <div id="payment_module_top">
                 <div id="payment_module_exit">×</div>
-                <img src="http://placehold.it/200x200" />
+                <img src="{{ asset('upload/profile/' . $user_profile->logo) }}" />
                 <h1>{{ $user_profile->company }}</h1>
                 <p>{{ $invoice->item_desc }}</p>
+            </div>
+            <!-- user info -->
+            <div id="payment_module_ucp">
+                <span id="ucp_email"></span>
+                <span>|</span>
+                <span id="ucp_logout"><a href="/oauth/logout">Logout</a></span>
             </div>
             <!-- content -->
             <div id="payment_module_content">
@@ -52,7 +75,7 @@
                     <!-- email -->
                     <div class="pi-payment-text">
                         <img src="{{ asset('image/gfx_letter.png') }}" />
-                        <input type="email" placeholder="이메일" id="email" name="email" maxlength="100" />
+                        <input type="email" placeholder="이메일" id="email" name="email" maxlength="128" autofocus />
                     </div>
                     <!-- pw -->
                     <div class="pi-payment-text">
@@ -67,13 +90,12 @@
 
                     <form method="post" id="smsForm">
                         <input type="hidden" id="cipher_id" name="cipher_id" />
-                        <input class="pi-payment-text" id="authcode" name="authcode" placeholder="인증 코드" />
+                        <input class="pi-payment-text" id="authcode" name="authcode" placeholder="인증 코드" maxlength="5" />
                         <input type="submit" class="pi-payment-button" id="smsSubmit" value="확인" />
                     </form>
 
-                    <div id="sms_sending">
-                        <div id="load_circle"></div>
-                        <p>코드를 보내는 중입니다.</p>
+                    <div id="sms_info">
+                        <p>결제 코드가 고객님의 핸드폰으로 발송되었습니다. 만약 문자가 수신되지 않는다면 페이지를 새로 불러오시거나 관리자에게 문의해주세요.</p>
                     </div>
                 </div>
                 <!-- payment tab -->
@@ -81,7 +103,7 @@
                     <div id="payment_info">
                         <div id="payment_price">
                             <img src="http://ricopay.pi-pay.net/image/gfx_pi.png" />
-                            <p>2 Pi (KRW 20,000)</p>
+                            <p>{{ number_format($invoice->pi_amount, 1) }} Pi (KRW {{ number_format($invoice->amount, 1) }})</p>
                         </div>
                         <div id="payment_balance">
                             <h1>홍길동님의 잔고</h1>
@@ -95,7 +117,7 @@
                     </div>
                     <!-- issue that using button tag, absolute width not applied as expected -->
                     <div class="pi-payment-button" id="pay">결제하기</div>
-                    <a id="receipt" href="#">영수증</a>
+                    <a id="receipt" href="{{ url('/receipt/' . $invoice->token) }}" target="_blank">영수증</a>
                 </div>
                 <!-- pi tab -->
                 <div class="payment-tab" id="tab_pi">

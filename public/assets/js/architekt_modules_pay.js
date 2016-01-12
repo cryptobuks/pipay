@@ -446,8 +446,8 @@ Architekt.module.reserv('Validator', function(options) {
 	formular.numeric = formular.number = formular.real;
 
 	return {
-		//Architekt.module.Validator.check(string type, string string): Validate string
-		check: function(type, string) {
+		//Architekt.module.Validator.is(string type, string string): Validate type of the string
+		is: function(string, type) {
 			var noneSupported = false;
 
 			switch(type) {
@@ -473,18 +473,51 @@ Architekt.module.reserv('Validator', function(options) {
 			if(result) return true;
 			else return false;
 		},
+		//Architekt.module.Validator.check(string type, string string): Alias of Validator.is
+		check: function(string, type) {
+			return this.is(string, type);
+		},
 		//Architekt.module.Validator.empty(string string): Returns true if the string is empty or null or undefined
 		empty: function(string) {
 			if(typeof string === 'undefined' || string === '' || string === null) return true;
 			return false;
 		},
-		//Architekt.module.Valditor.checkIfNotEmpty(string type, string string): Check the string is validate if it is not empty. If it is empty, returns true.
-		checkIfNotEmpty: function(type, string) {
+		//Architekt.module.Valditor.checkIfNotEmpty(string string, string type): Check the string type if it is not empty. Empty just returns true.
+		checkIfNotEmpty: function(string, type) {
 			if(!this.empty(string)) {
-				return this.check(type, string);
+				return this.check(string, type);
 			}
 
 			return true;
+		},
+		//Architekt.module.Validator.length(string string, string comparator, int length): Check the string length with comparator
+		length: function(string, comparator, length) {
+			var result = false;
+			comparator = typeof comparator !== 'undefined' ? comparator : '=';
+			length = typeof length !== 'undefined' ? +length : 0;
+
+			switch(comparator) {
+				case '>':
+					result = (string.length > length) ;
+					break;
+				case '>=':
+					result = (string.length >= length) ;
+					break;
+				case '<':
+					result = (string.length < length) ;
+					break;
+				case '<=':
+					result = (string.length <= length) ;
+					break;
+				case '=':
+					result = (string.length === length) ;
+					break;
+				default:
+					result = false;
+					break;
+			}
+
+			return result;
 		},
 		//Architekt.module.Validator.formular(int leftSide, int rightSide, function filter): Create formular
 		formular: function(leftSide, rightSide, filter) {

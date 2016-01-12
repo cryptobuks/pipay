@@ -377,7 +377,34 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   font-size: 12px;
 }
 
+#payment_module_background > #payment_module > #payment_module_ucp {
+  overflow: hidden;
+  height: 0;
+  padding: 0;
+  background-color: #d9ecff;
+  color: #4c5356;
+  border: 1px solid #757e82;
+  border-bottom: none;
+  text-align: center;
+}
+
+#payment_module_background > #payment_module > #payment_module_ucp > span {
+  font-size: 12px;
+  margin: 8px;
+}
+
+#payment_module_background > #payment_module > #payment_module_ucp > span > a {
+  font-size: 12px;
+  color: #0c69b8;
+  cursor: pointer;
+}
+
+#payment_module_background > #payment_module > #payment_module_ucp > span > a:hover {
+  text-decoration: underline;
+}
+
 #payment_module_background > #payment_module > #payment_module_content {
+  position: relative;
   height: 320px;
   background-color: #fff;
   padding: 20px;
@@ -432,10 +459,6 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   color: #4c5356;
   padding: 16px;
   text-align: center;
-}
-
-#payment_module_background > #payment_module > #payment_module_content #tab_easy {
-  display: block;
 }
 
 #payment_module_background > #payment_module > #payment_module_content #tab_easy > h1 {
@@ -568,68 +591,20 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   padding: 10px 24px;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_sending {
+#payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_info {
   position: absolute;
   top: unset;
   right: 20px;
-  bottom: 72px;
+  bottom: 50px;
   left: 20px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -o-border-radius: 10px;
-  -ms-border-radius: 10px;
   background-color: #e9ecf2;
   padding: 20px;
   text-align: center;
 }
 
-#payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_sending > p {
-  color: #4c5356;
-}
-
-#payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_sending > #load_circle {
-  border-radius: 32px;
-  -webkit-border-radius: 32px;
-  -moz-border-radius: 32px;
-  -o-border-radius: 32px;
-  -ms-border-radius: 32px;
-  position: absolute;
-  top: 50%;
-  right: unset;
-  bottom: unset;
-  left: 50px;
-  width: 32px;
-  height: 32px;
-  margin-top: -16px;
-  border: 2px dashed #4c5356;
-  color: #fff;
+#payment_module_background > #payment_module > #payment_module_content #tab_sms > #sms_info > p {
   font-size: 10px;
-  text-align: center;
-  -webkit-animation-name: spin;
-  -webkit-animation-duration: 2.5s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: spin;
-  -moz-animation-duration: 2.5s;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  -ms-animation-name: spin;
-  -ms-animation-duration: 2.5s;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-timing-function: linear;
-  -o-animation-name: spin;
-  -o-animation-duration: 2.5s;
-  -o-animation-iteration-count: infinite;
-  -o-animation-timing-function: linear;
-  -webkit-animation-name: spin;
-  animation-name: spin;
-  -webkit-animation-duration: 2.5s;
-  animation-duration: 2.5s;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
+  color: #4c5356;
 }
 
 #payment_module_background > #payment_module > #payment_module_content #tab_payment > #payment_info {

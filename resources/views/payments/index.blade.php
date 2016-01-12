@@ -71,7 +71,7 @@
 
                 for(var key in dataColumn) {
                     if(key === 'amount') {
-                        var _t = Formatter.currency(dataColumn['amount'], { drop: 1, symbol: '\\' });
+                        var _t = Formatter.currency(dataColumn['amount'], { drop: 1, symbol: 'KRW' });
 
                         parsedArray.push(_t);
                     }
@@ -246,6 +246,20 @@
                     window.open('{{ url('/') }}/receipt/' + dataObject.token);
                 },
             });
+            productDetailWidget.event.on('show', function() {
+                var data = productDetailWidget.getData();
+                var refundDom = productDetailWidget.querySelect('#refund');
+                var receiptDom = productDetailWidget.querySelect('#receipt');
+
+                if(data.status === 'confirmed' || data.status === 'settlement_complete') {
+                    refundDom.show();
+                    receiptDom.show();
+                }
+                else {
+                    refundDom.hide();
+                    receiptDom.hide();
+                }
+            });
 
 
             /* Refund widget */
@@ -291,7 +305,7 @@
                         _error('환불 금액을 입력해주세요.', refundWidget.select('amount'));
                         return false;
                     }
-                    else if(!Validator.check('number', amount)) {
+                    else if(!Validator.is(amount, number)) {
                         _error('환불 금액은 숫자로 입력해주세요.', refundWidget.select('amount'));
                         return false;
                     }

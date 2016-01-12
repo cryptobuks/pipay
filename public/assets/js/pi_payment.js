@@ -1,5 +1,8 @@
 Architekt.event.on('ready', function() {
+	var Client = Architekt.module.Client;
+	var Http = Architekt.module.Http;
 	var Printer = Architekt.module.Printer;
+	var Validator = Architekt.module.Validator;
 	var Notice = Architekt.module.Widget.Notice;
 	var Confirm = Architekt.module.Widget.Confirm;
 
@@ -15,18 +18,58 @@ Architekt.event.on('ready', function() {
 			sms: $('#tab_sms'),
 			payment: $('#tab_payment'),
 		},
+		ucp: {
+			shown: false,
+			container: $('#payment_module_ucp'),
+			email: $('#ucp_email'),
+			logout: $('#ucp_logout'),
+			show: function() {
+				dom.ucp.shown = true;
+
+				dom.ucp.container.stop(true, true).css({
+					height: 0,
+					padding: 0,
+				}).animate({
+					height: '32px',
+					padding: '8px'
+				}, 300, 'swing');
+
+				return this;
+			},
+			hide: function() {
+				dom.ucp.shown = false;
+
+				dom.ucp.container.stop(true, true).css({
+					height: '32px',
+					padding: '8px',
+				}).animate({
+					height: 0,
+					padding: 0
+				}, 300, 'swing');
+
+				return this;
+			},
+		},
 	};
 	var qrCode = new QRCode($('#qrcode').get(0), Architekt.productInfo.address);
 	var component = {
 		easy: {
 			email: $('#email'),
 			password: $('#password'),
+			reset: function() {
+				$('#email').val('');
+				$('#password').val('');
+			},
 		},
 		sms: {
 			form: $('#smsForm'),
 			code: $('#authcode'),
 			cipher: $('#cipher_id'),
 			submit: $('#smsSubmit'),
+			reset: function() {
+				$('#authcode').val('');
+				$('#cipher_id').val('');
+			},
 		},
 		pay: {
 			pay: $('#pay'),
@@ -37,28 +80,49 @@ Architekt.event.on('ready', function() {
 	//socket for check pi-address payment(pi sending)
 	var paymentSocket = io('http://devpay.pi-pay.net:8800');
 
-	function _error(text, focus) {
+	function _error(text, focus, reset) {
 		new Notice({
 			text:text,
 			callback: function() {
 				if(focus) focus.focus();
+				if(reset) reset.val('');
 			}
 		});
 	}
 
 	function appInit() {
+		//module settings
+		Printer.setLevel(0);
+
+		
 		attachEvents();
 		componentActions();
 
-		component.easy.email.focus();
-		currentTab = dom.tabs.easy;
+
+		//if user already logged in, display the user info and move to payment tab
+		if(typeof Architekt.userInfo.email !== 'undefined') {
+			currentTab = dom.tabs.payment;
+			dom.ucp.email.text(Architekt.userInfo.email);
+			dom.ucp.show();
+		}
+		else {
+			currentTab = dom.tabs.easy;
+
+			setTimeout(function() {
+				component.easy.email.focus();
+			}, 100);
+		}
+
+		currentTab.fadeIn(200);
 	}
-	
+
 	function attachEvents() {
+		var _isSubmit = false;	//check for form submit, prevent event duplication
 		var _is_switching_mode = false; //variable for check navigation switching animation
 		
-		//navigation click: switch tab and navigation
+		// 	navigation click: switch tab and navigation
 		dom.navs.click(function() {
+
 			//check if clicked already activated nav, exit
 			var idx = $(this).index();
 			
@@ -94,66 +158,239 @@ Architekt.event.on('ready', function() {
 		});
 
 		//easy payment - login
+		var _isSubmit = false;
 		dom.tabs.easy.submit(function() {
-			dom.tabs.easy.fadeOut(300, function() {
-				currentTab = dom.tabs.sms;
-				dom.tabs.sms.fadeIn(300);
-			});
+			if(_isSubmit) return;
 
+			var email = component.easy.email;
+			var password = component.easy.password;
+
+			if(!email.val()) {
+				_error('이메일을 입력해주세요.', email);
+				return false;
+			}
+			else if(!password.val()) {
+				_error('비밀번호를 입력해주세요.', password);
+				return false;
+			}
+
+			//validation
+			if(!Validator.is(email.val(), 'email') ) {
+				_error('이메일은 이메일 형식에 맞춰 입력해주세요.', email);
+				return false;
+			}
+			else if(Validator.length(password.val(), '<', 6)) {
+				_error('비밀번호는 6자리 이상을 입력해주세요.', password);
+				return false;
+			}
+
+
+			_isSubmit = true;
+
+			Http.post({
+				url: '/oauth/loginOnce',
+				data: {
+					email: component.easy.email.val(),
+					password: component.easy.password.val(),
+				},
+				success: function(data) {
+					var cipher = data.id;
+
+					component.sms.reset();
+					component.sms.cipher.val(cipher);
+
+					component.easy.reset();
+
+					dom.tabs.easy.fadeOut(300, function() {
+						currentTab = dom.tabs.sms;
+
+						dom.tabs.sms.fadeIn(300, function() {
+							component.sms.cipher.focus();
+						});
+					});
+				},
+				error: function(err) {
+					var errText = '서버에 오류가 발생하였습니다. 관리자에게 문의해주세요.';
+					var errorMessage = err.response.status;
+					
+					if(errorMessage === 'failed') {
+						errText = '잘못된 이메일이나 비밀번호입니다.';
+					}
+					else if(errorMessage === 'invalid_email') {
+						errText = '유효하지 않은 이메일 주소입니다.';
+					}
+					else if(errorMessage === 'invalid_password') {
+						errText = '유효하지 않은 비밀번호입니다.';
+					}
+					
+					new Notice({
+						text: errText,
+						callback: function() {
+							email.focus();
+						}
+					});
+
+					Printer.inspect(err);
+				},
+				complete: function() {
+					_isSubmit = false;
+				}
+			});			
+
+			//don't forget to no submit!
 			return false;
-
-
-			if(!component.easy.email.val()) {
-				_error('이메일을 입력해주세요.', component.easy.email);
-				return false;
-			}
-			else if(!component.easy.password.val()) {
-				_error('비밀번호를 입력해주세요.', component.easy.password);
-				return false;
-			}
-
-			
 		});
 
 		//easy payment - sms
 		component.sms.form.submit(function() {
-			dom.tabs.sms.fadeOut(300, function() {
-				currentTab = dom.tabs.payment;
-				dom.tabs.payment.fadeIn(300);
-			});
-			return false;
+			if(_isSubmit) return false;
 
-			if(!component.sms.code.val()) {
+			var code = component.sms.code;
+			var cipher = component.sms.cipher;
+
+			if(!code.val()) {
 				_error('인증 번호를 입력해주세요.', component.sms.code);
 				return false;
 			}
 
+			//validation
+			if(!Validator.check(code.val(), 'numeric')) {
+				_error('인증 번호는 숫자로 입력해주세요.', code, code);
+				return false;
+			}
+			else if(Validator.length(code.val(), '<', 5)) {
+				_error('인증 번호는 5자리 입니다.', code);
+				return false;
+			}
+
+
+			_isSubmit = true;
+
+			Http.post({
+				url: '/oauth/smsAuth',
+				data: {
+					'authcode': code.val(),
+					'cipher_id': cipher.val(),
+				},
+				success: function(data) {
+					var balance = data.balance;
+					var username = data.username;
+					var email = data.email;
+
+					component.sms.reset();
+
+					//update user info dom
+					dom.ucp.email.text(email);
+					dom.ucp.show();
+
+					$('#payment_balance > h1').text(username + '님의 잔고');
+					$('#payment_balance > p').text(parseFloat(balance).toFixed(1) + ' Pi');
+
+					dom.tabs.sms.fadeOut(300, function() {
+						currentTab = dom.tabs.payment;
+
+						dom.tabs.payment.fadeIn(300);
+					});
+				},
+				error: function(err) {
+					var errText = '서버에 오류가 발생하였습니다. 관리자에게 문의해주세요.';
+					var errorMessage = err.response.status;
+
+					if(errorMessage === 'failed') {
+						errText = '잘못된 인증코드입니다. 다시 입력해주세요.';
+						code.val('');
+					}
+
+					new Notice({
+						text: errText,
+						callback: function() {
+							code.focus();
+						}
+					});
+
+					Printer.inspect(err);
+				},
+				complete: function() {
+					_isSubmit = false;
+				}
+			});
 
 			return false;
 		});
 
 		//easy payment - pay
 		component.pay.pay.click(function() {
-			paymentComplete = true;
+			if(_isSubmit) return;
 
-			destroyNav();
 
-			$('#payment_info').animate({
-				height: '0',
-				opacity: '0.0'
-			}, 300, 'swing', function() {
-				$(this).remove();
-				component.pay.pay.addClass('done').text('결제 완료').off('click');
+			_isSubmit = true;
 
-				$('#payment_complete').delay(100).show().animate({
-					height: '80px',
-					opacity: '1.0',
-					'margin-top': '80px',
-				}, 300, 'swing', function() {
-					$('#receipt').fadeIn(300);
-				});
+			Http.post({
+				url: '/invoice/payment',
+				data: {
+					token: Architekt.productInfo.token,
+				},
+				success: function(data) {
+					paymentComplete = true;
+
+					destroyNav();
+					detachEvents();
+
+					$('#payment_info').animate({
+						height: '0',
+						opacity: '0.0'
+					}, 300, 'swing', function() {
+						$(this).remove();
+						component.pay.pay.addClass('done').text('결제 완료').off('click');
+
+						$('#payment_complete').delay(100).show().animate({
+							height: '80px',
+							opacity: '1.0',
+							'margin-top': '80px',
+						}, 300, 'swing', function() {
+							$('#receipt').fadeIn(300);
+						});
+					});
+				},
+				error: function(err) {
+					var errText = '서버에 오류가 발생하였습니다. 관리자에게 문의해주세요.';
+					var errorMessage = err.response.status;
+					
+					new Notice({
+						text: errText,
+						callback: function() {
+							email.focus();
+						}
+					});
+
+					Printer.inspect(err);
+				},
+				complete: function() {
+					_isSubmit = false;
+				}
 			});
 		});
+
+		//ucp logout
+		dom.ucp.logout.click(function() {
+			Http.get({
+				url: '/oauth/logout'
+			});
+
+			dom.ucp.hide();
+
+			currentTab.fadeOut(300, function() {
+				currentTab = dom.tabs.easy;
+
+				dom.tabs.easy.fadeIn(300);
+			});
+
+			return false;
+		});
+	}
+
+	function detachEvents() {
+		dom.ucp.logout.off('click');
 	}
 
 	function destroyNav() {
@@ -165,10 +402,16 @@ Architekt.event.on('ready', function() {
 
 	//definition of common actions for components
 	function componentActions() {
+		//give focus effect on input
 		$('.pi-payment-text > input').focus(function() {
 			$(this).parent().addClass('on');
 		}).blur(function() {
 			$(this).parent().removeClass('on');
+		});
+
+		//auto select input
+		$('div.pi-payment-text').click(function() {
+			$(this).find('input').focus();
 		});
 	}
 
@@ -183,6 +426,7 @@ Architekt.event.on('ready', function() {
 			var priceDom = $('#tab_pi_price');
 
 			destroyNav();
+			detachEvents();
 
 			qrwrap.animate({
 				height: '0',

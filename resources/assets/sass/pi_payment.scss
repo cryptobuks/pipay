@@ -67,7 +67,33 @@ $moduleBorderRadius: 5px;
 				font-size: 12px;
 			}
 		}
+		> #payment_module_ucp {
+			overflow: hidden;
+			height: 0;
+			padding: 0;
+			background-color: #d9ecff;
+			color: #4c5356;
+			border: 1px solid #757e82;
+			border-bottom: none;
+			text-align: center;
+
+			> span {
+				font-size: 12px;
+				margin: 8px;
+
+				> a {
+					font-size: 12px;
+					color: #0c69b8;
+					cursor: pointer;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+		}
 		> #payment_module_content {
+			position: relative;
 			height: $moduleHeight - 180px;
 			background-color: #fff;
 			padding: 20px;
@@ -111,8 +137,6 @@ $moduleBorderRadius: 5px;
 			}
 
 			#tab_easy {
-				display: block;
-
 				> h1 {
 					font-size: 14px;
 					color: #7f898e;
@@ -226,30 +250,15 @@ $moduleBorderRadius: 5px;
 					}
 				}
 
-				> #sms_sending {
-					@include createPosition(absolute, unset, 20px, 72px, 20px);
-					@include createBorderRadius(10px);
+				> #sms_info {
+					@include createPosition(absolute, unset, 20px, 50px, 20px);
 					background-color: #e9ecf2;
 					padding: 20px;
 					text-align: center;
 
 					> p {
-						color: #4c5356;
-					}
-					> #load_circle {
-						$circle-size: 32px;
-
-						@include createBorderRadius($circle-size);
-						@include createPosition(absolute, 50%, unset, unset, 50px);
-						width: $circle-size;
-						height: $circle-size;
-						margin-top: -($circle-size / 2);
-						border: 2px dashed #4c5356;
-						color: #fff;
 						font-size: 10px;
-						text-align: center;
-
-						@include applyAnimation(webkit moz ms o, spin, 2.5s);
+						color: #4c5356;
 					}
 				}
 			}
