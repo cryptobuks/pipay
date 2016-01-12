@@ -142,9 +142,9 @@ class OauthController extends Controller
         try {
 
             $sms = TwoFactor::getType( $user , TWO_FACTOR_TYPE_SMS );
-            $result = $sms->verify( $input['authcode'] );            
+            $result2 = $sms->verify( $input['authcode'] );            
 
-            if( $result['success'] == true ) {
+            if( $result2['success'] == true ) {
                 if( $this->loginUser( $id ) == true ) {
                     $result = 'success' ;
                 }
@@ -157,7 +157,7 @@ class OauthController extends Controller
             return Response::json( [ 'status' => 'save_failure' ] , 400  );            
         }
 
-        if( $result['success'] == true ) {
+        if( $result== 'success' ) {
             return Response::json( [ 'status' => 'success'  , 'balance' => amount_format( $account->balance ) , 'username' => $user->username , 'email' => $user->email ] , 200  );
         } else {
             return Response::json( [ 'status' => 'failed'  ] , 400  );            
