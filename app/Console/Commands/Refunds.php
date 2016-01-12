@@ -37,7 +37,7 @@ class Refunds extends Command
      *
      * @var string
      */
-    protected $description = 'refund';
+    protected $description = 'refund execute';
 
     protected $exchange_api ;
 
@@ -77,8 +77,6 @@ class Refunds extends Command
                 $refund_address = $refund->address;                
             }
 
-
-
             // 환불  시작 
             DB::beginTransaction();
             try {
@@ -112,15 +110,12 @@ class Refunds extends Command
                         $this->info( "[" . Carbon::now() . "] Error :  " . $refund_row['status']  . " "   );
                         throw new  Exception( 'refund failed' );
                     }
-                    
+
                 }
 
                 // 거래요구 데이터 환불로 상황 바꿈 
-                if(  $refund->pi_amount >= $invoice->pi_amount ){
-                    $invoice->status = 'refunded';
-                } else {
-                    $invoice->status = 'refunded_partial';
-                }
+
+               $invoice->status = 'refunded';
 
                 // 환불 금액 업데이트 
                $invoice->amount_refunded = $invoice->amount_refunded + $refund->amount;
@@ -155,11 +150,17 @@ class Refunds extends Command
             } catch ( Exception $e) {
                     DB::rollback();
                     $this->info( "[" . Carbon::now() . "] Error : " . $e->getMessage()   );  
-
+                    exit();
             }               
 
+            if( $invoice->status == 'refunded') {
+                $this->info( "[" . Carbon::now() . "]  paid to " . $user_profile->email . " at id of " . $invoice->id . " in transfer "   ); 
+            } else {
+                $this->info( "[" . Carbon::now() . "]  failed to " . $user_profile->email . " at id of " . $invoice->id . " in transfer "   );                 
+            }
 
-        }
-    }
+        }   // 유저별 환불 처리 
+  
+    } 
 
 }
