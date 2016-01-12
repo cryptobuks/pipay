@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use App\Invoice;
 use App\Oaccount;
+use Illuminate\Support\Facades\Config;
 
 class PaymentController extends Controller
 {
@@ -99,8 +100,11 @@ class PaymentController extends Controller
      */
     public function receipt( $id )
     {
-        $invoice = Invoice::where('token', '=',  $id )->first();
 
+        $invoice_status = Config::get('common.invoice_status');   
+
+        $invoice = Invoice::where('token', '=',  $id )->first();
+        $invoice->status_desc = $invoice_status[$invoice->status];
         return view('payments.receipt', compact('invoice') );
     }
     

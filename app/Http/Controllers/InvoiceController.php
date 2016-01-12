@@ -63,6 +63,9 @@ class InvoiceController extends Controller
 
         if( $invoice ) {
             $user_profile = UserProfile::find( $invoice->user_id );
+            if( strlen( $user_profile->logo ) < 1 ) {
+                $user_profile->logo = "default.png";
+            }
             return view('invoice.index' , compact ( 'invoice' , 'token' , 'user_profile' ) );
         } else {
             return "Payment has already ended or Invalid token.";
@@ -80,6 +83,9 @@ class InvoiceController extends Controller
 
         if( $invoice ) {
             $user_profile = UserProfile::find( $invoice->user_id );            
+            if( strlen( $user_profile->logo ) < 1 ) {
+                $user_profile->logo = "default.png";
+            }
             return view('invoice.test' , compact ( 'invoice' , 'token' , 'user_profile' ) );
         } else {
             return "Payment has already ended or Invalid token.";
