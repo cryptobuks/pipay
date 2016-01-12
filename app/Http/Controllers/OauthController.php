@@ -147,6 +147,7 @@ class OauthController extends Controller
             if( $result2['success'] == true ) {
                 if( $this->loginUser( $id ) == true ) {
                     $result = 'success' ;
+                    Auth::viaRemember();
                 }
             }
 
