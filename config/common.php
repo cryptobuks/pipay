@@ -8,22 +8,24 @@ return [
 	|--------------------------------------------------------------------------
 	*/
 
+	// 계정 입출금 이유 
 	'account_reason' => [
 		0 => 'unknown',
 		1 => 'fix',	// 픽스
-		100 => 'strike_fee',	// 수수료
-		110 => 'strike_add',	// 체결수량 증가
-		120 => 'strike_sub',	// 체결 수량 감소					
-		130 => 'strike_unlock', // 거래완료 동결 해지
-		600 => 'order_submit',  // 주문
-		610 => 'order_cancel',	  // 주문 취소
-		620 => 'order_fullfilled',  	
-		800 => 'withdraw_lock',  // 출금 동결
-		810 => 'withdraw_unlock',  // 출금 거부
-		1000 => 'deposit',  // 입금
-		2000 => 'withdraw',  // 출금
+		200 => 'invoice_new',	// 결제 시작시 
+		210 => 'invoice_pending',	// 결제는 됐으나 검증이 되지 않은 시점
+		220 => 'invoice_confirmed',	// 결제 완료 				
+		230 => 'invoice_failed', // 결제 실패 
+		240 => 'invoice_expired',  // 결제 만료 
+		300 => 'refund',	  // 환불 완료
+		310 => 'refund_lock',  	// 환불시 자금 동결
+		320 => 'refund_unlock',  //  환불시 자금 동결 풀림 
+		400 => 'transfer',  // 정산 완료 
+		410 => 'transfer_lock',  // 정산시 자금 동결 
+		420 => 'transfer_unlock',  // 정산시 자금 동결 풀림 
 	],
 
+	// 코인 트랜젝션 상황 
 	'states' => [
 		100   => 'submit',  // 입력
 		200   => 'accept',  // 수락
@@ -33,19 +35,22 @@ return [
 		600   => 'suspect',  // 상태 이상
 	],
 
-	'funs' => [
-		1   => 'unlock_funds',
-		2   => 'lock_funds',
-		3   => 'plus_funds',
-		4   => 'sub_funds',
-		5   => 'unlock_and_sub_funds',
-	],
+	// 자금 입출금  상황 
+	'funs' => array(
+		1   => 'unlock_funds',	// 자금 동결 풀림
+		2   => 'lock_funds',	// 자금 동결
+		3   => 'plus_funds',	// 자금 더함
+		4   => 'sub_funds',	// 자금 빼기
+		5   => 'unlock_and_sub_funds',	// 자금 동결 풀리고 빼기
+	),
 
+	// 인증 관련 기기 타입 
 	'two_factor_type' => [
 		'sms'   => 'sms',
 		'opt'   => 'opt',
 	],
 
+	// 상점 업종 
 	'user_categories' => [
 		1   => '건강관리서비스 및 장비',
 		2   => '게임',
@@ -70,6 +75,7 @@ return [
 		21   => '기타',						
 	],
 
+	// 유저 등급 
 	'user_levels' => [
 		1 => '이메일인증 유저',
 		2 => '개인회원',
@@ -77,6 +83,7 @@ return [
 		4 => '법인회원',
 	],
 
+	// 결제 요구 상황 
 	'invoice_status' => [
 		'new' => '대기' , 
 		'pending' => '결제확인중' , 
@@ -88,6 +95,7 @@ return [
 		'settlement_complete' => '정산완료' , 			
 	] , 
 
+	// 결제  관리자 정보  
 	'pay_user' => [
 		'base_uri' => env('PI_EXCHANGE_URL', 'https://pay.pi-pay.net' ), 
 		'username' => env('PAY_USERNAME' , '파이페이' ) ,
