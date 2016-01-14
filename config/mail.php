@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'username' => env('pak36@naver.com'),
+    'username' => env('works4pi@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'password' => env('xTndwC3mFIm7wiAlnaZy1A'),
+    'password' => env('CpPtAj8F1OCJZvnY8dxXdg'),
 
     /*
     |--------------------------------------------------------------------------
