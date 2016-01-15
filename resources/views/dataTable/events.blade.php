@@ -24,7 +24,7 @@
                 }
                 else {
                     dataTable.setPage(++page);
-                    getTableDataAndUpdate();                    
+                    getTableDataAndUpdate();
                 }
             });
 
@@ -38,6 +38,6 @@
 
             //export as excel
             $('#exportExcel').click(function() {
-                window.open(Client.createUrl('export/payment'));
+                window.open(Client.createUrl(Architekt.exportUrl));
                 return false;
             });

@@ -87,10 +87,10 @@ window.Architekt = new function ArchitektConstructor() {
             }
 
         //add basic events
-        +function addBasicEvents() {
+        (function addBasicEvents() {
             //Error event for error handling while firing event
             self.list.onerror = [];
-        }();
+        })();
 
         //normalize event name: if name doen't have 'on', attach it at front.
         function normalize(eventName) {
@@ -344,7 +344,18 @@ events.on(window, 'load', function() {
     Architekt.device.width = window.innerWidth;
     Architekt.device.height = window.innerHeight;
 
-    Architekt.event.fire('resize', e);
+    Architekt.event.fire('onresize', e);
 }).on(window, 'scroll', function(e) {
-    Architekt.event.fire('scroll', e);
+    Architekt.event.fire('onscroll', e);
+}).on(window, 'error', function(err) {
+    var extra = !err.error ? '' : '' + err.error;
+    extra += !err.lineno ? '' : ' at ' + err.filename + ':' + err.lineno;
+
+    console.error(extra);
+    Architekt.event.fire('onerror', err);
+
+    err.preventDefault();
+    err.stopPropagation();
+    err.stopImmediatePropagation();
+    return false;
 });

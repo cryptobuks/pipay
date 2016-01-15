@@ -1,3 +1,9 @@
+/****************************************************************************************************
+ *
+ *                        Architekt.module.Formatter: Formatting module
+ *
+ ****************************************************************************************************/
+
 Architekt.module.reserv('Formatter', function(options) {
 	return {
 		currency: function(data, options) {
@@ -570,6 +576,17 @@ Architekt.module.reserv('Validator', function(options) {
 		},
 	};
 });
+/****************************************************************************************************
+ *
+ *                        Architekt.module.Watcher: Error catching module
+ *
+ ****************************************************************************************************/
+
+ Architekt.module.reserv('watcher', function(options) {
+ 	options = typeof options === 'object' ? options : {};
+
+ 	this.event = new Architekt.EventEmitter();
+ });
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');

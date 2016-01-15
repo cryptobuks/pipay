@@ -1,18 +1,6 @@
 @extends('app')
 @section('content')
 
-    <script>
-        Architekt.event.on('ready', function() {
-            noExistFunction();
-        });
-        Architekt.event.on('ready', function() {
-            console.log('I am still alive!');
-        });
-        Architekt.event.on('error', function(err) {
-            console.log(err);
-        });
-    </script>
-
     <div id="pi_top_space"></div>
 
     <div id="pi_product">

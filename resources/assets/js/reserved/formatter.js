@@ -1,3 +1,9 @@
+/****************************************************************************************************
+ *
+ *                        Architekt.module.Formatter: Formatting module
+ *
+ ****************************************************************************************************/
+
 Architekt.module.reserv('Formatter', function(options) {
 	return {
 		currency: function(data, options) {
