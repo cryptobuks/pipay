@@ -582,10 +582,23 @@ Architekt.module.reserv('Validator', function(options) {
  *
  ****************************************************************************************************/
 
- Architekt.module.reserv('watcher', function(options) {
+ Architekt.module.reserv('Watcher', function(options) {
  	options = typeof options === 'object' ? options : {};
 
- 	this.event = new Architekt.EventEmitter();
+ 	this.event = new Architekt.EventEmitter(['onerror']);
+
+ 	function attempt(task) {
+ 		try {
+ 			task();
+ 		}
+ 		catch(err) {
+ 			this.event.fire('onerror', err);
+ 		}
+ 	};
+
+ 	return {
+ 		attempt: attempt
+ 	}
  });
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {

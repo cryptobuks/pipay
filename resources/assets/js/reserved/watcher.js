@@ -4,21 +4,21 @@
  *
  ****************************************************************************************************/
 
- Architekt.module.reserv('watcher', function(options) {
+ Architekt.module.reserv('Watcher', function(options) {
  	options = typeof options === 'object' ? options : {};
 
- 	this.event = new Architekt.EventEmitter(['onerror', 'onwatch']);
+ 	this.event = new Architekt.EventEmitter(['onerror']);
 
- 	this.see = function(task) {
+ 	function attempt(task) {
  		try {
- 			
+ 			task();
  		}
- 		catch {
- 			
+ 		catch(err) {
+ 			this.event.fire('onerror', err);
  		}
  	};
 
  	return {
- 		see: see
+ 		attempt: attempt
  	}
  });

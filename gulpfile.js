@@ -64,7 +64,6 @@ elixir(function(mix) {
         'reserved/locale.js',
         'reserved/printer.js',
         'reserved/validator.js',
-        'reserved/watcher.js',
         'reserved/widget.js',
         //Application source
     ], 'public/assets/js/architekt_modules.js');
@@ -86,7 +85,6 @@ elixir(function(mix) {
         'reserved/locale.js',
         'reserved/printer.js',
         'reserved/validator.js',
-        'reserved/watcher.js',
         'reserved/widget.js',
         //Application source
     ], 'public/assets/js/architekt_modules_pay.js');
