@@ -107,5 +107,36 @@ class PaymentController extends Controller
         $invoice->status_desc = $invoice_status[$invoice->status];
         return view('payments.receipt', compact('invoice') );
     }
+
+    public function excelExport( Request $request) 
+    {
+        Excel::create('History', function($excel) {
+
+            $excel->sheet('Sheet1', function($sheet) {
+                if( !empty($request['filter'] ) ) {
+                    $invoices = Invoice::where('user_id','=',$user_id)->where('status','=',$request['filter'] )->orderBy( 'id' , 'desc' )->get();
+                } else {
+                    $invoices = Invoice::where('user_id','=',$user_id)->orderBy( 'id' , 'desc' )->get();
+                }
+
+                $arr =array();
+                foreach($invoices as $invoice) {
+                        $data =  array($invoice->id, $invoice->created_at, $invoice->item_desc, $invoice->amount, $invoice->status,
+                            $invoice->pi_amount_received +' / ' + $invoice->pi_amount);
+                        array_push($arr, $data);
+                }
+
+                //set the titles
+                $sheet->fromArray($arr,null,'A1',false,false)->prependRow(array(
+                        '주문번호', '결제시작', '상품명', '상품가격', '결제상태', 'Pi 결제금액'
+                    )
+
+                );
+
+            });
+
+        })->export('xls');
+    }
     
 }
+
