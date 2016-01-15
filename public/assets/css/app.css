@@ -208,9 +208,7 @@ li {
 }
 
 select.pi-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  height: 32px;
 }
 
 .pi-text {
@@ -848,8 +846,8 @@ select.pi-input {
   bottom: unset;
   left: 50%;
   width: 400px;
-  height: 220px;
-  margin-top: -110px;
+  height: 300px;
+  margin-top: -130px;
   margin-left: -200px;
 }
 
@@ -916,6 +914,33 @@ select.pi-input {
 
 #profileFrm > .pi-form-control {
   width: 70%;
+  clear: both;
+}
+
+#profileFrm > .pi-form-control > label[for=settlement_currency] {
+  float: left;
+  height: 64px;
+}
+
+#profileFrm > .pi-form-control > .pi-radio {
+  margin-bottom: 8px;
+}
+
+#profileFrm > .pi-form-control > .pi-radio > #currency_krw {
+  color: #ed7583;
+}
+
+#profileFrm > .pi-form-control > .pi-radio > #currency_pi {
+  color: #0c69b8;
+}
+
+#profileFrm > .pi-form-control > .pi-radio > label {
+  width: 48px;
+}
+
+#profileFrm > .pi-form-control > .pi-radio > p {
+  color: #8b8f91;
+  font-size: 12px;
 }
 
 #profileBtnSubmit {
@@ -1040,6 +1065,19 @@ select.pi-input {
 
 #createProductForm > .pi-form-control {
   width: 70%;
+}
+
+#createProductForm > .pi-form-control > select.pi-input {
+  width: 10%;
+}
+
+#createProductForm > .pi-form-control > input#amount {
+  width: 45%;
+}
+
+#createProductForm > .pi-form-control > .pi-form-control-icon {
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 #createProductSubmit {

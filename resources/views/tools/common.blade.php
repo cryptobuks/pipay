@@ -19,8 +19,8 @@
 				<!-- price -->
 				<div class="pi-form-control">
 					{!! Form::label('amount', '상품가격'  , array('class' => '')) !!}
-					{!! Form::select( 'currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , array('class' => 'pi-input', 'id' => 'currency', 'placeholder' => '상품가격은 숫자로만 입력해주세요.'  )) !!}
-					{!! Form::text( 'amount', null , array('class' => ''  )) !!}
+					{!! Form::select('currency',  array('KRW' => 'KRW', 'PI' => 'Pi')  , null, array('class' => 'pi-input', 'id' => 'currency' )) !!}
+					{!! Form::text( 'amount', null , array('class' => 'pi-input', 'id' => 'amount'  )) !!}
 					<div class="pi-input-required">*</div>
 				</div>
 

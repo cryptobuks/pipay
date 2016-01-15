@@ -215,7 +215,7 @@ Architekt.event.on('ready', function() {
 	 /*****************************************************************************************
 	 *
 	 *
-	 * 							Application manipulate functions
+	 * 							Application manipulation functions
 	 *
 	 *
 	 *****************************************************************************************/
@@ -224,6 +224,11 @@ Architekt.event.on('ready', function() {
 		var _isSubmit = false;	//check for form submit, prevent event duplication
 		var _is_switching_mode = false; //variable for check navigation switching animation
 		
+		// exit button
+		$('#payment_module_exit').click(function() {
+			window.close();
+		});
+
 		// 	navigation click: switch tab and navigation
 		dom.navs.click(function() {
 

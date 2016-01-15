@@ -75,6 +75,7 @@ window.Architekt = new function ArchitektConstructor() {
 
     //Architekt.EventEmitter(): Create event attributes
     this.EventEmitter = function (events) {
+        var self = this;
         this.list = {};
 
         if (typeof events === 'object' && events.length !== 'undefined')
@@ -84,11 +85,24 @@ window.Architekt = new function ArchitektConstructor() {
 
                 this.list[eventName] = [];
             }
+
+        //add basic events
+        +function addBasicEvents() {
+            //Error event for error handling while firing event
+            self.list.onerror = [];
+        }();
+
+        //normalize event name: if name doen't have 'on', attach it at front.
+        function normalize(eventName) {
+            eventName = eventName.toLowerCase() || eventName;
+            if (eventName.substr(0, 2) !== 'on') eventName = 'on' + eventName;
+
+            return eventName;
+        };
                 
         //Architekt.EventEmitter.on(string type, function func): Add event
         this.on = function (type, func) {
-            type = type.toLowerCase();
-            if (type.substr(0, 2) !== 'on') type = 'on' + type;
+            type = normalize(type);
             
             var _el = this.list[type];
             if (typeof _el === "undefined")
@@ -99,8 +113,7 @@ window.Architekt = new function ArchitektConstructor() {
         };
         //Architekt.EventEmitter.off(string type): Remove events
         this.off = function (type) {
-            type = type.toLowerCase();
-            if (type.substr(0, 2) !== 'on') type = 'on' + type;
+            type = normalize(type);
 
             var _el = this.list[type];
             if (typeof _el === "undefined")
@@ -111,14 +124,53 @@ window.Architekt = new function ArchitektConstructor() {
         };
         //Architekt.EventEmitter.fire(string type, object eventArgument): Fire event
         this.fire = function (type, eventArgument) {
-            type = type.toLowerCase();
-            if (type.substr(0, 2) !== 'on') type = 'on' + type;
+            type = normalize(type);
 
             var _el = this.list[type];
+
             if (typeof _el === "undefined")
                 throw new Error('Architekt.js: Unknown event ' + type);
 
-            for (var i = 0, len = _el.length; i < len; i++) _el[i](eventArgument);
+            //fire event
+            for (var i = 0, len = _el.length; i < len; i++) {
+                try {
+                    _el[i](eventArgument);
+                }
+                catch(error) {
+                    if(typeof error === 'object')
+                        console.error(error.stack);
+                    else
+                        console.error(error);
+
+                    //fire error event
+                    this.fire('onerror', error);
+                }
+            }
+
+            return this;
+        };
+        //Architekt.EventEmitter.trigger(string type, object eventArgument): Alias of EventEmitter.fire
+        this.trigger = function(type, eventArgument) {
+            return this.fire(type, eventArgument);
+        };
+        //Architekt.EventEmitter.register(string eventName): Add new event
+        this.register = function(eventName) {
+            eventName = normalize(eventName);
+
+            if(typeof this.list[eventName] !== 'undefined')
+                throw new Error('Architekt.js: Failed register event ' + eventName + '. Event already exists.');
+
+            this.list[eventName] = [];
+            return this;
+        };
+        //Architekt.EventEmitter.unregister(string eventName): Remove event
+        this.unregister = function(eventName) {
+            eventName = normalize(eventName);
+
+            if(typeof this.list[eventName] === 'undefined')
+                throw new Error('Architekt.js: Failed unregister event ' + eventName + '. Event does not exists.');
+
+            delete this.list[eventName];
             return this;
         };
     };

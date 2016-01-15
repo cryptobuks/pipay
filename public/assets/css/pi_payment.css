@@ -492,6 +492,10 @@ table.architekt-dataTable > tbody > tr:nth-child(2n) {
   margin: 24px 0 8px 0;
 }
 
+#payment_module_background > #payment_module > #payment_module_content #tab_pi {
+  position: initial;
+}
+
 #payment_module_background > #payment_module > #payment_module_content #tab_pi > #qr_wrap {
   overflow: hidden;
   margin-top: 16px;

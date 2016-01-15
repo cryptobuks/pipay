@@ -18,12 +18,12 @@ Architekt.event.on('ready', function() {
 
     $('#howThisWork').click(function() {
         body.addClass('pi-modal');          //hide scrollbar
-        $('#howThisWorkLayer').fadeIn();
+        $('#howThisWorkLayer').fadeIn(100);
     });
 
     $('#howThisWorkLayer').click(function() {
         body.removeClass('pi-modal');
-        $('#howThisWorkLayer').fadeOut();
+        $('#howThisWorkLayer').fadeOut(100);
     });
 
 

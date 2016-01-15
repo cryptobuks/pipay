@@ -36,6 +36,19 @@
 	
 	> .pi-form-control {
 		width: 70%;
+
+		> select.pi-input {
+			width: 10%;
+		}
+
+		> input#amount {
+			width: 45%;
+		}
+
+		> .pi-form-control-icon {
+			margin-left: 8px;
+			cursor: pointer;
+		}
 	}
 }
 
