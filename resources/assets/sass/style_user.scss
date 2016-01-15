@@ -11,6 +11,31 @@
 	
 	> .pi-form-control {
 		width: 70%;
+		clear: both;
+
+		> label[for=settlement_currency] {
+			float: left;
+			height: 64px;
+		}
+
+		> .pi-radio {
+			margin-bottom: 8px;
+
+			> #currency_krw {
+				color: #ed7583;
+			}
+			> #currency_pi {
+				color: #0c69b8;
+			}
+
+			> label {
+				width: 48px;
+			}
+			>  p {
+				color: #8b8f91;
+				font-size: 12px;
+			}
+		}
 	}
 }
 

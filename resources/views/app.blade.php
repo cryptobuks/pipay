@@ -139,7 +139,12 @@
         </div>
     </div>
 
+    <!--[if lt IE 9]>
+        <script src="{{ asset('assets/js/ie9.js') }}"></script>
+    <![endif]-->
+
     <!-- load depencies -->
+    <script src="{{ asset('assets/js/html5shiv.js') }}"></script>
     <script src="{{ asset('assets/js/depend.js') }}"></script>
     <!-- load modules -->
     <script src="{{ asset('assets/js/architekt_modules.js') }}?noCache={{ date('Y-m-d_h:i:s') }}"></script>

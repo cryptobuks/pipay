@@ -576,6 +576,12 @@ Architekt.module.reserv('DataTable', function(options) {
  
 	};
 });
+/****************************************************************************************************
+ *
+ *                        Architekt.module.Formatter: Formatting module
+ *
+ ****************************************************************************************************/
+
 Architekt.module.reserv('Formatter', function(options) {
 	return {
 		currency: function(data, options) {
@@ -1148,6 +1154,30 @@ Architekt.module.reserv('Validator', function(options) {
 		},
 	};
 });
+/****************************************************************************************************
+ *
+ *                        Architekt.module.Watcher: Error catching module
+ *
+ ****************************************************************************************************/
+
+ Architekt.module.reserv('Watcher', function(options) {
+ 	options = typeof options === 'object' ? options : {};
+
+ 	this.event = new Architekt.EventEmitter(['onerror']);
+
+ 	function attempt(task) {
+ 		try {
+ 			task();
+ 		}
+ 		catch(err) {
+ 			this.event.fire('onerror', err);
+ 		}
+ 	};
+
+ 	return {
+ 		attempt: attempt
+ 	}
+ });
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');

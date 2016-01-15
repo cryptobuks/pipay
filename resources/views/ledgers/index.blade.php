@@ -2,11 +2,21 @@
 @section('content')
     
     <script>
+        //Global
+        Architekt.event.on('preparing', function() {
+            Architekt.exportUrl = 'export/ledger';
+        });
+        Architekt.event.on('error', function(err) {
+            new Architekt.module.Widget.Notice({
+                text: '페이지에 오류가 발생하였습니다. 관리자에게 문의해주세요.',
+            });
+        });
         //Ledger list control
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;
             var Http = Architekt.module.Http;
             var Formatter = Architekt.module.Formatter;
+            var Client = Architekt.module.Client;
 
             var requestUrl = '{{ Request::url() }}';
             var dataTable = new Architekt.module.DataTable({
@@ -88,7 +98,7 @@
 	<div id="pi_ledger">
         <div id="pi_list" class="pi-container">
         	<div id="pi_ledger_total">
-        		<h1>잔액: <span class="pi-theme-complete">{{ $AccountJson[0]->KRW }} KRW</span> | <span class="pi-theme-waiting">{{ $AccountJson[0]->PI }} Pi</span></h1>
+        		<h1>잔액: <span class="pi-theme-complete">{{ $AccountJson[0]->KRW }} KRW</span> | <span class="pi-theme-waiting">{{ $AccountJson[0]->PI }} PI</span></h1>
         		<p>* 원화 정산은 결제일로부터 영업일 기간 내 2일 이내로 처리되며 거래소 내부 KRW로 충전됩니다.</p>
         		<p>* 파이 정산은 결제 후 2시간 이내에 처리됩니다.</p>
         	</div>

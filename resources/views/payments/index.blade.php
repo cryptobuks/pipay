@@ -2,6 +2,15 @@
 @section('content')
     
     <script>
+        //Global
+        Architekt.event.on('preparing', function() {
+            Architekt.exportUrl = 'export/payment';
+        });
+        Architekt.event.on('error', function(err) {
+            new Notice({
+                text: '페이지에 오류가 발생하였습니다. 관리자에게 문의해주세요.',
+            });
+        });
         //Payment list control
         Architekt.event.on('ready', function() {
             var Notice = Architekt.module.Widget.Notice;

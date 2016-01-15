@@ -24,7 +24,7 @@
                 }
                 else {
                     dataTable.setPage(++page);
-                    getTableDataAndUpdate();                    
+                    getTableDataAndUpdate();
                 }
             });
 
@@ -38,8 +38,6 @@
 
             //export as excel
             $('#exportExcel').click(function() {
-                new Notice({
-                    text: '준비 중입니다.'
-                });
+                window.open(Client.createUrl(Architekt.exportUrl));
                 return false;
             });

@@ -35,6 +35,16 @@ elixir(function(mix) {
         'qrcode.min.js',
     ], 'public/assets/js/depend.js');
 
+    //HTML5.js
+    mix.scripts([
+        'html5shiv.js',
+    ], 'public/assets/js/html5shiv.js');
+
+    //IE
+    mix.scripts([
+        'IE9.js',
+    ], 'public/assets/js/ie9.js');
+
 
     //later CDN too
     mix.scripts([

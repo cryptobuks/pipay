@@ -1,16 +1,20 @@
 @extends('app')
 @section('content')
 
-	@include('users.setFormHeight')
+@include('users.setFormHeight')
+
 
 @if (count($errors) > 0)
 	@include('users.error')
+
 @else
+
 	<script>
 		Architekt.event.on('ready', function() {
 			$('#email').focus();
 		});
 	</script>
+
 @endif
 
 	<div id="pi_top_space"></div>
@@ -79,11 +83,13 @@
 					{!! Form::label('settlement_currency', '정산통화'  , array('class' => '')) !!}
 					<div class="pi-radio">
 						{!! Form::radio('settlement_currency', 'KRW' , $isCurrencyKrw, array('class' => ''  )) !!}
-						<label for="currency">KRW</label>
+						<label id="currency_krw" for="currency">KRW</label>
+						<p>수수료: 1%, 정산일: 결제일로부터 영업일 기준 2일 이내</p>
 					</div>
 					<div class="pi-radio">
 						{!! Form::radio('settlement_currency', 'PI', $isCurrencyPi, array('class' => ''  )) !!}
-						<label for="currency">PI</label>
+						<label id="currency_pi" for="currency">PI</label>
+						<p>수수료: 0%, 정산일: 결제 후 2시간 이내</p>
 					</div>
 
 					<div class="pi-form-control-icon sprite-question"></div>
@@ -125,7 +131,7 @@
 	$userProfile = $user_profile->logo;
 
 	if(!$userProfile || is_null($userProfile)) {
-		$userProfile = asset('image/profile_pic.png');
+		$userProfile = url('/upload/profile/default.png');
 	}
 	else {
 		$userProfile = url('/upload/profile/', $userProfile);
