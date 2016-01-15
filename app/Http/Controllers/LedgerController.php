@@ -90,4 +90,46 @@ class LedgerController extends Controller
         return view('ledgers.index', compact('AccountJson','pagePer'));
     }
 
+    public function excelExport( Request $request) 
+    {
+        
+        Excel::create('History', function($excel) {
+
+            $excel->sheet('Sheet1', function($sheet) {
+                $user = $this->sentry->getUser();
+                $user_id  = $user->id;
+
+                $transactions = Transaction::where('user_id', '=', $user_id)->orderBy( 'id' , 'desc' )->get();
+
+                $arr =array();
+                foreach($transactions as $transaction) {
+                        if( 'payment' == $transaction->type ) {
+                            $data =  array($transaction->created_at->format('Y-m-d H:i:s'),
+                                $transaction->amount,
+                                0,
+                                0
+                            );
+                        } else if ( 'refund' == $transaction->type || 'transfer' == $transaction->type ) {
+                            $data =  array(
+                                $transaction->created_at->format('Y-m-d H:i:s'),
+                                0,
+                                $transaction->amount,
+                                $transaction->fee 
+                            );
+                        }
+                        
+                        array_push($arr, $data);
+                }
+
+                //set the titles
+                $sheet->fromArray($arr,null,'A1',false,false)->prependRow(array(
+                        '날짜', '입금', '출금', '수수료'
+                    )
+                );
+
+            });
+
+        })->export('xls');
+    }
+
 }

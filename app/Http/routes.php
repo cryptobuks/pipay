@@ -49,6 +49,7 @@ $router->post('refund', ['as' => 'refund.store', 'uses' => 'RefundController@sto
 
 // ledger routes
 $router->get('ledger', ['as' => 'ledger.index', 'uses' => 'LedgerController@index']);   // 정산 목록 
+$router->get('export/ledger', ['as' => 'ledger.excelexport', 'uses' => 'LedgerController@excelExport']);   // 정산 목록 
 
 // 결제 페이지 요청 
 $router->get('checkout/{token}', ['as' => 'checkout.index', 'uses' => 'CheckoutController@index']);
