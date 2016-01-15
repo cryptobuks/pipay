@@ -126,8 +126,14 @@ class PaymentController extends Controller
 
                 $arr =array();
                 foreach($invoices as $invoice) {
-                        $data =  array($invoice->id, $invoice->created_at, $invoice->item_desc, $invoice->amount, $invoice->status,
-                            $invoice->pi_amount_received . ' / ' . $invoice->pi_amount);
+                        $data =  array(
+                            $invoice->id, 
+                            $invoice->created_at, 
+                            $invoice->item_desc, 
+                            amount_format( $invoice->amount ),
+                            $invoice->status,
+                            amount_format( $invoice->pi_amount_received ) . ' / ' . amount_format ( $invoice->pi_amount )
+                        );
                         array_push($arr, $data);
                 }
 

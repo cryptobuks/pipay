@@ -105,8 +105,9 @@ class LedgerController extends Controller
                 $arr =array();
                 foreach($transactions as $transaction) {
                         if( 'payment' == $transaction->type ) {
-                            $data =  array($transaction->created_at->format('Y-m-d H:i:s'),
-                                $transaction->amount,
+                            $data =  array(
+                                $transaction->created_at->format('Y-m-d H:i:s'),
+                                amount_format( $transaction->amount ),
                                 0,
                                 0
                             );
@@ -114,8 +115,8 @@ class LedgerController extends Controller
                             $data =  array(
                                 $transaction->created_at->format('Y-m-d H:i:s'),
                                 0,
-                                $transaction->amount,
-                                $transaction->fee 
+                                amount_format( $transaction->amount ),
+                                amount_format( $transaction->fee ) 
                             );
                         }
                         
