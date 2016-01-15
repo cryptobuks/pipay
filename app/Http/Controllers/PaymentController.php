@@ -112,7 +112,7 @@ class PaymentController extends Controller
     public function excelExport( Request $request) 
     {
         
-        Excel::create('History', function($excel) {
+        Excel::create('거래내역', function($excel) {
 
             $excel->sheet('Sheet1', function($sheet) {
                 $user = $this->sentry->getUser();

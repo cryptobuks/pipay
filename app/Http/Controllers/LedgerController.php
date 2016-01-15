@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Transaction;
 use App\Account;
+use Excel;
 
 class LedgerController extends Controller
 {
@@ -93,7 +94,7 @@ class LedgerController extends Controller
     public function excelExport( Request $request) 
     {
         
-        Excel::create('History', function($excel) {
+        Excel::create('정산내역', function($excel) {
 
             $excel->sheet('Sheet1', function($sheet) {
                 $user = $this->sentry->getUser();
