@@ -108,18 +108,18 @@ class LedgerController extends Controller
                             $data =  array(
                                 $transaction->created_at->format('Y-m-d H:i:s'),
                                 amount_format( $transaction->amount ),
-                                0,
-                                0
+                                '0',
+                                '0'
                             );
                         } else if ( 'refund' == $transaction->type || 'transfer' == $transaction->type ) {
                             $data =  array(
                                 $transaction->created_at->format('Y-m-d H:i:s'),
-                                0,
+                                '0',
                                 amount_format( $transaction->amount ),
                                 amount_format( $transaction->fee ) 
                             );
                         }
-                        
+
                         array_push($arr, $data);
                 }
 
