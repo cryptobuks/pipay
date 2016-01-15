@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Response;
 use App\Invoice;
 use App\Oaccount;
 use Illuminate\Support\Facades\Config;
+use Excel;
 
 class PaymentController extends Controller
 {
@@ -110,9 +111,13 @@ class PaymentController extends Controller
 
     public function excelExport( Request $request) 
     {
+        
         Excel::create('History', function($excel) {
 
             $excel->sheet('Sheet1', function($sheet) {
+                $user = $this->sentry->getUser();
+                $user_id  = $user->id;
+
                 if( !empty($request['filter'] ) ) {
                     $invoices = Invoice::where('user_id','=',$user_id)->where('status','=',$request['filter'] )->orderBy( 'id' , 'desc' )->get();
                 } else {
@@ -122,7 +127,7 @@ class PaymentController extends Controller
                 $arr =array();
                 foreach($invoices as $invoice) {
                         $data =  array($invoice->id, $invoice->created_at, $invoice->item_desc, $invoice->amount, $invoice->status,
-                            $invoice->pi_amount_received +' / ' + $invoice->pi_amount);
+                            $invoice->pi_amount_received . ' / ' . $invoice->pi_amount);
                         array_push($arr, $data);
                 }
 
@@ -130,7 +135,6 @@ class PaymentController extends Controller
                 $sheet->fromArray($arr,null,'A1',false,false)->prependRow(array(
                         '주문번호', '결제시작', '상품명', '상품가격', '결제상태', 'Pi 결제금액'
                     )
-
                 );
 
             });

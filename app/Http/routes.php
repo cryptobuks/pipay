@@ -42,7 +42,7 @@ $router->post('tool/encrypt', ['as' => 'tool.encrypt', 'uses' => 'ToolController
 // payment routes
 $router->get('payment', ['as' => 'payment.index', 'uses' => 'PaymentController@index']);  // 거래 목록 
 $router->get('payment/{id}', ['as' => 'payment.show', 'uses' => 'PaymentController@show']);  // 거래 보기 
-$router->post('payment/excelExport', ['as' => 'payment.excelexport', 'uses' => 'PaymentController@excelExport']);  // 엑셀 내보내기
+$router->get('export/payment', ['as' => 'payment.excelexport', 'uses' => 'PaymentController@excelExport']);  // 엑셀 내보내기
 $router->get('receipt/{id}', ['as' => 'receipt', 'uses' => 'PaymentController@receipt']);  // 거래 보기 
 $router->get('refund/{id}', ['as' => 'refund.index', 'uses' => 'RefundController@index']);  // 환불하기 페이지 
 $router->post('refund', ['as' => 'refund.store', 'uses' => 'RefundController@store']);   // 환불 저장 

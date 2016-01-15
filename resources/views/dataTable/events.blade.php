@@ -38,6 +38,6 @@
 
             //export as excel
             $('#exportExcel').click(function() {
-                window.open(Client.createUrl('payment/export'));
+                window.open(Client.createUrl('export/payment'));
                 return false;
             });
