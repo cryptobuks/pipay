@@ -3,16 +3,13 @@
  *      Architekt.module.Http: Asynchronous HTTP request module
  *
  ****************************************************************************************************/
-Architekt.module.reserv('Http', function(options) {
-	var printLog = function() {};
-	var printWarn = function() {};
-	var printError = function() {};
-
-	Architekt.event.on('ready', function() {
-		printLog = Architekt.module.Printer.log;
-		printWarn = Architekt.module.Printer.warn;
-		printError = Architekt.module.Printer.error;
-	});
+Architekt.module.reserv({
+	name: 'Http',
+	deps: ['Printer'],
+}, function(options) {
+	var printLog = Architekt.module.Printer.log;
+	var printWarn = Architekt.module.Printer.warn;
+	var printError = Architekt.module.Printer.err;
 
 	//AJAX REQUEST function
 	//Requres console.js

@@ -73,6 +73,98 @@ window.Architekt = new function ArchitektConstructor() {
         },
     };
 
+    //Media object
+    this.media = new function () {
+        //Architekt.media.Image()
+        this.Image = function (options) {
+            var self = this;
+
+            options = typeof options === 'object' ? options : {};
+            this.src = typeof options.src !== 'undefined' ? options.src : false;
+
+            //Make events
+            this.event = new Architekt.EventEmitter(['load']);
+
+            this.data = new Image();
+            this.data.src = this.src;
+            this.data.addEventListener('load', function () {
+                self.event.fire('load');
+            });
+        };
+        this.Image.prototype.reload = function () {
+            var self = this;
+
+            this.data.removeEventListener('load');
+
+            this.data = new Image();
+            this.data.src = this.src;
+            this.data.addEventListener('load', function () {
+                self.event.fire('load');
+            });
+            return this;
+        };
+        //Architekt.media.Audio()
+        this.Audio = function (options) {
+            var self = this;
+
+            options = typeof options === 'object' ? options : {};
+            this.src = typeof options.src !== 'undefined' ? options.src : false;
+            this.playable = false;
+
+            //Make events
+            this.event = new Architekt.EventEmitter(['load','ended']);
+
+            this._loadFired = false;
+
+            this.data = new Audio();
+            this.data.src = this.src;
+            this.data.addEventListener('canplaythrough', function () {
+                this.playable = true;
+
+                if (self._loadFired) return false;
+                self._loadFired = true;
+                self.event.fire('load');
+            });
+            this.data.addEventListener('ended', function () {
+                self.event.fire('ended');
+            });
+        };
+        this.Audio.prototype.reload = function () {
+            var self = this;
+
+            this.data.removeEventListener('canplaythrough');
+            this.data.removeEventListener('ended');
+            this.playable = false;
+
+            this.data = new Audio();
+            this.data.src = this.src;
+            this.data.addEventListener('canplaythrough', function () {
+                this.playable = true;
+
+                if (self._loadFired) return false;
+                self._loadFired = true;
+                self.event.fire('load');
+            });
+            this.data.addEventListener('ended', function () {
+                self.event.fire('ended');
+            });
+            return this;
+        }
+        this.Audio.prototype.play = function () {
+            this.data.play();
+            return this;
+        };
+        this.Audio.prototype.pause = function () {
+            this.data.pause();
+            return this;
+        };
+        this.Audio.prototype.stop = function () {
+            this.data.currentTime = 0;
+            this.data.pause();
+            return this;
+        };
+    };
+
     //Architekt.EventEmitter(): Create event attributes
     this.EventEmitter = function (events) {
         var self = this;
@@ -244,7 +336,65 @@ window.Architekt = new function ArchitektConstructor() {
     };
 
     //Modular
-    var reserved = {};
+    var reservedModules = {};
+    var moduleList = [];
+    var modulesLoaded = 0;
+    var modulesMounted = 0;
+
+    //function for wait and load dependency module
+    function loadDependencyModule(moduleObject) {
+        var deps = moduleObject.deps;
+        var loaded = 0;
+
+        //loop and check dependencies are loaded
+        //this loop is looping dependency list
+        for(var i = 0, len = deps.length; i < len; i++) {
+            var dependency = deps[i];
+
+            //this loop is looping loaded modules
+            for(var j = 0, lenModules = moduleList.length; j < lenModules; j++) {
+                if(dependency === moduleList[j].name) {
+                    loaded++;
+                    break;
+                }
+            }
+        }
+
+        //if all modules loaded, actually mount
+        if(loaded >= deps.length) {
+            mountModule(moduleObject);
+        }
+        //else, wait more 10 ms.
+        else {
+            setTimeout(function() {
+                loadDependencyModule(moduleObject);
+            }, 10);
+        }
+    };
+    function mountModule(moduleObject) {
+        var name = moduleObject.name;
+        var version = moduleObject.version;
+        var deps = moduleObject.deps;
+        var moduleConstructor = moduleObject.moduleConstructor;
+
+        Architekt.module[name] = new moduleConstructor();
+
+        moduleList.push({
+            name: name,
+            version: version,
+            deps: deps,
+        });
+
+        modulesMounted++;
+
+        if(modulesMounted >= modulesLoaded) {
+            console.log('Architekt.js: Ready to go.');
+            console.log(JSON.stringify(self.info));
+
+            Architekt.event.fire('onready');
+        }
+    }
+
     this.module = {
         //Architekt.module.load(string url, function callback): Load a module
         //Architekt.module.load(array url, function callback): Load modules
@@ -258,9 +408,12 @@ window.Architekt = new function ArchitektConstructor() {
                 _num = url.length;
                 
                 if (_num === 0) {
+                    modulesLoaded = 0;
                     callback();
                 }
                 else {
+                    modulesLoaded = _num;
+
                     for (var i = 0; i < _num; i++) {
                         Architekt.loadScript(url[i], function () {
                             console.log('Architekt.js: Module mounted ' + url[_loaded]);
@@ -273,6 +426,8 @@ window.Architekt = new function ArchitektConstructor() {
                 }
             }
             else {
+                modulesLoaded++;
+                
                 Architekt.loadScript(url, function () {
                     console.log('Architekt.js: Module mounted ' + url);
                     callback();
@@ -282,16 +437,77 @@ window.Architekt = new function ArchitektConstructor() {
             return this;
         },
         //Architekt.module.mount(string moduleName, function moduleConstructor): Mount a module
-        mount: function (moduleName, moduleConstructor) {
-            if (typeof this[moduleName] !== 'undefined') throw new Error(moduleName + ' Module already mounted.');
-            this[moduleName] = new moduleConstructor();
+        //Architekt.module.mount(object moduleInfo, function moduleConstructor): Mount a module with specified info
+        mount: function (moduleInfo, moduleConstructor) {
+            //if first argument is string, it means it is name of the module.
+            if(typeof moduleInfo === 'string') {
+                var moduleName = moduleInfo;
+
+                if (typeof this[moduleName] !== 'undefined')
+                    throw new Error(moduleName + ' Module already mounted.');
+
+                mountModule({
+                    name: moduleName,
+                    version: 0,
+                    deps: [],
+                    moduleConstructor: moduleConstructor,
+                });
+            }
+            //if first argument is object, it contains module info
+            else if(typeof moduleInfo === 'object') {
+                var moduleName = moduleInfo.name || '';
+                var moduleVersion = moduleInfo.version || '';
+                var dependencies = moduleInfo.deps || [];
+
+                if (typeof this[moduleName] !== 'undefined')
+                    throw new Error(moduleName + ' module already mounted.');
+
+                //is module has dependencies?
+                if(dependencies.length > 0) {
+                    loadDependencyModule({
+                        name: moduleName,
+                        version: moduleVersion,
+                        deps: dependencies,
+                        moduleConstructor: moduleConstructor,
+                    });
+                }
+                //else, just load
+                else {
+                    mountModule({
+                        name: moduleName,
+                        version: moduleVersion,
+                        deps: dependencies,
+                        moduleConstructor: moduleConstructor,
+                    });
+                }
+            }
+            else {
+                throw new Error('Architekt.js: tried unsupported module mounting. first argument must be string or object.');
+            }
+
             return this;
         },
         //Architekt.module.reserv(string moduleName, function moduleConstructor): Reserv a module
-        //Note that reserved modules are loaded after onmodulesready
-        reserv: function(moduleName, moduleConstructor) {
-        	if (typeof reserved[moduleName] !== 'undefined') throw new Error(moduleName + ' Module already reserved.');
-        	reserved[moduleName] = moduleConstructor;
+        //Architekt.module.reserv(object moduleInfo, function moduleConstructor): Reserv a module with specified info
+        reserv: function(moduleInfo, moduleConstructor) {
+            var moduleName;
+
+            if(typeof moduleInfo === 'string') {
+                moduleName = moduleInfo;
+            }
+            else if(typeof moduleInfo === 'object') {
+                if(typeof moduleInfo.name !== 'undefined')
+                    moduleName = moduleInfo.name;
+                else
+                    throw new Error('Architekt.js: moduleInfo object must contains module name.');
+            }
+            else
+                throw new Error('Architekt.js: tried unsupported module mounting. first argument must be string or object.');
+
+        	reservedModules[moduleName] = {
+                moduleInfo: moduleInfo,
+                moduleConstructor: moduleConstructor,
+            };
         	return this;
         },
     };
@@ -318,19 +534,18 @@ window.Architekt = new function ArchitektConstructor() {
 	this.init = function() {
 		//Load reservated modules
 		setTimeout(function() {
-			for(var moduleName in reserved) {
-				Architekt.module.mount(moduleName, reserved[moduleName]);
+            //count how many modules
+            for(var key in reservedModules) 
+                modulesLoaded++;
+
+			for(var key in reservedModules) {
+				Architekt.module.mount(reservedModules[key].moduleInfo, reservedModules[key].moduleConstructor);
 			}
-
-            console.log('Architekt.js: Ready to go.');
-            console.log(JSON.stringify(self.info));
-
-			Architekt.event.fire('onready');
 		}, 0);
 	};
 
 	//Event definitions
-    this.event = new this.EventEmitter([ 'onready', 'onresize', 'onscroll', 'onmodulesloaded', 'onpreparing' ]);
+    this.event = new this.EventEmitter([ 'onready', 'onresize', 'onscroll', 'onpreparing' ]);
 };
 
 //Make Architekt load when window loaded
@@ -349,7 +564,7 @@ events.on(window, 'load', function() {
     Architekt.event.fire('onscroll', e);
 }).on(window, 'error', function(err) {
     var extra = !err.error ? '' : '' + err.error;
-    extra += !err.lineno ? '' : ' at ' + err.filename + ':' + err.lineno;
+    extra += !err.lineno ? '' : ' at ' + err.filename + ' Line ' + err.lineno;
 
     console.error(extra);
     Architekt.event.fire('onerror', err);

@@ -208,7 +208,7 @@ li {
 }
 
 select.pi-input {
-  height: 32px;
+  height: 34px;
 }
 
 .pi-text {
@@ -1068,7 +1068,7 @@ select.pi-input {
 }
 
 #createProductForm > .pi-form-control > select.pi-input {
-  width: 10%;
+  width: 12%;
 }
 
 #createProductForm > .pi-form-control > input#amount {

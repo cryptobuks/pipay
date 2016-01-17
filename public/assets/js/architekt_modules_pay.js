@@ -1,5 +1,30 @@
 /****************************************************************************************************
  *
+ *      Architekt.module.Client: Client resource provider
+ *
+ ****************************************************************************************************/
+
+Architekt.module.reserv('Client', function(options) {
+	return {
+		domain: document.URL,
+		host: location.host,
+		hostName: location.hostname,
+		href: location.href,
+		origin: location.origin,
+		path: location.path,
+		protocol: location.protocol,
+		url: (location.protocol + "//" + location.host),
+		createUrl: function(sub) {
+			var temp = [];
+			temp.push(this.url);
+			temp.push(sub);
+
+			return temp.join("/");
+		}
+	};
+});
+/****************************************************************************************************
+ *
  *                        Architekt.module.Formatter: Formatting module
  *
  ****************************************************************************************************/
@@ -77,44 +102,16 @@ Architekt.module.reserv('Formatter', function(options) {
 });
 /****************************************************************************************************
  *
- *      Architekt.module.Client: Client resource provider
- *
- ****************************************************************************************************/
-
-Architekt.module.reserv('Client', function(options) {
-	return {
-		domain: document.URL,
-		host: location.host,
-		hostName: location.hostname,
-		href: location.href,
-		origin: location.origin,
-		path: location.path,
-		protocol: location.protocol,
-		url: (location.protocol + "//" + location.host),
-		createUrl: function(sub) {
-			var temp = [];
-			temp.push(this.url);
-			temp.push(sub);
-
-			return temp.join("/");
-		}
-	};
-});
-/****************************************************************************************************
- *
  *      Architekt.module.Http: Asynchronous HTTP request module
  *
  ****************************************************************************************************/
-Architekt.module.reserv('Http', function(options) {
-	var printLog = function() {};
-	var printWarn = function() {};
-	var printError = function() {};
-
-	Architekt.event.on('ready', function() {
-		printLog = Architekt.module.Printer.log;
-		printWarn = Architekt.module.Printer.warn;
-		printError = Architekt.module.Printer.error;
-	});
+Architekt.module.reserv({
+	name: 'Http',
+	deps: ['Printer'],
+}, function(options) {
+	var printLog = Architekt.module.Printer.log;
+	var printWarn = Architekt.module.Printer.warn;
+	var printError = Architekt.module.Printer.err;
 
 	//AJAX REQUEST function
 	//Requres console.js
@@ -576,30 +573,6 @@ Architekt.module.reserv('Validator', function(options) {
 		},
 	};
 });
-/****************************************************************************************************
- *
- *                        Architekt.module.Watcher: Error catching module
- *
- ****************************************************************************************************/
-
- Architekt.module.reserv('Watcher', function(options) {
- 	options = typeof options === 'object' ? options : {};
-
- 	this.event = new Architekt.EventEmitter(['onerror']);
-
- 	function attempt(task) {
- 		try {
- 			task();
- 		}
- 		catch(err) {
- 			this.event.fire('onerror', err);
- 		}
- 	};
-
- 	return {
- 		attempt: attempt
- 	}
- });
 /* Widget Module */
 Architekt.module.reserv('Widget', function(options) {
 	var body = $('body');

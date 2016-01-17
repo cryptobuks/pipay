@@ -54,12 +54,12 @@ elixir(function(mix) {
     //Merge modules
     //CDN too? i dunno
     mix.scripts([
+        'reserved/client.js',
         'reserved/clipboard.js',
         'reserved/comparator.js',
         'reserved/customWidget.js',
         'reserved/dataTable.js',
         'reserved/formatter.js',
-        'reserved/client.js',
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
@@ -79,8 +79,8 @@ elixir(function(mix) {
 
     //modules for payment
     mix.scripts([
-        'reserved/formatter.js',
         'reserved/client.js',
+        'reserved/formatter.js',
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
