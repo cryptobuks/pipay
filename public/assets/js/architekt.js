@@ -169,6 +169,7 @@ window.Architekt = new function ArchitektConstructor() {
     this.EventEmitter = function (events) {
         var self = this;
         this.list = {};
+        this.checkOnce = {};
 
         if (typeof events === 'object' && events.length !== 'undefined')
             for (var i = 0, len = events.length; i < len; i++) {
@@ -244,6 +245,51 @@ window.Architekt = new function ArchitektConstructor() {
         //Architekt.EventEmitter.trigger(string type, object eventArgument): Alias of EventEmitter.fire
         this.trigger = function(type, eventArgument) {
             return this.fire(type, eventArgument);
+        };
+        //Architekt.EventEmitter.fireOnce(string type, object eventArgument): Fire event only once
+        this.fireOnce = function(type, eventArgument) {
+            var self = this;
+
+            type = normalize(type);
+
+            var _el = this.list[type];
+
+            if (typeof _el === "undefined")
+                throw new Error('Architekt.js: Unknown event ' + type);
+
+            //if already fired, don't fire events
+            if(typeof self.checkOnce[type] !== 'undefined') return this;
+
+            self.checkOnce[type] = true;
+
+            //fire event
+            for (var i = 0, len = _el.length; i < len; i++) {
+                try {
+                    _el[i](eventArgument);
+                }
+                catch(error) {
+                    if(typeof error === 'object')
+                        console.error(error.stack);
+                    else
+                        console.error(error);
+
+                    //fire error event
+                    this.fire('onerror', error);
+                }
+            }
+
+            return this;
+        };
+        //Architekt.EventEmitter.triggerOnce(string type, object eventArgument): Alias of EventEmitter.fireOnce
+        this.triggerOnce = function(type, eventArgument) {
+            return this.fireOnce(type, eventArgument);
+        };
+        //Architekt.EventEmitter.reset(string type): Reset the "fire once" event
+        this.reset = function(type) {
+            type = normalize(type);
+
+            delete this.list[type];
+            return this;
         };
         //Architekt.EventEmitter.register(string eventName): Add new event
         this.register = function(eventName) {

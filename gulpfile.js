@@ -60,6 +60,7 @@ elixir(function(mix) {
         'reserved/customWidget.js',
         'reserved/dataTable.js',
         'reserved/formatter.js',
+        'reserved/guardian.js',
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
@@ -81,6 +82,7 @@ elixir(function(mix) {
     mix.scripts([
         'reserved/client.js',
         'reserved/formatter.js',
+        'reserved/guardian.js',
         'reserved/http.js',
         'reserved/locale.js',
         'reserved/printer.js',
